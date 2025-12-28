@@ -1,218 +1,507 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>JJKR COMMUNITY</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JJKR COMMUNITY</title>
 
-<style>
-/* =====================
-   COLOR SYSTEM
-===================== */
-:root{
-  --bar1:#cfe0f6;
-  --bar2:#8fb0dc;
+  <style>
+    /* =========================
+       0) 기본 리셋
+    ========================= */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Tahoma, Verdana, Arial, sans-serif;
+      overflow: hidden; /* 창들이 화면 밖으로 밀려도 스크롤 안 생기게 */
+      background: #000;
+    }
 
-  --glass: rgba(255,255,255,.38);
-  --glass2: rgba(255,255,255,.22);
+    /* =========================
+       1) 컬러 변수 (★타이틀바 흰색)
+    ========================= */
+    :root{
+      /* 레퍼처럼: 흰색 타이틀바(살짝 그라데이션) */
+      --titlebar-top: #f7f7f7;
+      --titlebar-bot: #e9e9e9;
 
-  --border: rgba(20,30,50,.45);
-  --shadow: rgba(10,18,30,.22);
-}
+      --frame: rgba(255,255,255,0.60); /* 창 프레임 투명감 */
+      --glass: rgba(255,255,255,0.40); /* 창 바디(유리) */
+      --border: rgba(0,0,0,0.30);
 
-/* =====================
-   BASE
-===================== */
-html,body{
-  width:100%;
-  height:100%;
-  margin:0;
-  font-family: Tahoma, Verdana, Arial, sans-serif;
-  overflow:hidden;
-}
+      --shadow: 0 12px 30px rgba(0,0,0,0.22);
+      --shadow-strong: 0 18px 46px rgba(0,0,0,0.30);
 
-/* 🌿 배경: 투명 + 꽃 이미지 */
-body{
-  background: url("bg.jpg") center/cover no-repeat fixed;
-}
+      --text: #1b1b1b;
+      --muted: rgba(0,0,0,0.55);
+    }
 
-/* 안개 + 필름감 */
-.film{
-  pointer-events:none;
-  position:fixed;
-  inset:0;
-  opacity:.42;
-  background:
-    radial-gradient(1200px 900px at 20% 10%, rgba(255,255,255,.40), transparent 60%),
-    radial-gradient(900px 700px at 70% 80%, rgba(255,255,255,.22), transparent 60%),
-    repeating-linear-gradient(
-      0deg,
-      rgba(0,0,0,.03),
-      rgba(0,0,0,.03) 1px,
-      transparent 1px,
-      transparent 4px
-    );
-  mix-blend-mode: screen;
-}
+    /* =========================
+       2) 배경(네 꽃 사진)
+       - bg-flower.jpg 를 네 파일명으로 맞춰줘
+    ========================= */
+    .wallpaper {
+      position: fixed;
+      inset: 0;
+      background-image: url("bg.png"); /* ← 여기 파일명 수정 */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: saturate(0.95) contrast(0.98);
+      transform: scale(1.02); /* 가장자리 빈틈 방지 */
+    }
 
-/* =====================
-   WINDOWS
-===================== */
-.win{
-  position:absolute;
-  background: linear-gradient(180deg, var(--glass), var(--glass2));
-  border:1.4px solid var(--border);
-  box-shadow: 0 16px 40px var(--shadow);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
+    /* 배경 위에 은은한 안개 레이어(레퍼처럼 “투명한 공기감”) */
+    .wallpaper::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(1200px 600px at 20% 15%, rgba(255,255,255,0.30), transparent 60%),
+        radial-gradient(900px 500px at 80% 25%, rgba(255,255,255,0.22), transparent 55%),
+        radial-gradient(900px 700px at 55% 80%, rgba(255,255,255,0.18), transparent 60%),
+        linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      pointer-events:none;
+    }
 
-/* 타이틀바 */
-.bar{
-  height:24px;
-  background: linear-gradient(180deg, var(--bar1), var(--bar2));
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 6px;
-  font-size:12px;
-  font-weight:700;
-  color:#13294b;
-  box-sizing:border-box;
-}
+    /* =========================
+       3) 바탕(창 올리는 캔버스)
+    ========================= */
+    .desk {
+      position: fixed;
+      inset: 0;
+      pointer-events: none; /* 기본은 클릭 막고, 창만 클릭 되게 */
+    }
 
-.btns span{
-  display:inline-block;
-  width:12px;
-  height:12px;
-  border:1px solid rgba(0,0,0,.35);
-  background:#e9eef6;
-  margin-left:4px;
-}
+    /* =========================
+       4) 창(Window)
+    ========================= */
+    .win {
+      position: absolute;
+      width: 420px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      background: var(--frame);
 
-/* 내용 */
-.content{
-  padding:10px;
-  font-size:13px;
-  line-height:1.5;
-  color:#1c2a3f;
-}
+      /* 유리 느낌 */
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
 
-/* =====================
-   IMAGE FRAME
-===================== */
-.frame{
-  width:100%;
-  aspect-ratio:16/9;
-  border:1px solid rgba(20,30,50,.35);
-  background: rgba(255,255,255,.12);
-  overflow:hidden;
-  position:relative;
-}
+      pointer-events: auto; /* 창만 클릭 허용 */
+      user-select: none; /* 드래그 중 텍스트 선택 방지 */
+    }
 
-.frame img{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  filter: saturate(.92) contrast(.96) brightness(.98);
-}
+    .win.is-front { box-shadow: var(--shadow-strong); }
 
-/* =====================
-   TASKBAR
-===================== */
-.taskbar{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  height:44px;
-  background: rgba(255,255,255,.22);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-top:1px solid rgba(20,30,50,.25);
-  display:flex;
-  align-items:center;
-  padding:0 10px;
-  gap:10px;
-  box-sizing:border-box;
-}
+    /* =========================
+       5) 타이틀바 (★흰색)
+    ========================= */
+    .titlebar {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px 0 10px;
 
-.start{
-  background: rgba(255,255,255,.35);
-  border:1px solid rgba(20,30,50,.28);
-  border-radius:10px;
-  padding:7px 12px;
-  font-weight:800;
-  font-size:13px;
-}
+      background: linear-gradient(to bottom, var(--titlebar-top), var(--titlebar-bot));
+      border-bottom: 1px solid rgba(0,0,0,0.18);
 
-.task{
-  font-weight:800;
-  font-size:13px;
-  opacity:.8;
-}
-</style>
+      color: #222;           /* 흰바탕이라 글자 어둡게 */
+      text-shadow: none;     /* 파란바용 그림자 제거 */
+      cursor: grab;
+    }
+    .titlebar:active { cursor: grabbing; }
+
+    .title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.75);
+      flex: 0 0 auto;
+    }
+
+    .title {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 280px;
+    }
+
+    .title-btns {
+      display: flex;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    /* 버튼도 파란기 없이 흰/회색 */
+    .btn {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+      border: 1px solid rgba(0,0,0,0.35);
+      background: rgba(255,255,255,0.85);
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
+    }
+
+    /* =========================
+       6) 창 내용
+    ========================= */
+    .content {
+      background: var(--glass);
+      padding: 8px;
+    }
+
+    /* 이미지 창 */
+    .media {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.35);
+    }
+    .media img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    /* “미디어 아래 얇은 바” */
+    .meta {
+      margin-top: 6px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 4px 6px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+
+    /* 텍스트 창(게시판/공지) */
+    .note {
+      padding: 10px 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.14);
+      background: rgba(255,255,255,0.62);
+      color: #222;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .note b { display:block; margin-bottom: 6px; }
+    .note ul { margin: 8px 0 0 18px; padding:0; }
+    .note li { margin: 3px 0; }
+    .note a { color:#0b57d0; text-decoration: underline; }
+
+    /* =========================
+       7) 하단 바(Start 느낌)
+    ========================= */
+    .taskbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
+      border-top: 1px solid rgba(0,0,0,0.18);
+    }
+
+    .start {
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.80);
+      font-weight: 700;
+      font-size: 12px;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .brand {
+      font-size: 13px;
+      color: #222;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .spacer { flex: 1; }
+    .clock {
+      font-size: 12px;
+      color: rgba(0,0,0,0.65);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 모바일에서 너무 커 보이면 자동 축소 */
+    @media (max-width: 480px){
+      .win { width: 340px; }
+      .title { max-width: 220px; }
+    }
+  </style>
 </head>
 
 <body>
+  <!-- 배경 -->
+  <div class="wallpaper"></div>
 
-<div class="film"></div>
+  <!-- 창 올리는 영역 -->
+  <div class="desk" id="desk">
 
-<!-- 🪟 텍스트 창 -->
-<div class="win" style="top:60px; left:60px; width:320px;">
-  <div class="bar">
-    <span>📁 구인 게시판</span>
-    <div class="btns"><span></span><span></span><span></span></div>
-  </div>
-  <div class="content">
-    <b>JJKR COMMUNITY</b><br>
-    가개장 기간 동안만 운영합니다.<br><br>
-    • 게시판: 전체 공개<br>
-    • 컨택: 비밀댓글(관리자+글쓴이)<br>
-    • 완료 시 관계란 한 줄 기재
-  </div>
-</div>
+    <!-- 0) 공지/게시판 안내 창 -->
+    <div class="win is-front" style="left:18px; top:18px; width: 260px;" data-z="50">
+      <div class="titlebar">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">구인 게시판</div>
+        </div>
+        <div class="title-btns">
+          <div class="btn"></div><div class="btn"></div><div class="btn"></div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="note">
+          <b>JJKR COMMUNITY</b>
+          가개장 기간 동안만 운영합니다.
+          <ul>
+            <li>게시판: 전체 공개</li>
+            <li>컨택: 비밀댓글(관리자+글쓴이)</li>
+            <li>완료 시 관계란 한 줄 기재</li>
+          </ul>
+          <div style="margin-top:10px;">
+            👉 <a href="#" onclick="alert('다음 단계에서 게시판 링크 연결!'); return false;">게시판 들어가기(준비중)</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- 🪟 이미지 창 1 -->
-<div class="win" style="top:120px; left:420px; width:360px;">
-  <div class="bar">
-    <span>0722_1029_002.mp4</span>
-    <div class="btns"><span></span><span></span><span></span></div>
-  </div>
-  <div class="frame">
-    <img src="img01.jpg" alt="">
-  </div>
-</div>
+    <!-- =========================
+         이미지 창 9개
+         - 아래 src를 네 이미지 파일명으로 바꾸기
+         - 파일은 GitHub에 같이 올려야 함
+    ========================= -->
 
-<!-- 🪟 이미지 창 2 -->
-<div class="win" style="top:340px; left:180px; width:380px;">
-  <div class="bar">
-    <span>0722_1029_003.mp4</span>
-    <div class="btns"><span></span><span></span><span></span></div>
-  </div>
-  <div class="frame">
-    <img src="img02.jpg" alt="">
-  </div>
-</div>
+    <!-- 1 -->
+    <div class="win" style="left:270px; top:70px;" data-z="10">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_002.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img01.jpg" alt=""></div>
+        <div class="meta"><span>Preview · File · Edit · View</span><span>—</span></div>
+      </div>
+    </div>
 
-<!-- 🪟 이미지 창 3 -->
-<div class="win" style="top:260px; left:620px; width:300px;">
-  <div class="bar">
-    <span>0722_1029_005.mp4</span>
-    <div class="btns"><span></span><span></span><span></span></div>
-  </div>
-  <div class="frame">
-    <img src="img03.jpg" alt="">
-  </div>
-</div>
+    <!-- 2 -->
+    <div class="win" style="left:510px; top:92px; width: 360px;" data-z="11">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_006.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img02.jpg" alt=""></div>
+        <div class="meta"><span>00:17</span><span> </span></div>
+      </div>
+    </div>
 
-<!-- 작업표시줄 -->
-<div class="taskbar">
-  <div class="start">Start</div>
-  <div class="task">JJKR COMMUNITY</div>
-</div>
+    <!-- 3 -->
+    <div class="win" style="left:210px; top:250px; width: 520px;" data-z="12">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_003.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img03.jpg" alt=""></div>
+        <div class="meta"><span>▶ 02:47</span><span> </span></div>
+      </div>
+    </div>
 
+    <!-- 4 -->
+    <div class="win" style="left:40px; top:520px; width: 440px;" data-z="13">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_004.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img04.jpg" alt=""></div>
+        <div class="meta"><span>Saved 1 min ago</span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="win" style="left:380px; top:520px; width: 520px;" data-z="14">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_005.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img05.jpg" alt=""></div>
+        <div class="meta"><span>Continue listening?</span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="win" style="left:760px; top:290px; width: 260px;" data-z="15">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_007.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img06.jpg" alt=""></div>
+        <div class="meta"><span> </span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="win" style="left:860px; top:70px; width: 260px;" data-z="16">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_008.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img07.jpg" alt=""></div>
+        <div class="meta"><span> </span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="win" style="left:880px; top:430px; width: 320px;" data-z="17">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_009.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img08.jpg" alt=""></div>
+        <div class="meta"><span> </span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="win" style="left:620px; top:360px; width: 360px;" data-z="18">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_010.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img09.jpg" alt=""></div>
+        <div class="meta"><span> </span><span> </span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 하단 바 -->
+  <div class="taskbar">
+    <div class="start" onclick="alert('Start 메뉴는 다음 단계에서!')">Start</div>
+    <div class="brand">JJKR COMMUNITY</div>
+    <div class="spacer"></div>
+    <div class="clock" id="clock">--:--</div>
+  </div>
+
+  <script>
+    // =========================
+    // 드래그 + 앞으로 가져오기
+    // =========================
+    const wins = Array.from(document.querySelectorAll(".win"));
+    let topZ = 100;
+
+    function bringToFront(win){
+      topZ += 1;
+      win.style.zIndex = topZ;
+      wins.forEach(w => w.classList.remove("is-front"));
+      win.classList.add("is-front");
+    }
+
+    wins.forEach(win => {
+      // 초기 z-index 설정(겹침 순서 유지)
+      const initZ = parseInt(win.getAttribute("data-z") || "0", 10);
+      win.style.zIndex = 50 + initZ;
+
+      win.addEventListener("pointerdown", () => bringToFront(win));
+
+      const bar = win.querySelector(".titlebar");
+      let dragging = false;
+      let startX = 0, startY = 0;
+      let winX = 0, winY = 0;
+
+      bar.addEventListener("pointerdown", (e) => {
+        bringToFront(win);
+        dragging = true;
+        bar.setPointerCapture(e.pointerId);
+
+        const rect = win.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        winX = rect.left;
+        winY = rect.top;
+
+        e.preventDefault();
+      });
+
+      bar.addEventListener("pointermove", (e) => {
+        if(!dragging) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        let nx = winX + dx;
+        let ny = winY + dy;
+
+        // 화면 밖으로 너무 나가지 않게 살짝 제한
+        const maxX = window.innerWidth - 60;
+        const maxY = window.innerHeight - 120; // taskbar 고려
+        nx = Math.min(Math.max(nx, -40), maxX);
+        ny = Math.min(Math.max(ny, -20), maxY);
+
+        win.style.left = nx + "px";
+        win.style.top  = ny + "px";
+      });
+
+      bar.addEventListener("pointerup", () => {
+        dragging = false;
+      });
+      bar.addEventListener("pointercancel", () => {
+        dragging = false;
+      });
+    });
+
+    // =========================
+    // 시계
+    // =========================
+    const clock = document.getElementById("clock");
+    function tick(){
+      const d = new Date();
+      const hh = String(d.getHours()).padStart(2,"0");
+      const mm = String(d.getMinutes()).padStart(2,"0");
+      clock.textContent = `${hh}:${mm}`;
+    }
+    tick();
+    setInterval(tick, 1000 * 10);
+  </script>
 </body>
 </html>

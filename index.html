@@ -262,6 +262,64 @@
       .win { width: 340px; }
       .title { max-width: 220px; }
     }
+    /* ===== YouTube playlist window ===== */
+.yt-window {
+  position: absolute;
+  right: 40px;
+  bottom: 90px;
+  width: 320px;
+  z-index: 9999;
+  user-select: none;
+}
+
+/* 창 내용 여백 제거 */
+.yt-window .content {
+  padding: 0;
+  background: #fff;
+}
+
+/* 유튜브 화면 */
+.yt-window iframe {
+  width: 100%;
+  height: 180px;
+  border: 0;
+  display: block;
+}
+
+/* 제목줄: 드래그 가능 표시 */
+.yt-window .titlebar {
+  cursor: grab;
+}
+.yt-window.dragging .titlebar {
+  cursor: grabbing;
+}
+
+/* 제목 왼쪽(파일명) */
+.yt-window .titlebar .title {
+  display: inline-block;
+  padding-left: 6px;
+}
+
+/* 오른쪽 버튼 영역 */
+.yt-window .titlebar .buttons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* 소리 버튼 */
+.yt-window .sound-btn {
+  font-size: 12px;
+  padding: 2px 8px;
+  border: 1px solid rgba(0,0,0,0.25);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.85);
+  cursor: pointer;
+}
+
+.yt-window .sound-btn:active {
+  transform: translateY(1px);
+      }
   </style>
 </head>
 
@@ -503,5 +561,98 @@
     tick();
     setInterval(tick, 1000 * 10);
   </script>
+  <!-- =========================
+     🎵 YouTube Playlist Window
+     ========================= -->
+<div class="window yt-window" id="ytWin" style="top:120px; left:40px;">
+  <div class="titlebar" id="ytDrag">
+    <span class="title">0722_1029_011.mp4</span>
+
+    <div class="buttons">
+      <button class="sound-btn" id="ytSoundBtn">🔇</button>
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="content">
+    <iframe
+      id="ytFrame"
+      src="https://www.youtube.com/embed/videoseries?list=PLUE3Cb-ZSnOeLPneQRPY76iI9h9NCQMp6&autoplay=1&loop=1&mute=1"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+<script>
+  // ===== (1) 소리 켜기/끄기 버튼 =====
+  const ytFrame = document.getElementById("ytFrame");
+  const soundBtn = document.getElementById("ytSoundBtn");
+
+  let isMuted = true;
+  soundBtn.addEventListener("click", () => {
+    // iframe src에서 mute 값을 토글
+    const url = new URL(ytFrame.src);
+    url.searchParams.set("mute", isMuted ? "0" : "1");
+    ytFrame.src = url.toString();
+
+    isMuted = !isMuted;
+    soundBtn.textContent = isMuted ? "🔇" : "🔊";
+  });
+
+  // ===== (2) 창 드래그(모바일 터치 + PC 마우스 둘 다) =====
+  const win = document.getElementById("ytWin");
+  const dragHandle = document.getElementById("ytDrag");
+
+  let dragging = false;
+  let startX = 0, startY = 0;
+  let startLeft = 0, startTop = 0;
+
+  function pointerDown(e) {
+    dragging = true;
+    win.classList.add("dragging");
+
+    const p = e.touches ? e.touches[0] : e;
+    startX = p.clientX;
+    startY = p.clientY;
+
+    const rect = win.getBoundingClientRect();
+    startLeft = rect.left;
+    startTop = rect.top;
+
+    e.preventDefault();
+  }
+
+  function pointerMove(e) {
+    if (!dragging) return;
+
+    const p = e.touches ? e.touches[0] : e;
+    const dx = p.clientX - startX;
+    const dy = p.clientY - startY;
+
+    const newLeft = startLeft + dx;
+    const newTop = startTop + dy;
+
+    win.style.left = newLeft + "px";
+    win.style.top = newTop + "px";
+    win.style.right = "auto";
+    win.style.bottom = "auto";
+  }
+
+  function pointerUp() {
+    dragging = false;
+    win.classList.remove("dragging");
+  }
+
+  // 마우스
+  dragHandle.addEventListener("mousedown", pointerDown);
+  window.addEventListener("mousemove", pointerMove);
+  window.addEventListener("mouseup", pointerUp);
+
+  // 터치(모바일)
+  dragHandle.addEventListener("touchstart", pointerDown, { passive: false });
+  window.addEventListener("touchmove", pointerMove, { passive: false });
+  window.addEventListener("touchend", pointerUp);
+</script>
 </body>
 </html>

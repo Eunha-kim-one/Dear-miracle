@@ -6,203 +6,226 @@
   <title>JJKR COMMUNITY</title>
   <style>
     :root{
-      --xp-blue1:#0a246a;
-      --xp-blue2:#3a6ea5;
-      --xp-beige:#ece9d8;
-      --xp-border:#000;
-      --shadow:rgba(0,0,0,.35);
+      --bar1:#8fb0dc;         /* 레퍼처럼 더 연한 타이틀바 */
+      --bar2:#5f86c8;
+      --beige:#f3f0e6;
+      --border:rgba(0,0,0,.65);
+      --shadow:rgba(0,0,0,.22);
     }
     html,body{height:100%;}
     body{
       margin:0;
       font-family: Tahoma, Verdana, Arial, sans-serif;
       overflow:hidden;
-      background:
-        radial-gradient(1200px 600px at 30% 20%, rgba(255,255,255,.35), transparent 60%),
-        radial-gradient(900px 500px at 70% 70%, rgba(255,255,255,.18), transparent 60%),
-        linear-gradient(#9fbbe8, #bcd1f2);
+      background: radial-gradient(1200px 700px at 40% 30%, rgba(255,255,255,.25), transparent 60%),
+                  linear-gradient(#a9c0e9, #c7d7f4);
     }
 
-    /* 필름/노이즈(미감 악마용) */
-    .grain{
+    /* 레퍼 느낌: 살짝 뿌연 필름+먼지 */
+    .film{
       pointer-events:none;
       position:fixed; inset:0;
-      opacity:.18;
+      opacity:.22;
       mix-blend-mode: overlay;
-      background-image:
-        repeating-linear-gradient(0deg, rgba(255,255,255,.06), rgba(255,255,255,.06) 1px, transparent 1px, transparent 3px),
-        repeating-linear-gradient(90deg, rgba(0,0,0,.04), rgba(0,0,0,.04) 1px, transparent 1px, transparent 4px);
+      background:
+        radial-gradient(1200px 900px at 20% 20%, rgba(255,255,255,.35), transparent 55%),
+        radial-gradient(900px 700px at 70% 70%, rgba(255,255,255,.18), transparent 55%),
+        repeating-linear-gradient(0deg, rgba(0,0,0,.03), rgba(0,0,0,.03) 1px, transparent 1px, transparent 4px);
     }
 
-    /* 데스크톱 영역 */
-    .desktop{
-      position:relative;
-      width:100%;
-      height:100%;
-      padding:24px;
-      box-sizing:border-box;
-    }
+    .desktop{position:relative; width:100%; height:100%;}
 
-    /* 윈도우 XP 스타일 창 */
+    /* 창 */
     .win{
       position:absolute;
-      width:min(520px, 82vw);
-      background:var(--xp-beige);
-      border:2px solid var(--xp-border);
-      box-shadow: 8px 10px 0 rgba(0,0,0,.12), 0 10px 30px var(--shadow);
+      background: rgba(255,255,255,.72);
+      border:1.8px solid var(--border);
+      box-shadow: 0 14px 30px var(--shadow);
+      backdrop-filter: blur(1px);
     }
+
     .titlebar{
+      height:28px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      height:34px;
       padding:0 8px;
-      color:#fff;
-      background: linear-gradient(180deg, var(--xp-blue2), var(--xp-blue1));
-      border-bottom:2px solid var(--xp-border);
+      color:#1a1a1a;
+      font-size:12px;
+      background: linear-gradient(180deg, var(--bar1), var(--bar2));
+      border-bottom:1.6px solid var(--border);
       user-select:none;
     }
-    .title-left{
-      display:flex; align-items:center; gap:8px;
-      font-weight:700; letter-spacing:.2px;
-      font-size:14px;
-    }
-    .dot{
-      width:12px;height:12px;border:2px solid #fff;
-      background:rgba(255,255,255,.25);
-      box-shadow: inset 0 0 0 2px rgba(0,0,0,.15);
-    }
-    .btns{display:flex; gap:6px;}
+    .left{display:flex; align-items:center; gap:6px; font-weight:700;}
+    .dot{width:10px;height:10px;border:1.6px solid rgba(255,255,255,.9); background:rgba(255,255,255,.25);}
+
+    .btns{display:flex; gap:5px;}
     .btn{
-      width:26px;height:20px;
-      border:2px solid var(--xp-border);
-      background:#cfd8e6;
-      box-shadow: inset 0 0 0 2px rgba(255,255,255,.35);
+      width:18px;height:14px;
+      border:1.4px solid rgba(0,0,0,.55);
+      background:rgba(255,255,255,.55);
     }
 
-    .content{ padding:10px; }
+    .content{padding:8px; background:transparent;}
     .frame{
-      background:#fff;
-      border:2px solid var(--xp-border);
-      box-shadow: inset 0 0 0 2px rgba(0,0,0,.06);
-      overflow:hidden;
-    }
-    .frame img{
-      display:block;
       width:100%;
-      height:auto;
+      aspect-ratio: 16 / 9;     /* 레퍼처럼 창 안 “영상 프레임” */
+      border:1.6px solid rgba(0,0,0,.55);
+      background:#fff;
+      overflow:hidden;
+      position:relative;
+    }
+
+    /* 핵심: 이미지가 안 떠도 촌스럽지 않게 ‘프리뷰 배경’이 보이게 */
+    .frame::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 500px at 30% 40%, rgba(255,255,255,.35), transparent 60%),
+        linear-gradient(#9fbbe8, #c7d7f4);
+      filter: blur(0.5px);
+    }
+
+    .frame img{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit: cover;
+      opacity: .98;
       filter: saturate(.95) contrast(.98);
     }
 
-    /* 작은 “파일/툴바” 느낌 라벨 */
     .meta{
-      margin:8px 0 0;
-      font-size:12px;
-      color:#333;
-      opacity:.85;
+      margin-top:6px;
+      font-size:11px;
+      color:rgba(0,0,0,.65);
+      letter-spacing:.1px;
     }
 
-    /* 배치(레퍼 1번처럼 겹치기) */
-    .w1{ left:6vw;  top:8vh;  z-index:5; width:min(540px, 86vw); }
-    .w2{ left:56vw; top:10vh; z-index:6; width:min(420px, 70vw); transform:rotate(.2deg); }
-    .w3{ left:26vw; top:26vh; z-index:4; width:min(520px, 84vw); opacity:.98; }
-    .w4{ left:10vw; top:56vh; z-index:3; width:min(440px, 76vw); transform:rotate(-.2deg); }
-    .w5{ left:58vw; top:54vh; z-index:7; width:min(520px, 82vw); }
+    /* 레퍼처럼 “겹치기” 배치 (모바일에서도 화면 안에 들어오게 조정) */
+    .w1{ left:6vw;  top:6vh;  width:min(520px, 86vw); z-index:5;}
+    .w2{ left:58vw; top:8vh;  width:min(440px, 70vw); z-index:7;}
+    .w3{ left:22vw; top:22vh; width:min(560px, 88vw); z-index:4;}
+    .w4{ left:8vw;  top:58vh; width:min(520px, 84vw); z-index:3;}
+    .w5{ left:52vw; top:52vh; width:min(540px, 86vw); z-index:6;}
 
-    /* 하단 작업표시줄(원하면 유지) */
+    /* 작은 보조창(레퍼에 있는 파일창 느낌) */
+    .mini{
+      width:min(280px, 62vw);
+      opacity:.96;
+    }
+    .w6{ left:44vw; top:14vh; z-index:2;}
+    .w7{ left:70vw; top:30vh; z-index:1;}
+
+    /* 작업표시줄 */
     .taskbar{
       position:fixed; left:0; right:0; bottom:0;
-      height:46px;
+      height:44px;
       background: linear-gradient(#2f66c7, #1f4f9a);
-      border-top:2px solid #0b1f4a;
+      border-top:1.8px solid rgba(0,0,0,.6);
       display:flex; align-items:center;
-      padding:0 10px;
+      padding:0 10px; gap:10px;
       box-sizing:border-box;
-      gap:10px;
     }
     .start{
       background: linear-gradient(#55b84a, #2f8f2a);
-      border:2px solid #0b2d08;
+      border:1.8px solid rgba(0,0,0,.65);
       border-radius:8px;
-      padding:8px 14px;
+      padding:7px 12px;
       color:#fff;
-      font-weight:700;
-      box-shadow: inset 0 0 0 2px rgba(255,255,255,.25);
+      font-weight:800;
+      font-size:13px;
     }
-    .task{
-      color:#e9f1ff;
-      opacity:.9;
-      font-weight:700;
-    }
+    .task{color:#e9f1ff; opacity:.95; font-weight:800;}
   </style>
 </head>
 
 <body>
   <div class="desktop">
 
-    <!-- 창 1 -->
+    <!-- 레퍼처럼 큰 창: 좌상 -->
     <section class="win w1">
       <div class="titlebar">
-        <div class="title-left"><span class="dot"></span> 0722_1029_002.mp4</div>
+        <div class="left"><span class="dot"></span> 0722_1029_002.mp4</div>
         <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
       </div>
       <div class="content">
-        <div class="frame"><img src="shot6.jpg" alt=""></div>
+        <div class="frame"><img src="img01.jpg" alt=""></div>
         <div class="meta">Preview · File · Edit · View · Go · Tools · Window</div>
       </div>
     </section>
 
-    <!-- 창 2 -->
+    <!-- 우상 -->
     <section class="win w2">
       <div class="titlebar">
-        <div class="title-left"><span class="dot"></span> 0722_1029_006.mp4</div>
+        <div class="left"><span class="dot"></span> 0722_1029_006.mp4</div>
         <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
       </div>
       <div class="content">
-        <div class="frame"><img src="shot8.jpg" alt=""></div>
+        <div class="frame"><img src="img02.jpg" alt=""></div>
         <div class="meta">00:17</div>
       </div>
     </section>
 
-    <!-- 창 3 (메인 느낌 크게) -->
+    <!-- 가운데 메인 -->
     <section class="win w3">
       <div class="titlebar">
-        <div class="title-left"><span class="dot"></span> 0722_1029_003.mp4</div>
+        <div class="left"><span class="dot"></span> 0722_1029_003.mp4</div>
         <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
       </div>
       <div class="content">
-        <div class="frame"><img src="shot4.jpg" alt=""></div>
+        <div class="frame"><img src="img03.jpg" alt=""></div>
         <div class="meta">▶︎ 02:47</div>
       </div>
     </section>
 
-    <!-- 창 4 -->
+    <!-- 좌하 -->
     <section class="win w4">
       <div class="titlebar">
-        <div class="title-left"><span class="dot"></span> 0722_1029_004.mp4</div>
+        <div class="left"><span class="dot"></span> 0722_1029_004.mp4</div>
         <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
       </div>
       <div class="content">
-        <div class="frame"><img src="shot1.jpg" alt=""></div>
+        <div class="frame"><img src="img04.jpg" alt=""></div>
         <div class="meta">Saved 1 min ago</div>
       </div>
     </section>
 
-    <!-- 창 5 -->
+    <!-- 우하 -->
     <section class="win w5">
       <div class="titlebar">
-        <div class="title-left"><span class="dot"></span> 0722_1029_005.mp4</div>
+        <div class="left"><span class="dot"></span> 0722_1029_005.mp4</div>
         <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
       </div>
       <div class="content">
-        <div class="frame"><img src="shot5.jpg" alt=""></div>
+        <div class="frame"><img src="img05.jpg" alt=""></div>
         <div class="meta">Continue listening?</div>
+      </div>
+    </section>
+
+    <!-- 보조 작은 창들(레퍼의 파일창 느낌) -->
+    <section class="win mini w6">
+      <div class="titlebar">
+        <div class="left"><span class="dot"></span> folder</div>
+        <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="frame"><img src="img06.jpg" alt=""></div>
+      </div>
+    </section>
+
+    <section class="win mini w7">
+      <div class="titlebar">
+        <div class="left"><span class="dot"></span> note</div>
+        <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="frame"><img src="img07.jpg" alt=""></div>
       </div>
     </section>
 
   </div>
 
-  <div class="grain"></div>
+  <div class="film"></div>
 
   <div class="taskbar">
     <div class="start">Start</div>

@@ -1,26 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JJKR COMMUNITY</title>
-
   <style>
-    /* ---- 기본 배경 (90s / XP 데스크톱) ---- */
     :root{
       --xp-blue1:#0a246a;
       --xp-blue2:#3a6ea5;
       --xp-beige:#ece9d8;
       --xp-border:#000;
-      --shadow:#000;
+      --shadow:rgba(0,0,0,.35);
     }
-    html, body { height:100%; }
+    html,body{height:100%;}
     body{
       margin:0;
       font-family: Tahoma, Verdana, Arial, sans-serif;
       overflow:hidden;
-      /* 배경은 일단 기본 컬러 + 그레인 느낌 */
-      background: linear-gradient(180deg, #b7d7ff 0%, #7fb1ff 45%, #cfe7ff 100%);
+      background:
+        radial-gradient(1200px 600px at 30% 20%, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(900px 500px at 70% 70%, rgba(255,255,255,.18), transparent 60%),
+        linear-gradient(#9fbbe8, #bcd1f2);
+    }
+
+    /* 필름/노이즈(미감 악마용) */
+    .grain{
+      pointer-events:none;
+      position:fixed; inset:0;
+      opacity:.18;
+      mix-blend-mode: overlay;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.06), rgba(255,255,255,.06) 1px, transparent 1px, transparent 3px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,.04), rgba(0,0,0,.04) 1px, transparent 1px, transparent 4px);
     }
 
     /* 데스크톱 영역 */
@@ -28,219 +39,174 @@
       position:relative;
       width:100%;
       height:100%;
+      padding:24px;
+      box-sizing:border-box;
     }
 
-    /* ---- 윈도우 창 기본 ---- */
-    .window{
+    /* 윈도우 XP 스타일 창 */
+    .win{
       position:absolute;
-      width:min(360px, 92vw);
-      background: var(--xp-beige);
+      width:min(520px, 82vw);
+      background:var(--xp-beige);
       border:2px solid var(--xp-border);
-      box-shadow: 4px 4px 0 var(--shadow);
-      user-select:none;
+      box-shadow: 8px 10px 0 rgba(0,0,0,.12), 0 10px 30px var(--shadow);
     }
     .titlebar{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:6px 8px;
+      height:34px;
+      padding:0 8px;
       color:#fff;
-      font-size:14px;
-      background: linear-gradient(var(--xp-blue1), var(--xp-blue2));
-      cursor: grab;
+      background: linear-gradient(180deg, var(--xp-blue2), var(--xp-blue1));
+      border-bottom:2px solid var(--xp-border);
+      user-select:none;
     }
-    .titlebar:active{ cursor:grabbing; }
     .title-left{
-      display:flex; gap:8px; align-items:center;
-      font-weight:700;
+      display:flex; align-items:center; gap:8px;
+      font-weight:700; letter-spacing:.2px;
+      font-size:14px;
     }
     .dot{
-      width:12px;height:12px;border-radius:2px;
-      background:#fff;
-      box-shadow: inset -2px -2px 0 rgba(0,0,0,.25);
+      width:12px;height:12px;border:2px solid #fff;
+      background:rgba(255,255,255,.25);
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,.15);
     }
-    .btns{
-      display:flex; gap:6px;
-    }
+    .btns{display:flex; gap:6px;}
     .btn{
-      width:18px;height:18px;
-      border:1px solid rgba(255,255,255,.6);
-      background: rgba(255,255,255,.25);
-      display:grid; place-items:center;
-      font-size:12px; line-height:1;
+      width:26px;height:20px;
+      border:2px solid var(--xp-border);
+      background:#cfd8e6;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.35);
     }
 
-    .content{
-      padding:12px;
-      font-size:13px;
-      color:#111;
-    }
-    .hint{
-      margin-top:8px;
-      font-size:12px;
-      opacity:.75;
-    }
-
-    /* ---- 말풍선(구인글) ---- */
-    .bubble{
-      position:absolute;
-      max-width:min(320px, 82vw);
+    .content{ padding:10px; }
+    .frame{
       background:#fff;
-      border:2px solid #000;
-      box-shadow: 3px 3px 0 #000;
-      padding:10px 12px;
-      font-size:13px;
+      border:2px solid var(--xp-border);
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,.06);
+      overflow:hidden;
     }
-    .bubble::after{
-      content:"";
-      position:absolute;
-      left:18px;
-      bottom:-14px;
-      width:0;height:0;
-      border:12px solid transparent;
-      border-top-color:#000;
+    .frame img{
+      display:block;
+      width:100%;
+      height:auto;
+      filter: saturate(.95) contrast(.98);
     }
-    .bubble::before{
-      content:"";
-      position:absolute;
-      left:20px;
-      bottom:-11px;
-      width:0;height:0;
-      border:10px solid transparent;
-      border-top-color:#fff;
-    }
-    .bubble-title{
-      font-weight:700;
-      margin-bottom:6px;
-    }
-    .bubble small{ opacity:.7; }
 
-    /* ---- 오른쪽 아래 작업표시줄 느낌 ---- */
+    /* 작은 “파일/툴바” 느낌 라벨 */
+    .meta{
+      margin:8px 0 0;
+      font-size:12px;
+      color:#333;
+      opacity:.85;
+    }
+
+    /* 배치(레퍼 1번처럼 겹치기) */
+    .w1{ left:6vw;  top:8vh;  z-index:5; width:min(540px, 86vw); }
+    .w2{ left:56vw; top:10vh; z-index:6; width:min(420px, 70vw); transform:rotate(.2deg); }
+    .w3{ left:26vw; top:26vh; z-index:4; width:min(520px, 84vw); opacity:.98; }
+    .w4{ left:10vw; top:56vh; z-index:3; width:min(440px, 76vw); transform:rotate(-.2deg); }
+    .w5{ left:58vw; top:54vh; z-index:7; width:min(520px, 82vw); }
+
+    /* 하단 작업표시줄(원하면 유지) */
     .taskbar{
-      position:absolute;
-      left:0; right:0; bottom:0;
-      height:40px;
-      background: linear-gradient(#245edb, #1941a5);
-      border-top:2px solid #0b2a7a;
+      position:fixed; left:0; right:0; bottom:0;
+      height:46px;
+      background: linear-gradient(#2f66c7, #1f4f9a);
+      border-top:2px solid #0b1f4a;
       display:flex; align-items:center;
       padding:0 10px;
+      box-sizing:border-box;
       gap:10px;
-      color:#fff;
-      font-size:13px;
     }
     .start{
-      background: linear-gradient(#3aa23a, #1f7c1f);
-      border:2px solid rgba(0,0,0,.35);
-      padding:5px 10px;
-      border-radius:6px;
+      background: linear-gradient(#55b84a, #2f8f2a);
+      border:2px solid #0b2d08;
+      border-radius:8px;
+      padding:8px 14px;
+      color:#fff;
+      font-weight:700;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.25);
+    }
+    .task{
+      color:#e9f1ff;
+      opacity:.9;
       font-weight:700;
     }
-    .tray{
-      margin-left:auto;
-      opacity:.9;
-    }
-
-    /* 클릭 가능한 링크 스타일 */
-    a { color:#0b57d0; text-decoration:underline; }
   </style>
 </head>
 
 <body>
-  <div class="desktop" id="desktop">
+  <div class="desktop">
 
-    <!-- 구인창(윈도우) -->
-    <div class="window" id="win1" style="top:72px; left:18px;">
-      <div class="titlebar" data-drag="win1">
-        <div class="title-left">
-          <div class="dot"></div>
-          <div>📁 구인 게시판</div>
-        </div>
-        <div class="btns">
-          <div class="btn">—</div>
-          <div class="btn">□</div>
-          <div class="btn">×</div>
-        </div>
+    <!-- 창 1 -->
+    <section class="win w1">
+      <div class="titlebar">
+        <div class="title-left"><span class="dot"></span> 0722_1029_002.mp4</div>
+        <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
       </div>
       <div class="content">
-        <b>JJKR COMMUNITY</b><br>
-        가개장 기간 동안만 운영합니다.<br><br>
-
-        • 게시판: 전체 공개<br>
-        • 컨택: 비밀댓글(관리자+글쓴이만)<br>
-        • 완료 시: 관계란 한 줄 기재<br><br>
-
-        <a href="#" onclick="spawnBubble(); return false;">👉 홈에 구인 말풍선 띄우기(테스트)</a>
-        <div class="hint">* 다음 단계에서 “게시판 링크”랑 “유튜브 플레이어 창”도 붙일 거야.</div>
+        <div class="frame"><img src="shot6.jpg" alt=""></div>
+        <div class="meta">Preview · File · Edit · View · Go · Tools · Window</div>
       </div>
-    </div>
+    </section>
 
-    <!-- 말풍선 예시(처음엔 숨김) -->
-    <div class="bubble" id="bubble1" style="top:220px; left:40px; display:none;">
-      <div class="bubble-title">📢 선관 구인 중</div>
-      <div>닉네임/캐설정 간단히 + 원하는 관계 적고<br>비밀댓글로 컨택 부탁!</div>
-      <div style="margin-top:6px;"><small>※ 이 말풍선은 랜덤 위치로 뜨게 만들 수 있음</small></div>
-    </div>
+    <!-- 창 2 -->
+    <section class="win w2">
+      <div class="titlebar">
+        <div class="title-left"><span class="dot"></span> 0722_1029_006.mp4</div>
+        <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="frame"><img src="shot8.jpg" alt=""></div>
+        <div class="meta">00:17</div>
+      </div>
+    </section>
 
-    <!-- 작업표시줄 -->
-    <div class="taskbar">
-      <div class="start">Start</div>
-      <div>JJKR COMMUNITY</div>
-      <div class="tray" id="clock"></div>
-    </div>
+    <!-- 창 3 (메인 느낌 크게) -->
+    <section class="win w3">
+      <div class="titlebar">
+        <div class="title-left"><span class="dot"></span> 0722_1029_003.mp4</div>
+        <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="frame"><img src="shot4.jpg" alt=""></div>
+        <div class="meta">▶︎ 02:47</div>
+      </div>
+    </section>
+
+    <!-- 창 4 -->
+    <section class="win w4">
+      <div class="titlebar">
+        <div class="title-left"><span class="dot"></span> 0722_1029_004.mp4</div>
+        <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="frame"><img src="shot1.jpg" alt=""></div>
+        <div class="meta">Saved 1 min ago</div>
+      </div>
+    </section>
+
+    <!-- 창 5 -->
+    <section class="win w5">
+      <div class="titlebar">
+        <div class="title-left"><span class="dot"></span> 0722_1029_005.mp4</div>
+        <div class="btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="frame"><img src="shot5.jpg" alt=""></div>
+        <div class="meta">Continue listening?</div>
+      </div>
+    </section>
 
   </div>
 
-  <script>
-    // 시계(오른쪽 아래)
-    function tick(){
-      const d = new Date();
-      const hh = String(d.getHours()).padStart(2,'0');
-      const mm = String(d.getMinutes()).padStart(2,'0');
-      document.getElementById('clock').textContent = hh + ":" + mm;
-    }
-    tick(); setInterval(tick, 1000 * 20);
+  <div class="grain"></div>
 
-    // 말풍선 띄우기(테스트)
-    function spawnBubble(){
-      const b = document.getElementById('bubble1');
-      b.style.display = 'block';
-
-      // 랜덤 위치(화면 밖으로 안 나가게)
-      const maxX = Math.max(10, window.innerWidth - b.offsetWidth - 10);
-      const maxY = Math.max(60, window.innerHeight - 120 - b.offsetHeight); // taskbar 고려
-      const x = Math.floor(Math.random() * maxX);
-      const y = Math.floor(60 + Math.random() * (maxY - 60));
-      b.style.left = x + "px";
-      b.style.top  = y + "px";
-    }
-
-    // 창 드래그(윈도우 느낌)
-    let dragTarget = null;
-    let startX = 0, startY = 0;
-    let origX = 0, origY = 0;
-
-    document.addEventListener('pointerdown', (e) => {
-      const tb = e.target.closest('.titlebar');
-      if(!tb) return;
-      const id = tb.getAttribute('data-drag');
-      dragTarget = document.getElementById(id);
-      startX = e.clientX; startY = e.clientY;
-      const rect = dragTarget.getBoundingClientRect();
-      origX = rect.left; origY = rect.top;
-      dragTarget.setPointerCapture(e.pointerId);
-    });
-
-    document.addEventListener('pointermove', (e) => {
-      if(!dragTarget) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      dragTarget.style.left = (origX + dx) + "px";
-      dragTarget.style.top  = (origY + dy) + "px";
-    });
-
-    document.addEventListener('pointerup', () => {
-      dragTarget = null;
-    });
-  </script>
+  <div class="taskbar">
+    <div class="start">Start</div>
+    <div class="task">JJKR COMMUNITY</div>
+  </div>
 </body>
 </html>

@@ -114,6 +114,26 @@
       font-size: 12px;
       font-weight: 700;
       white-space: nowrap;
+      position: relative; /* ✅ 뱃지 얹기 */
+    }
+
+    /* ✅ 쪽지 뱃지(보드용) */
+    .inbox-badge{
+      position:absolute;
+      top:-6px;
+      right:-6px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.92);
+      font-weight: 900;
+      font-size: 11px;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      line-height: 1;
     }
 
     .content {
@@ -310,6 +330,13 @@
       white-space: pre-wrap;
       color:#222;
     }
+    .msg .actions{
+      margin-top: 10px;
+      display:flex;
+      gap: 8px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
 
     /* taskbar */
     .taskbar {
@@ -364,7 +391,13 @@
         <div class="title-btns">
           <button class="iconbtn" id="btnNick" title="닉네임 변경">닉</button>
           <button class="iconbtn" id="btnAdmin" title="관리자">관리</button>
-          <button class="iconbtn" id="btnInbox" title="쪽지함">쪽지</button>
+
+          <!-- ✅ 쪽지 버튼 + 안읽음 뱃지 -->
+          <button class="iconbtn" id="btnInbox" title="쪽지함">
+            쪽지
+            <span class="inbox-badge" id="inboxBadge">0</span>
+          </button>
+
           <button class="iconbtn" id="btnWrite" title="글쓰기">글</button>
           <button class="iconbtn" id="btnHome" title="홈으로">홈</button>
           <button class="iconbtn" id="btnReload" title="새로고침">↻</button>
@@ -424,33 +457,33 @@
       </div>
     </div>
   </div>
-  
-<!-- ✅ 관리자 모달 -->
-<div class="modal-backdrop" id="adminBg">
-  <div class="modal">
-    <div class="titlebar" style="cursor: default;">
-      <div class="title-left">
-        <div class="dot"></div>
-        <div class="title">관리자 코드</div>
-      </div>
-      <div class="title-btns">
-        <button class="btn" id="closeAdmin" title="닫기"></button>
-      </div>
-    </div>
 
-    <div class="content">
-      <div class="field">
-        <div class="label">코드</div>
-        <input id="adminInput" placeholder="관리자 코드 입력" />
+  <!-- ✅ 관리자 모달 -->
+  <div class="modal-backdrop" id="adminBg">
+    <div class="modal">
+      <div class="titlebar" style="cursor: default;">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">관리자 코드</div>
+        </div>
+        <div class="title-btns">
+          <button class="btn" id="closeAdmin" title="닫기"></button>
+        </div>
       </div>
-      <div class="modal-actions">
-        <button class="pill" id="adminOff">관리 해제</button>
-        <button class="pill" id="adminOn">확인</button>
+
+      <div class="content">
+        <div class="field">
+          <div class="label">코드</div>
+          <input id="adminInput" placeholder="관리자 코드 입력" />
+        </div>
+        <div class="modal-actions">
+          <button class="pill" id="adminOff">관리 해제</button>
+          <button class="pill" id="adminOn">확인</button>
+        </div>
+        <div class="hint" id="adminHint"></div>
       </div>
-      <div class="hint" id="adminHint"></div>
     </div>
   </div>
-</div>
 
   <!-- ✅ 글쓰기/수정 모달 -->
   <div class="modal-backdrop" id="postBg">
@@ -562,40 +595,29 @@
        ✅ Firebase + Board Script
        ========================= -->
   <script type="module">
-    // =========================
-    // 0) Firebase import (CDN)
-    // =========================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import {
       getFirestore, collection, addDoc, getDocs, query, orderBy, limit,
       serverTimestamp, doc, updateDoc, deleteDoc, where
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // =========================
-    // ✅ 1) 여기에 firebaseConfig 붙여넣기
-    // =========================
-   const firebaseConfig = {
-  apiKey: "AIzaSyA1PxEOrwjVi4BOLA13UbFIncTYe6RdYIQ",
-  authDomain: "dear-miracle.firebaseapp.com",
-  projectId: "dear-miracle",
-  storageBucket: "dear-miracle.firebasestorage.app",
-  messagingSenderId: "793139917614",
-  appId: "1:793139917614:web:dec74f65af6a0df1c740bf",
-  measurementId: "G-VF22L8ZR6D"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyA1PxEOrwjVi4BOLA13UbFIncTYe6RdYIQ",
+      authDomain: "dear-miracle.firebaseapp.com",
+      projectId: "dear-miracle",
+      storageBucket: "dear-miracle.firebasestorage.app",
+      messagingSenderId: "793139917614",
+      appId: "1:793139917614:web:dec74f65af6a0df1c740bf",
+      measurementId: "G-VF22L8ZR6D"
+    };
 
-    // ⚠️ 여기 빈 채로 두면 동작 안 함
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // =========================
-    // 1) 공용 유틸
-    // =========================
     const $ = (id)=>document.getElementById(id);
 
     function fmtTime(ts){
       if(!ts) return "";
-      // Firestore Timestamp 형태면 toDate() 가능
       try{
         const d = ts.toDate ? ts.toDate() : new Date(ts);
         const yy = String(d.getFullYear()).slice(2);
@@ -614,11 +636,35 @@
     }
 
     // =========================
-    // 2) 닉네임(비번 없는 세션)
+    // ✅ 닉네임(인덱스와 공유)
     // =========================
     const NICK_KEY = "dm_nick";
+    const READ_KEY_PREFIX = "dm_read_cutoff_"; // dm_read_cutoff_<nick>
+
     function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }
-    function setNick(n){ localStorage.setItem(NICK_KEY, n.trim()); }
+    function setNick(n){ localStorage.setItem(NICK_KEY, (n||"").trim()); }
+
+    function getReadCutoff(nick){
+      const raw = localStorage.getItem(READ_KEY_PREFIX + nick);
+      const ms = raw ? parseInt(raw, 10) : 0;
+      return Number.isFinite(ms) ? ms : 0;
+    }
+    function setReadCutoff(nick, ms){
+      localStorage.setItem(READ_KEY_PREFIX + nick, String(ms));
+    }
+
+    // =========================
+    // ✅ 관리자(마스터키) 모드
+    // =========================
+    const ADMIN_KEY = "dm_is_admin";
+    const ADMIN_MASTER_CODE = "xhltk";
+
+    function isAdmin(){ return localStorage.getItem(ADMIN_KEY) === "1"; }
+    function setAdmin(on){
+      localStorage.setItem(ADMIN_KEY, on ? "1" : "0");
+      updateWhoAmI();
+    }
+    function adminBadge(){ return isAdmin() ? " · 관리자" : ""; }
 
     function updateWhoAmI(){
       const n = getNick();
@@ -627,40 +673,32 @@
       $("dmFrom").value = n || "";
     }
 
-    // 닉 모달 열기/닫기
+    // =========================
+    // ✅ 닉 모달
+    // =========================
     const nickBg = $("nickBg");
     function openNickModal(force=false){
       $("nickHint").textContent = "";
       $("nickInput").value = getNick();
       nickBg.style.display = "flex";
-      if(force) $("closeNick").style.display = "none";
-      else $("closeNick").style.display = "inline-flex";
+      $("closeNick").style.display = force ? "none" : "inline-flex";
       setTimeout(()=> $("nickInput").focus(), 50);
     }
-    function closeNickModal(){
-      nickBg.style.display = "none";
-    }
-
+    function closeNickModal(){ nickBg.style.display = "none"; }
     function ensureNick(){
       const n = getNick();
-      if(!n){
-        openNickModal(true);
-        return false;
-      }
+      if(!n){ openNickModal(true); return false; }
       return true;
     }
 
-    // 닉 저장
     $("nickSave").onclick = async ()=>{
-      const val = $("nickInput").value.trim();
-      if(!val){
-        $("nickHint").textContent = "닉네임을 입력해주세요.";
-        return;
-      }
+      const val = ($("nickInput").value || "").trim();
+      if(!val){ $("nickHint").textContent = "닉네임을 입력해주세요."; return; }
       setNick(val);
       updateWhoAmI();
       closeNickModal();
       await loadPosts();
+      await refreshInboxBadge();
     };
     $("nickCancel").onclick = ()=>{
       if(getNick()) closeNickModal();
@@ -668,74 +706,51 @@
     };
     $("closeNick").onclick = closeNickModal;
     nickBg.addEventListener("click", (e)=>{ if(e.target===nickBg && getNick()) closeNickModal(); });
-    
-// =========================
-// ✅ 관리자(마스터키) 모드
-// =========================
-const ADMIN_KEY = "dm_is_admin";
-
-// ✅ 네가 원하는 "모든 걸 뚫는" 관리자 코드 (원하는 걸로 바꿔도 됨)
-const ADMIN_MASTER_CODE = "xhltk";
-
-function isAdmin(){
-  return localStorage.getItem(ADMIN_KEY) === "1";
-}
-function setAdmin(on){
-  localStorage.setItem(ADMIN_KEY, on ? "1" : "0");
-  updateWhoAmI();
-}
-
-function adminBadge(){
-  return isAdmin() ? " · 관리자" : "";
-}
-// 관리자 모달 열기/닫기
-const adminBg = $("adminBg");
-function openAdminModal(){
-  $("adminHint").textContent = "";
-  $("adminInput").value = "";
-  adminBg.style.display = "flex";
-  setTimeout(()=> $("adminInput").focus(), 50);
-}
-function closeAdminModal(){
-  adminBg.style.display = "none";
-}
-
-$("btnAdmin").onclick = openAdminModal;
-$("closeAdmin").onclick = closeAdminModal;
-adminBg.addEventListener("click", (e)=>{ if(e.target===adminBg) closeAdminModal(); });
-
-$("adminOn").onclick = ()=>{
-  const code = ($("adminInput").value || "").trim();
-  if(code === ADMIN_MASTER_CODE){
-    setAdmin(true);
-    $("adminHint").textContent = "관리자 모드가 활성화되었습니다.";
-    closeAdminModal();
-    loadPosts();
-  }else{
-    $("adminHint").textContent = "관리자 코드가 올바르지 않습니다.";
-  }
-};
-
-$("adminOff").onclick = ()=>{
-  setAdmin(false);
-  $("adminHint").textContent = "관리자 모드가 해제되었습니다.";
-  closeAdminModal();
-  loadPosts();
-};
 
     // =========================
-    // 3) 네비 버튼
+    // ✅ 관리자 모달
+    // =========================
+    const adminBg = $("adminBg");
+    function openAdminModal(){
+      $("adminHint").textContent = "";
+      $("adminInput").value = "";
+      adminBg.style.display = "flex";
+      setTimeout(()=> $("adminInput").focus(), 50);
+    }
+    function closeAdminModal(){ adminBg.style.display = "none"; }
+
+    $("btnAdmin").onclick = openAdminModal;
+    $("closeAdmin").onclick = closeAdminModal;
+    adminBg.addEventListener("click", (e)=>{ if(e.target===adminBg) closeAdminModal(); });
+
+    $("adminOn").onclick = ()=>{
+      const code = ($("adminInput").value || "").trim();
+      if(code === ADMIN_MASTER_CODE){
+        setAdmin(true);
+        closeAdminModal();
+        loadPosts();
+      }else{
+        $("adminHint").textContent = "관리자 코드가 올바르지 않습니다.";
+      }
+    };
+    $("adminOff").onclick = ()=>{
+      setAdmin(false);
+      closeAdminModal();
+      loadPosts();
+    };
+
+    // =========================
+    // ✅ 네비
     // =========================
     const goHome = ()=> location.href = "index.html";
     $("homeBtn").onclick = goHome;
     $("btnHome").onclick = goHome;
     $("btnReload").onclick = ()=> location.reload();
-
     $("btnNick").onclick = ()=> openNickModal(false);
     $("changeNickBtn").onclick = ()=> openNickModal(false);
 
     // =========================
-    // 4) 글쓰기/수정 모달
+    // ✅ 글쓰기/수정 모달
     // =========================
     const postBg = $("postBg");
     let editingPostId = null;
@@ -769,22 +784,15 @@ $("adminOff").onclick = ()=>{
     $("closePost").onclick = closePostModal;
     postBg.addEventListener("click", (e)=>{ if(e.target===postBg) closePostModal(); });
 
-    // 등록/수정 저장
     $("postSubmit").onclick = async ()=>{
       if(!ensureNick()) return;
 
-      const title = $("inpTitle").value.trim();
-      const content = $("inpContent").value.trim();
+      const title = ($("inpTitle").value || "").trim();
+      const content = ($("inpContent").value || "").trim();
       const author = getNick();
 
-      if(!title){
-        $("postHint").textContent = "제목을 입력해주세요.";
-        return;
-      }
-      if(!content){
-        $("postHint").textContent = "내용을 입력해주세요.";
-        return;
-      }
+      if(!title){ $("postHint").textContent = "제목을 입력해주세요."; return; }
+      if(!content){ $("postHint").textContent = "내용을 입력해주세요."; return; }
 
       try{
         $("postSubmit").disabled = true;
@@ -792,18 +800,13 @@ $("adminOff").onclick = ()=>{
 
         if(editingPostId){
           const ref = doc(db, "posts", editingPostId);
-          await updateDoc(ref, {
-            title, content,
-            updatedAt: serverTimestamp()
-          });
-          $("postHint").textContent = "수정되었습니다.";
+          await updateDoc(ref, { title, content, updatedAt: serverTimestamp() });
         }else{
           await addDoc(collection(db, "posts"), {
             title, content, author,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           });
-          $("postHint").textContent = "등록되었습니다.";
         }
 
         closePostModal();
@@ -817,7 +820,7 @@ $("adminOff").onclick = ()=>{
     };
 
     // =========================
-    // 5) 쪽지 보내기 모달
+    // ✅ 쪽지 보내기 모달
     // =========================
     const dmBg = $("dmBg");
     let dmTargetNick = "";
@@ -825,8 +828,9 @@ $("adminOff").onclick = ()=>{
 
     function openDMModal(toNick, postId=""){
       if(!ensureNick()) return;
-      dmTargetNick = toNick || "";
-      dmTargetPostId = postId || "";
+      dmTargetNick = (toNick || "").trim();
+      dmTargetPostId = (postId || "").trim();
+
       $("dmHint").textContent = "";
       $("dmTo").value = dmTargetNick;
       $("dmFrom").value = getNick();
@@ -842,22 +846,14 @@ $("adminOff").onclick = ()=>{
 
     $("dmSend").onclick = async ()=>{
       if(!ensureNick()) return;
+
       const from = getNick();
       const to = (dmTargetNick || "").trim();
-      const body = $("dmBody").value.trim();
+      const body = ($("dmBody").value || "").trim();
 
-      if(!to){
-        $("dmHint").textContent = "받는 사람이 없습니다.";
-        return;
-      }
-      if(to === from){
-        $("dmHint").textContent = "자기 자신에게는 보낼 수 없습니다.";
-        return;
-      }
-      if(!body){
-        $("dmHint").textContent = "내용을 입력해주세요.";
-        return;
-      }
+      if(!to){ $("dmHint").textContent = "받는 사람이 없습니다."; return; }
+      if(to === from){ $("dmHint").textContent = "자기 자신에게는 보낼 수 없습니다."; return; }
+      if(!body){ $("dmHint").textContent = "내용을 입력해주세요."; return; }
 
       try{
         $("dmSend").disabled = true;
@@ -869,8 +865,9 @@ $("adminOff").onclick = ()=>{
           createdAt: serverTimestamp()
         });
 
-        $("dmHint").textContent = "전송되었습니다.";
         closeDMModal();
+        // ✅ 보내고 나면 뱃지/쪽지함 상태도 갱신
+        await refreshInboxBadge();
       }catch(err){
         console.error(err);
         $("dmHint").textContent = "전송에 실패했습니다.";
@@ -880,7 +877,53 @@ $("adminOff").onclick = ()=>{
     };
 
     // =========================
-    // 6) 쪽지함 모달
+    // ✅ 안읽음 뱃지 로직(인덱스와 동일 철학)
+    // =========================
+    function updateInboxBadge(n){
+      const b = $("inboxBadge");
+      const num = Math.max(0, Number(n)||0);
+      b.textContent = String(num);
+      b.style.display = num > 0 ? "inline-flex" : "none";
+    }
+
+    function markReadNow(){
+      const me = getNick();
+      if(!me) return;
+      setReadCutoff(me, Date.now());
+      updateInboxBadge(0);
+    }
+
+    async function refreshInboxBadge(){
+      const me = getNick();
+      if(!me){ updateInboxBadge(0); return; }
+
+      const cutoffMs = getReadCutoff(me);
+
+      try{
+        const qy = query(
+          collection(db, "messages"),
+          where("to", "==", me),
+          orderBy("createdAt", "desc"),
+          limit(50)
+        );
+        const snap = await getDocs(qy);
+
+        let cnt = 0;
+        snap.forEach(docu=>{
+          const m = docu.data();
+          const t = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          if(t && t > cutoffMs) cnt += 1;
+        });
+
+        updateInboxBadge(cnt);
+      }catch(err){
+        console.error(err);
+        // 실패해도 조용히(뱃지 유지)
+      }
+    }
+
+    // =========================
+    // ✅ 쪽지함 모달 (받은함: 답장 버튼 + 안읽음 표시)
     // =========================
     const inboxBg = $("inboxBg");
     let inboxMode = "recv"; // recv | sent
@@ -890,6 +933,8 @@ $("adminOff").onclick = ()=>{
       inboxBg.style.display = "flex";
       setInboxTab("recv");
       loadInbox();
+      // ✅ 열었으면 "지금까지는 읽음"
+      markReadNow();
     }
     function closeInbox(){ inboxBg.style.display = "none"; }
 
@@ -910,7 +955,10 @@ $("adminOff").onclick = ()=>{
 
     async function loadInbox(){
       if(!ensureNick()) return;
+
       const me = getNick();
+      const cutoffMs = getReadCutoff(me);
+
       $("inboxHint").textContent = "불러오는 중…";
       $("inboxList").innerHTML = "";
 
@@ -933,24 +981,34 @@ $("adminOff").onclick = ()=>{
         }
 
         const snap = await getDocs(qy);
+
         if(snap.empty){
           $("inboxHint").textContent = inboxMode==="recv" ? "받은 쪽지가 없습니다." : "보낸 쪽지가 없습니다.";
           return;
         }
 
         const frag = document.createDocumentFragment();
+
         snap.forEach(docu=>{
           const m = docu.data();
+
           const div = document.createElement("div");
           div.className = "msg";
+
           const top = document.createElement("div");
           top.className = "top";
+
           const who = inboxMode==="recv"
             ? `보낸 사람: ${m.from || "-"}`
             : `받는 사람: ${m.to || "-"}`;
+
           const t = fmtTime(m.createdAt);
+
+          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          const isUnread = inboxMode==="recv" && whenMs && whenMs > cutoffMs;
+
           const ref = m.postId ? `연결글: ${m.postId}` : "";
-          top.textContent = `${who} · ${t}${ref ? " · " + ref : ""}`;
+          top.textContent = `${who} · ${t}${isUnread ? " · 안읽음" : ""}${ref ? " · " + ref : ""}`;
 
           const body = document.createElement("div");
           body.className = "body";
@@ -958,11 +1016,30 @@ $("adminOff").onclick = ()=>{
 
           div.appendChild(top);
           div.appendChild(body);
+
+          // ✅ 받은함은 "답장" 버튼
+          if(inboxMode === "recv"){
+            const actions = document.createElement("div");
+            actions.className = "actions";
+
+            const reply = document.createElement("button");
+            reply.className = "mini";
+            reply.textContent = "답장";
+            reply.onclick = ()=> openDMModal(m.from || "", m.postId || "");
+
+            actions.appendChild(reply);
+            div.appendChild(actions);
+          }
+
           frag.appendChild(div);
         });
 
         $("inboxList").appendChild(frag);
         $("inboxHint").textContent = "";
+
+        // ✅ 목록 확인했으니 읽음 처리 + 뱃지 갱신
+        markReadNow();
+        await refreshInboxBadge();
       }catch(err){
         console.error(err);
         $("inboxHint").textContent = "쪽지함을 불러오지 못했습니다.";
@@ -970,14 +1047,13 @@ $("adminOff").onclick = ()=>{
     }
 
     // =========================
-    // 7) 게시글 목록 로드/렌더
+    // ✅ 게시글 목록 로드/렌더
     // =========================
     async function loadPosts(){
       setStatus("불러오는 중…");
       $("list").innerHTML = "";
 
       try{
-        // 최신순 50개
         const qy = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50));
         const snap = await getDocs(qy);
 
@@ -987,6 +1063,8 @@ $("adminOff").onclick = ()=>{
         }
 
         const me = getNick();
+        const admin = isAdmin();
+
         const frag = document.createDocumentFragment();
 
         snap.forEach(docu=>{
@@ -1013,16 +1091,16 @@ $("adminOff").onclick = ()=>{
           const actions = document.createElement("div");
           actions.className = "card-actions";
 
-          // 쪽지 보내기
           const btnDM = document.createElement("button");
           btnDM.className = "mini";
           btnDM.textContent = "쪽지 보내기";
           btnDM.onclick = ()=> openDMModal(author, id);
-
-          // 내 글이면 수정/삭제 버튼 노출
           actions.appendChild(btnDM);
 
-          if(me && author === me){
+          // ✅ 내 글이거나 관리자면 수정/삭제 가능
+          const canManage = (me && author === me) || admin;
+
+          if(canManage){
             const btnEdit = document.createElement("button");
             btnEdit.className = "mini ghost";
             btnEdit.textContent = "수정";
@@ -1064,7 +1142,7 @@ $("adminOff").onclick = ()=>{
     }
 
     // =========================
-    // 8) 창 드래그 + 앞으로 가져오기
+    // ✅ 창 드래그 + 앞으로
     // =========================
     const wins = Array.from(document.querySelectorAll(".win"));
     let topZ = 100;
@@ -1089,7 +1167,6 @@ $("adminOff").onclick = ()=>{
       let startX = 0, startY = 0, winX = 0, winY = 0;
 
       bar.addEventListener("pointerdown", (e) => {
-        // 버튼 클릭은 드래그로 안 잡히게
         const t = e.target;
         if(t && (t.tagName === "BUTTON" || t.classList.contains("btn") || t.classList.contains("iconbtn"))) return;
 
@@ -1113,7 +1190,7 @@ $("adminOff").onclick = ()=>{
         let ny = winY + dy;
 
         const maxX = window.innerWidth - 60;
-        const maxY = window.innerHeight - 120; // taskbar 고려
+        const maxY = window.innerHeight - 120;
         nx = Math.min(Math.max(nx, -40), maxX);
         ny = Math.min(Math.max(ny, -20), maxY);
 
@@ -1126,7 +1203,7 @@ $("adminOff").onclick = ()=>{
     });
 
     // =========================
-    // 9) 시계
+    // ✅ 시계
     // =========================
     const clock = $("clock");
     function tick(){
@@ -1136,16 +1213,19 @@ $("adminOff").onclick = ()=>{
     tick(); setInterval(tick, 10000);
 
     // =========================
-    // 10) 초기 실행
+    // ✅ 초기 실행
     // =========================
     updateWhoAmI();
 
-    // 닉 없으면 강제 모달
     if(!getNick()){
       openNickModal(true);
     }else{
       await loadPosts();
+      await refreshInboxBadge();
     }
+
+    // ✅ 뱃지 15초마다 갱신(가벼운 폴링)
+    setInterval(()=>{ refreshInboxBadge(); }, 15000);
   </script>
 </body>
 </html>

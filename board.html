@@ -367,12 +367,15 @@
 
     document.getElementById("btnReload").onclick = ()=> location.reload();
 
-    // ✅ 여기다 기존 게시판 "목록 불러오기/글쓰기 저장" Firebase 스크립트를 붙여넣기
-    // - list 엘리먼트 id="list"
-    // - status 엘리먼트 id="status"
-    // - 등록 버튼 id="submitBtn"
-    // - 입력: inpTitle, inpAuthor, inpContent
-    // - 등록 성공 후 closeModal() 호출하면 UX 깔끔함
+    const firebaseConfig = {
+  apiKey: "AIzaSyA1PxEOrwjVi4BOLA13UbFIncTYe6RdYIQ",
+  authDomain: "dear-miracle.firebaseapp.com",
+  projectId: "dear-miracle",
+  storageBucket: "dear-miracle.firebasestorage.app",
+  messagingSenderId: "793139917614",
+  appId: "1:793139917614:web:dec74f65af6a0df1c740bf",
+  measurementId: "G-VF22L8ZR6D"
+};
   </script>
 </body>
 </html>

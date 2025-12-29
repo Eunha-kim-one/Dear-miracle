@@ -879,15 +879,38 @@
       return;
     }
 
-    const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10"];
-    let y = 0.03;
-    order.forEach((k, i) => {
-      const w = byKey[k];
-      if(!w) return;
-      place(w, (i % 2 ? 0.08 : 0.02), y);
-      y += 0.07;
-    });
+    // --- 모바일(작은 화면) 레이아웃: 화면 폭을 "꽉" 쓰도록 1~2열 자동 ---
+const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10"];
+
+// 화면이 아주 좁으면 1열(가운데), 그 외는 2열(좌/우 퍼짐)
+const cols = (vw < 460) ? 1 : 2;
+
+// 2열일 때 좌/우 위치(가운데 기준으로 퍼짐)
+const xLeft  = 0.06;
+const xRight = 0.56;
+
+let row = 0;
+
+order.forEach((k, i) => {
+  const win = byKey[k];
+  if(!win) return;
+
+  // 현재 윈도우가 반쪽 폭보다 크면(=2열에 못 들어가면) 강제로 중앙 1열 처리
+  const halfW = (window.innerWidth - 36) / 2; // 대충 여백 고려
+  const tooWideFor2Col = (cols === 2 && win.offsetWidth > halfW);
+
+  let col = (cols === 1 || tooWideFor2Col) ? 0 : (i % 2);
+
+  // row 계산: 2열이면 2개마다 한 줄, 1열이면 계속 증가
+  if(cols === 1 || tooWideFor2Col){
+    row += 1;
+    place(win, 0.50, 0.05 + (row - 1) * 0.12);
+  }else{
+    const y01 = 0.06 + Math.floor(i / 2) * 0.14;
+    place(win, col === 0 ? xLeft : xRight, y01);
   }
+});
+
 
   wins.forEach(win => {
     const initZ = parseInt(win.getAttribute("data-z") || "0", 10);

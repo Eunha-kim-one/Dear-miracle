@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dear Miracle</title>
+  <title>JJKR COMMUNITY</title>
+
   <style>
-    /* ====== 기존 디자인 그대로 유지 ====== */
     * { box-sizing: border-box; }
     html, body { height: 100%; }
     body {
@@ -14,17 +14,22 @@
       overflow: hidden;
       background: #000;
     }
+
     :root{
       --titlebar-top: #f7f7f7;
       --titlebar-bot: #e9e9e9;
+
       --frame: rgba(255,255,255,0.60);
       --glass: rgba(255,255,255,0.40);
       --border: rgba(0,0,0,0.30);
+
       --shadow: 0 12px 30px rgba(0,0,0,0.22);
       --shadow-strong: 0 18px 46px rgba(0,0,0,0.30);
+
       --text: #1b1b1b;
       --muted: rgba(0,0,0,0.55);
     }
+
     .wallpaper {
       position: fixed;
       inset: 0;
@@ -35,6 +40,7 @@
       filter: saturate(0.95) contrast(0.98);
       transform: scale(1.02);
     }
+
     .wallpaper::after{
       content:"";
       position:absolute;
@@ -46,7 +52,13 @@
         linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
       pointer-events:none;
     }
-    .desk { position: fixed; inset: 0; pointer-events: none; }
+
+    .desk {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
     .win {
       position: absolute;
       width: 420px;
@@ -55,27 +67,103 @@
       box-shadow: var(--shadow);
       border: 1px solid var(--border);
       background: var(--frame);
+
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+
       pointer-events: auto;
       user-select: none;
     }
+    .win.is-front { box-shadow: var(--shadow-strong); }
+
     .titlebar {
       height: 30px;
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 0 8px 0 10px;
+
       background: linear-gradient(to bottom, var(--titlebar-top), var(--titlebar-bot));
       border-bottom: 1px solid rgba(0,0,0,0.18);
-      color: #222; cursor: grab;
+
+      color: #222;
+      text-shadow: none;
+      cursor: grab;
     }
     .titlebar:active { cursor: grabbing; }
-    .title-left { display: flex; align-items: center; gap: 8px; }
+
+    .title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
     .dot {
-      width: 10px; height: 10px; border-radius: 2px;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
       border: 1px solid rgba(0,0,0,0.22);
       background: rgba(255,255,255,0.75);
+      flex: 0 0 auto;
     }
-    .content { background: var(--glass); padding: 8px; }
+
+    .title {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 280px;
+    }
+
+    .title-btns {
+      display: flex;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    .btn {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+      border: 1px solid rgba(0,0,0,0.35);
+      background: rgba(255,255,255,0.85);
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
+    }
+
+    .content {
+      background: var(--glass);
+      padding: 8px;
+    }
+
+    .media {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.35);
+    }
+    .media img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    .meta {
+      margin-top: 6px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 4px 6px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+
     .note {
       padding: 10px 10px 12px;
       border-radius: 8px;
@@ -89,32 +177,100 @@
     .note ul { margin: 8px 0 0 18px; padding:0; }
     .note li { margin: 3px 0; }
     .note a { color:#0b57d0; text-decoration: underline; }
+
     .taskbar {
-      position: fixed; left:0; right:0; bottom:0;
-      height: 44px; display:flex; align-items:center;
-      gap:10px; padding:0 12px;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+
       background: rgba(255,255,255,0.55);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
       border-top: 1px solid rgba(0,0,0,0.18);
     }
+
     .start {
-      height: 30px; padding: 0 12px; border-radius: 8px;
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 8px;
       border: 1px solid rgba(0,0,0,0.22);
       background: rgba(255,255,255,0.80);
-      font-weight: 700; font-size: 12px;
-      display:flex; align-items:center; cursor:pointer;
+      font-weight: 700;
+      font-size: 12px;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      cursor: pointer;
     }
-    .brand { font-size: 13px; color: #222; font-weight: 700; }
-    .clock { font-size: 12px; color: rgba(0,0,0,0.65); }
+
+    .brand {
+      font-size: 13px;
+      color: #222;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .spacer { flex: 1; }
+    .clock {
+      font-size: 12px;
+      color: rgba(0,0,0,0.65);
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 480px){
+      .win { width: 340px; }
+      .title { max-width: 220px; }
+    }
+
+    /* ===== YouTube playlist window ===== */
+    .yt-window { width: 280px; }      /* ✅ 살짝 키움 */
+    .yt-window .content { padding: 0; background: #fff; }
+    .yt-window iframe {
+      width: 100%;
+      height: 190px;                  /* ✅ 살짝 키움(음소거 버튼 뜨게) */
+      border: 0;
+      display: block;
+    }
+
+    .yt-window .titlebar .buttons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .yt-window .sound-btn {
+      font-size: 12px;
+      padding: 2px 8px;
+      border: 1px solid rgba(0,0,0,0.25);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.85);
+      cursor: pointer;
+    }
+    .yt-window .sound-btn:active { transform: translateY(1px); }
   </style>
 </head>
 
 <body>
   <div class="wallpaper"></div>
+
   <div class="desk" id="desk">
-    <div class="win is-front" style="left:18px; top:18px; width:260px;">
+
+    <!-- 0) 공지/게시판 안내 창 -->
+    <div class="win is-front" style="left:18px; top:18px; width: 260px;" data-z="50">
       <div class="titlebar">
-        <div class="title-left"><div class="dot"></div><div class="title">구인 게시판</div></div>
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">구인 게시판</div>
+        </div>
+        <div class="title-btns">
+          <div class="btn"></div><div class="btn"></div><div class="btn"></div>
+        </div>
       </div>
       <div class="content">
         <div class="note">
@@ -126,57 +282,209 @@
             <li>완료 시 관계란 한 줄 기재</li>
           </ul>
           <div style="margin-top:10px;">
-            👉 <a href="#" id="loadPosts">게시판 들어가기</a>
+            👉 <a href="#" onclick="alert('다음 단계에서 게시판 링크 연결!'); return false;">게시판 들어가기(준비중)</a>
           </div>
-          <ul id="postList" style="margin-top:10px;"></ul>
         </div>
       </div>
     </div>
+
+    <!-- 1 -->
+    <div class="win" style="left:270px; top:70px;" data-z="10">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_002.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img01.jpg" alt=""></div>
+        <div class="meta"><span>Preview · File · Edit · View</span><span>—</span></div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="win" style="left:510px; top:92px; width: 360px;" data-z="11">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_006.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img02.jpg" alt=""></div>
+        <div class="meta"><span>00:17</span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="win" style="left:210px; top:250px; width: 520px;" data-z="12">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_003.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img03.jpg" alt=""></div>
+        <div class="meta"><span>▶ 02:47</span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 4 (✅ 오류 수정 완료) -->
+    <div class="win" style="left:40px; top:520px; width: 440px;" data-z="13">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_004.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img04.jpg" alt=""></div>
+        <div class="meta"><span>Saved 1 min ago</span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="win" style="left:380px; top:520px; width: 520px;" data-z="14">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_005.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img05.jpg" alt=""></div>
+        <div class="meta"><span>Continue listening?</span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="win" style="left:760px; top:290px; width: 260px;" data-z="15">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_007.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img06.jpg" alt=""></div>
+        <div class="meta"><span> </span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="win" style="left:860px; top:70px; width: 260px;" data-z="16">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_008.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img07.jpg" alt=""></div>
+        <div class="meta"><span> </span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="win" style="left:880px; top:430px; width: 320px;" data-z="17">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_009.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img08.jpg" alt=""></div>
+        <div class="meta"><span> </span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="win" style="left:620px; top:360px; width: 360px;" data-z="18">
+      <div class="titlebar">
+        <div class="title-left"><div class="dot"></div><div class="title">0722_1029_010.mp4</div></div>
+        <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
+      </div>
+      <div class="content">
+        <div class="media"><img src="img09.jpg" alt=""></div>
+        <div class="meta"><span> </span><span> </span></div>
+      </div>
+    </div>
+
+    <!-- 🎵 YouTube Playlist Window (✅ win 클래스라 드래그/앞으로오기 같이 됨) -->
+    <div class="win yt-window" id="ytWin" style="top:260px; left:40px;" data-z="9">
+      <div class="titlebar" id="ytDrag">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">0722_1029_011.mp4</div>
+        </div>
+        <div class="title-btns">
+          <button class="sound-btn" id="ytSoundBtn">🔇</button>
+          <div class="btn"></div><div class="btn"></div><div class="btn"></div>
+        </div>
+      </div>
+
+      <div class="content">
+        <iframe
+          id="ytFrame"
+          src="https://www.youtube.com/embed/videoseries?list=PLUE3Cb-ZSnOeLPneQRPY76iI9h9NCQMp6&autoplay=1&loop=1&mute=1"
+          allow="autoplay; encrypted-media"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
   </div>
 
   <div class="taskbar">
     <div class="start" onclick="alert('Start 메뉴는 다음 단계에서!')">Start</div>
     <div class="brand">JJKR COMMUNITY</div>
+    <div class="spacer"></div>
     <div class="clock" id="clock">--:--</div>
   </div>
 
-  <!-- ===== Firebase 연결 (script 태그 방식) ===== -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+  <script>
+    // ===== 창 드래그 + 앞으로 가져오기 (win 전부 포함) =====
+    const wins = Array.from(document.querySelectorAll(".win"));
+    let topZ = 100;
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyA...너의키...",
-      authDomain: "dear-miracle.firebaseapp.com",
-      projectId: "dear-miracle",
-      storageBucket: "dear-miracle.appspot.com",
-      messagingSenderId: "793139917614",
-      appId: "1:793139917614:web:cb67465afa0d16f740bf",
-      measurementId: "G-VF22L8ZR6D"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // ===== Firestore 게시글 불러오기 =====
-    async function loadPosts() {
-      const postList = document.getElementById("postList");
-      postList.innerHTML = "<li>불러오는 중...</li>";
-
-      const querySnapshot = await getDocs(collection(db, "posts"));
-      postList.innerHTML = "";
-
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const li = document.createElement("li");
-        li.textContent = `${data.title} — ${data.author}`;
-        postList.appendChild(li);
-      });
+    function bringToFront(win){
+      topZ += 1;
+      win.style.zIndex = topZ;
+      wins.forEach(w => w.classList.remove("is-front"));
+      win.classList.add("is-front");
     }
 
-    document.getElementById("loadPosts").addEventListener("click", (e) => {
-      e.preventDefault();
-      loadPosts();
+    wins.forEach(win => {
+      const initZ = parseInt(win.getAttribute("data-z") || "0", 10);
+      win.style.zIndex = 50 + initZ;
+
+      win.addEventListener("pointerdown", () => bringToFront(win));
+
+      const bar = win.querySelector(".titlebar");
+      let dragging = false;
+      let startX = 0, startY = 0;
+      let winX = 0, winY = 0;
+
+      bar.addEventListener("pointerdown", (e) => {
+        bringToFront(win);
+        dragging = true;
+        bar.setPointerCapture(e.pointerId);
+
+        const rect = win.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        winX = rect.left;
+        winY = rect.top;
+
+        e.preventDefault();
+      });
+
+      bar.addEventListener("pointermove", (e) => {
+        if(!dragging) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        let nx = winX + dx;
+        let ny = winY + dy;
+
+        const maxX = window.innerWidth - 60;
+        const maxY = window.innerHeight - 120;
+        nx = Math.min(Math.max(nx, -40), maxX);
+        ny = Math.min(Math.max(ny, -20), maxY);
+
+        win.style.left = nx + "px";
+        win.style.top  = ny + "px";
+      });
+
+      bar.addEventListener("pointerup", () => dragging = false);
+      bar.addEventListener("pointercancel", () => dragging = false);
     });
 
     // ===== 시계 =====
@@ -185,10 +493,25 @@
       const d = new Date();
       const hh = String(d.getHours()).padStart(2,"0");
       const mm = String(d.getMinutes()).padStart(2,"0");
-      clock.textContent = `${hh}:${mm}`;
+      clock.textContent = ${hh}:${mm};
     }
     tick();
-    setInterval(tick, 10000);
+    setInterval(tick, 1000 * 10);
+
+    // ===== 유튜브 소리 버튼(iframe src 토글) =====
+    const ytFrame = document.getElementById("ytFrame");
+    const soundBtn = document.getElementById("ytSoundBtn");
+    let isMuted = true;
+
+    soundBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const url = new URL(ytFrame.src);
+      url.searchParams.set("mute", isMuted ? "0" : "1");
+      ytFrame.src = url.toString();
+
+      isMuted = !isMuted;
+      soundBtn.textContent = isMuted ? "🔇" : "🔊";
+    });
   </script>
 </body>
-</html>
+  </html>

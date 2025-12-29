@@ -618,25 +618,46 @@
       오른쪽 하단 메신저를<br>
       이용해주세요.
 
-      <div style="margin-top:12px;">
-        <button
-          onclick="document.getElementById('dmFabBtn').click()"
-          style="
-            width:100%;
-            padding:10px;
-            border-radius:8px;
-            border:1px solid rgba(0,0,0,0.25);
-            background:rgba(0,0,0,0.75);
-            color:#fff;
-            font-weight:700;
-            cursor:pointer;
-          ">
-          메신저 열기
-        </button>
-      </div>
-    </div>
-  </div>
+     <div style="display:flex; gap:10px; margin-top:12px;">
+
+  <!-- 메신저 버튼 -->
+  <button
+    onclick="document.getElementById('dmFabBtn').click()"
+    style="
+      flex:1;
+      padding:12px 14px;
+      border-radius:10px;
+      border:1px solid rgba(0,0,0,0.3);
+      background:rgba(0,0,0,0.8);
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    ">
+    💬 컨택 확인하기
+  </button>
+
+  <!-- 게시판 버튼 -->
+  <button
+    onclick="location.href='board.html'"
+    style="
+      padding:12px 14px;
+      border-radius:10px;
+      border:1px solid rgba(0,0,0,0.25);
+      background:rgba(255,255,255,0.9);
+      color:#111;
+      font-weight:700;
+      cursor:pointer;
+      white-space:nowrap;
+    ">
+    📄 게시판
+  </button>
+
 </div>
+
 
     <!-- 1 -->
     <div class="win" data-key="w1" style="left:270px; top:70px;" data-z="10">

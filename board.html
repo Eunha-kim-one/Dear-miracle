@@ -116,7 +116,19 @@
       white-space: nowrap;
       position: relative; /* ✅ 뱃지 얹기 */
     }
-
+    
+<style>
+@media (max-width: 768px){
+  #dmWin{
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+  }
+  
     /* ✅ 쪽지 뱃지(보드용) */
     .inbox-badge{
       position:absolute;

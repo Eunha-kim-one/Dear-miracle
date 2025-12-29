@@ -24,10 +24,13 @@
       --shadow: 0 12px 30px rgba(0,0,0,0.22);
       --shadow-strong: 0 18px 46px rgba(0,0,0,0.30);
       --muted: rgba(0,0,0,0.55);
+      --danger: rgba(180, 40, 40, 0.95);
+      --ok: rgba(0, 120, 80, 0.95);
     }
 
     .wallpaper {
-      position: fixed; inset: 0;
+      position: fixed;
+      inset: 0;
       background-image: url("bg.png");
       background-size: cover;
       background-position: center;
@@ -36,7 +39,9 @@
       transform: scale(1.02);
     }
     .wallpaper::after{
-      content:""; position:absolute; inset:0;
+      content:"";
+      position:absolute;
+      inset:0;
       background:
         radial-gradient(1200px 600px at 20% 15%, rgba(255,255,255,0.30), transparent 60%),
         radial-gradient(900px 500px at 80% 25%, rgba(255,255,255,0.22), transparent 55%),
@@ -63,7 +68,9 @@
 
     .titlebar {
       height: 30px;
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 0 8px 0 10px;
       background: linear-gradient(to bottom, var(--titlebar-top), var(--titlebar-bot));
       border-bottom: 1px solid rgba(0,0,0,0.18);
@@ -71,6 +78,7 @@
       cursor: grab;
     }
     .titlebar:active { cursor: grabbing; }
+
     .title-left { display:flex; align-items:center; gap:8px; min-width:0; }
     .dot {
       width: 10px; height: 10px; border-radius: 2px;
@@ -80,153 +88,264 @@
     }
     .title {
       font-size: 12px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       max-width: 520px;
     }
-    .title-btns { display:flex; gap:6px; flex:0 0 auto; }
-    .btn {
+    .title-btns { display:flex; gap:6px; flex:0 0 auto; align-items:center; }
+
+    .btn, .iconbtn {
       width: 16px; height: 16px; border-radius: 2px;
       border: 1px solid rgba(0,0,0,0.35);
       background: rgba(255,255,255,0.85);
       box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
       cursor: pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 0;
+    }
+    .iconbtn{
+      width: auto;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
-    .content { background: var(--glass); padding: 10px; height: calc(100% - 30px); display:flex; flex-direction:column; }
+    .content {
+      background: var(--glass);
+      padding: 10px;
+      user-select: text;
+    }
 
+    /* ===== Board UI ===== */
     .board-top {
       display:flex; align-items:center; justify-content:space-between;
-      gap: 10px; margin-bottom: 10px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
     .board-top .desc {
       font-size: 12px;
-      color: rgba(0,0,0,0.65);
+      color: rgba(0,0,0,0.55);
       background: rgba(255,255,255,0.55);
       border: 1px solid rgba(0,0,0,0.12);
       padding: 6px 8px;
       border-radius: 8px;
       flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.35;
     }
-    .board-top .actions { display:flex; gap:8px; align-items:center; }
+    .board-top .actions { display:flex; gap:8px; flex-wrap:wrap; }
     .pill {
-      height: 30px; padding: 0 12px; border-radius: 8px;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 10px;
       border: 1px solid rgba(0,0,0,0.22);
-      background: rgba(255,255,255,0.90);
-      font-weight: 700; font-size: 12px; cursor: pointer;
+      background: rgba(255,255,255,0.88);
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
     }
-    .pill.ghost { background: rgba(255,255,255,0.70); }
-    .pill.danger { background: rgba(255,240,240,0.85); }
+    .pill:active{ transform: translateY(1px); }
+    .pill.danger{
+      border-color: rgba(180,40,40,0.35);
+      background: rgba(255,255,255,0.88);
+      color: #7b0e0e;
+    }
+
+    .subline{
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .whoami{
+      font-size: 12px;
+      color: rgba(0,0,0,0.65);
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.12);
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
 
     .list {
-      display: grid; gap: 10px;
+      display: grid;
+      gap: 10px;
+      max-height: 520px;
       overflow: auto;
       padding-right: 4px;
-      flex: 1;
     }
-    .empty { font-size: 12px; color: var(--muted); }
 
     .card {
       background: rgba(255,255,255,0.62);
       border: 1px solid rgba(0,0,0,0.14);
-      border-radius: 10px;
-      padding: 10px;
+      border-radius: 12px;
+      padding: 12px;
     }
-    .card h3 { margin: 0 0 6px; font-size: 14px; }
+    .card h3 { margin: 0 0 8px; font-size: 15px; }
     .meta {
       display:flex; gap:10px; flex-wrap:wrap;
-      font-size: 11px; color: rgba(0,0,0,0.55);
-      margin-bottom: 8px;
-      align-items:center;
-      justify-content:space-between;
+      font-size: 11px; color: rgba(0,0,0,0.58);
+      margin-bottom: 10px;
     }
-    .meta-left { display:flex; gap:10px; flex-wrap:wrap; }
-    .meta-right { display:flex; gap:6px; align-items:center; }
-    .text { font-size: 13px; line-height: 1.45; white-space: pre-wrap; }
+    .text { font-size: 13px; line-height: 1.45; white-space: pre-wrap; color:#222; }
 
-    .comments {
+    .card-actions{
       margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(0,0,0,0.10);
-      display: grid;
+      display:flex;
       gap: 8px;
+      flex-wrap: wrap;
+      align-items:center;
     }
-    .c-item{
-      background: rgba(255,255,255,0.52);
-      border: 1px solid rgba(0,0,0,0.10);
+    .mini {
+      height: 30px;
+      padding: 0 10px;
       border-radius: 10px;
-      padding: 8px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.90);
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
     }
-    .c-meta{
-      display:flex; gap:10px; flex-wrap:wrap;
-      font-size: 11px; color: rgba(0,0,0,0.55);
-      margin-bottom: 6px;
+    .mini.ghost{
+      background: rgba(255,255,255,0.65);
+      font-weight: 700;
     }
-    .c-text{ font-size: 13px; white-space: pre-wrap; line-height: 1.4; }
-    .lock{ font-weight:700; }
+    .mini.danger{
+      border-color: rgba(180,40,40,0.35);
+      color: #7b0e0e;
+    }
 
-    .comment-form{
-      display:grid; gap:8px;
-      background: rgba(255,255,255,0.45);
-      border: 1px dashed rgba(0,0,0,0.14);
-      border-radius: 10px;
-      padding: 10px;
+    .status{
+      margin-top:10px;
+      font-size: 11px;
+      color: rgba(0,0,0,0.60);
     }
-    .row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-    .row input, .row textarea{
-      border-radius: 10px;
-      border: 1px solid rgba(0,0,0,0.18);
-      background: rgba(255,255,255,0.92);
-      padding: 10px;
-      font-size: 14px;
-      outline: none;
-      flex: 1;
-      min-width: 180px;
-    }
-    .row textarea{ width:100%; min-height: 90px; resize: vertical; flex: 1 1 100%; }
 
+    /* ===== Modal Backdrop ===== */
     .modal-backdrop{
-      position: fixed; inset: 0; background: rgba(0,0,0,0.35);
-      display:none; align-items:center; justify-content:center;
-      padding: 16px; z-index: 9999;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.35);
+      display:none;
+      align-items:center; justify-content:center;
+      padding: 14px;
+      z-index: 9999;
+      pointer-events: auto;
     }
     .modal{
-      width: min(720px, 100%);
+      width: min(760px, 100%);
       background: rgba(255,255,255,0.78);
       border: 1px solid rgba(0,0,0,0.18);
-      border-radius: 12px; overflow:hidden;
+      border-radius: 12px;
+      overflow:hidden;
       box-shadow: 0 20px 60px rgba(0,0,0,0.35);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
-    .modal .content{ background: transparent; height:auto; }
-    .field{ display:grid; gap:6px; margin-bottom: 10px; }
-    .field input, .field textarea{
-      width:100%; border-radius: 10px;
-      border: 1px solid rgba(0,0,0,0.18);
-      background: rgba(255,255,255,0.92);
-      padding: 10px; font-size: 14px; outline: none;
-    }
-    .field textarea{ min-height: 160px; resize: vertical; }
-    .hint { font-size: 11px; color: rgba(0,0,0,0.55); }
-    .modal-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top: 10px; }
+    .modal .content{ background: transparent; }
 
+    .field{ display:grid; gap:6px; margin-bottom: 10px; }
+    .label{ font-size: 12px; color: rgba(0,0,0,0.65); font-weight: 800; }
+    .field input, .field textarea{
+      width:100%;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.90);
+      padding: 11px 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    .field textarea{ min-height: 170px; resize: vertical; line-height: 1.45; }
+    .field input[readonly]{
+      background: rgba(255,255,255,0.70);
+      color: rgba(0,0,0,0.65);
+    }
+    .modal-actions{
+      display:flex; justify-content:flex-end; gap:8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .hint{
+      margin-top:8px;
+      font-size: 11px;
+      color: rgba(0,0,0,0.60);
+      line-height: 1.35;
+    }
+
+    /* ===== Inbox list ===== */
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .tab{
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.75);
+      font-weight: 900;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .tab.active{
+      background: rgba(255,255,255,0.92);
+    }
+    .msg{
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(0,0,0,0.14);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .msg .top{
+      display:flex; gap:10px; flex-wrap:wrap;
+      font-size: 11px;
+      color: rgba(0,0,0,0.60);
+      margin-bottom: 8px;
+    }
+    .msg .body{
+      font-size: 13px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      color:#222;
+    }
+
+    /* taskbar */
     .taskbar {
-      position: fixed; left: 0; right: 0; bottom: 0;
-      height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 12px;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
       background: rgba(255,255,255,0.55);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-top: 1px solid rgba(0,0,0,0.18);
+      pointer-events: auto;
     }
-    .brand { font-size: 13px; color:#222; font-weight:700; letter-spacing:0.2px; }
+    .brand { font-size: 13px; color:#222; font-weight:900; letter-spacing:0.2px; }
     .spacer { flex:1; }
     .clock { font-size: 12px; color: rgba(0,0,0,0.65); font-variant-numeric: tabular-nums; }
 
-    @media (max-width: 820px){
-      .board-top .desc { max-width: 52vw; }
+    /* ===== Responsive ===== */
+    @media (max-width: 980px){
+      #boardWin{ width: calc(100vw - 24px) !important; left: 12px !important; }
+      .list{ max-height: calc(100vh - 220px); }
+    }
+    @media (max-width: 560px){
+      .titlebar{ height: 36px; }
+      .title{ font-size: 13px; max-width: 260px; }
+      .pill{ height: 38px; font-size: 13px; }
+      .mini{ height: 36px; font-size: 13px; }
+      .whoami{ font-size: 13px; }
+      .card h3{ font-size: 16px; }
+      .text{ font-size: 14px; }
+      .field input, .field textarea{ font-size: 15px; }
+      .modal{ width: 100%; }
+      .list{ max-height: calc(100vh - 240px); }
     }
   </style>
 </head>
@@ -235,73 +354,172 @@
   <div class="wallpaper"></div>
 
   <div class="desk" id="desk">
-    <div class="win is-front" id="boardWin" data-z="50">
+    <!-- ✅ 게시판 윈도우 -->
+    <div class="win is-front" id="boardWin" style="left:60px; top:50px; width: 920px;" data-z="50">
       <div class="titlebar">
         <div class="title-left">
           <div class="dot"></div>
-          <div class="title" id="winTitle">구인 게시판</div>
+          <div class="title">구인 게시판</div>
         </div>
         <div class="title-btns">
-          <div class="btn" id="btnHome" title="홈으로"></div>
-          <div class="btn" id="btnWrite" title="글쓰기"></div>
-          <div class="btn" id="btnReload" title="새로고침"></div>
-          <div class="btn" id="btnAdmin" title="관리자"></div>
+          <button class="iconbtn" id="btnNick" title="닉네임 변경">닉</button>
+          <button class="iconbtn" id="btnInbox" title="쪽지함">쪽지</button>
+          <button class="iconbtn" id="btnWrite" title="글쓰기">글</button>
+          <button class="iconbtn" id="btnHome" title="홈으로">홈</button>
+          <button class="iconbtn" id="btnReload" title="새로고침">↻</button>
         </div>
       </div>
 
       <div class="content">
         <div class="board-top">
-          <div class="desc" id="descText">전체 공개 · 컨택은 비밀댓글(글쓴이/운영자 열람)로 진행 예정</div>
+          <div class="desc">
+            전체 공개 · 컨택은 <b>쪽지</b>로 진행합니다. (비밀댓글 대신 DM)
+          </div>
           <div class="actions">
-            <button class="pill ghost" id="adminState">ADMIN: OFF</button>
             <button class="pill" id="homeBtn">← 홈으로</button>
+            <button class="pill" id="inboxBtn">내 쪽지함</button>
             <button class="pill" id="writeBtn">글쓰기</button>
           </div>
         </div>
 
-        <div class="list" id="list">
-          <div class="empty">불러오는 중입니다…</div>
+        <div class="subline">
+          <div class="whoami" id="whoami">닉네임: (불러오는 중...)</div>
+          <button class="pill" id="changeNickBtn">닉네임 바꾸기</button>
         </div>
 
-        <div style="margin-top:10px; font-size:11px; color:rgba(0,0,0,0.55);" id="status"></div>
+        <div class="list" id="list"></div>
+        <div class="status" id="status"></div>
       </div>
     </div>
   </div>
 
-  <div class="modal-backdrop" id="modalBg">
+  <!-- ✅ 닉네임 로그인 모달 -->
+  <div class="modal-backdrop" id="nickBg">
     <div class="modal">
       <div class="titlebar" style="cursor: default;">
         <div class="title-left">
           <div class="dot"></div>
-          <div class="title" id="modalTitle">새 글</div>
+          <div class="title">닉네임 입력</div>
         </div>
         <div class="title-btns">
-          <div class="btn" id="closeModal"></div>
+          <button class="btn" id="closeNick" title="닫기"></button>
         </div>
       </div>
 
       <div class="content">
         <div class="field">
-          <input id="inpTitle" placeholder="제목" />
+          <div class="label">닉네임</div>
+          <input id="nickInput" placeholder="예: DearMiracle / ㅇㅇ / 닉네임" maxlength="30" />
         </div>
-        <div class="field">
-          <input id="inpAuthor" placeholder="작성자(닉네임)" />
+        <div class="modal-actions">
+          <button class="pill" id="nickCancel">취소</button>
+          <button class="pill" id="nickSave">확인</button>
         </div>
-        <div class="field">
-          <textarea id="inpContent" placeholder="내용"></textarea>
+        <div class="hint">
+          비밀번호 없이 <b>닉네임만</b> 사용합니다.<br/>
+          (가개장용 · 간편 모드)
         </div>
+        <div class="hint" id="nickHint"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 글쓰기/수정 모달 -->
+  <div class="modal-backdrop" id="postBg">
+    <div class="modal">
+      <div class="titlebar" style="cursor: default;">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title" id="postModalTitle">새 글</div>
+        </div>
+        <div class="title-btns">
+          <button class="btn" id="closePost" title="닫기"></button>
+        </div>
+      </div>
+
+      <div class="content">
         <div class="field">
-          <input id="inpPass" placeholder="글 비밀번호 (수정/삭제/비밀댓글 열람용)" type="password" />
-          <div class="hint">* 비밀번호는 저장 후 복구할 수 없습니다. 반드시 기억해 주세요.</div>
+          <div class="label">제목</div>
+          <input id="inpTitle" placeholder="예: 관계 구합니다 / 선관계 구인 / 00페어" maxlength="80" />
+        </div>
+
+        <div class="field">
+          <div class="label">작성자(자동)</div>
+          <input id="inpAuthor" readonly />
+        </div>
+
+        <div class="field">
+          <div class="label">내용</div>
+          <textarea id="inpContent" placeholder="구인 내용 / 조건 / 기간 / 연락 방식 등을 적어주세요."></textarea>
         </div>
 
         <div class="modal-actions">
-          <button class="pill" id="cancelBtn">취소</button>
-          <button class="pill" id="submitBtn">등록</button>
+          <button class="pill" id="postCancel">취소</button>
+          <button class="pill" id="postSubmit">등록</button>
         </div>
-        <div class="hint" id="modalHint" style="margin-top:8px;">
-          * 현재는 “누구나 글 작성 가능” 상태입니다.
+        <div class="hint" id="postHint"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 쪽지 보내기 모달 -->
+  <div class="modal-backdrop" id="dmBg">
+    <div class="modal">
+      <div class="titlebar" style="cursor: default;">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">쪽지 보내기</div>
         </div>
+        <div class="title-btns">
+          <button class="btn" id="closeDM" title="닫기"></button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="field">
+          <div class="label">받는 사람</div>
+          <input id="dmTo" readonly />
+        </div>
+        <div class="field">
+          <div class="label">보내는 사람</div>
+          <input id="dmFrom" readonly />
+        </div>
+        <div class="field">
+          <div class="label">내용</div>
+          <textarea id="dmBody" placeholder="컨택 내용을 적어주세요."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button class="pill" id="dmCancel">취소</button>
+          <button class="pill" id="dmSend">보내기</button>
+        </div>
+        <div class="hint" id="dmHint"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 쪽지함 모달 -->
+  <div class="modal-backdrop" id="inboxBg">
+    <div class="modal">
+      <div class="titlebar" style="cursor: default;">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">내 쪽지함</div>
+        </div>
+        <div class="title-btns">
+          <button class="btn" id="closeInbox" title="닫기"></button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="tabs">
+          <button class="tab active" id="tabRecv">받은 쪽지</button>
+          <button class="tab" id="tabSent">보낸 쪽지</button>
+          <button class="pill" id="inboxRefresh">새로고침</button>
+        </div>
+
+        <div id="inboxList" style="max-height: 520px; overflow:auto; padding-right:4px;"></div>
+        <div class="hint" id="inboxHint"></div>
       </div>
     </div>
   </div>
@@ -312,89 +530,487 @@
     <div class="clock" id="clock">--:--</div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <!-- =========================
+       ✅ Firebase + Board Script
+       ========================= -->
+  <script type="module">
+    // =========================
+    // 0) Firebase import (CDN)
+    // =========================
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore, collection, addDoc, getDocs, query, orderBy, limit,
+      serverTimestamp, doc, updateDoc, deleteDoc, where
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  <script>
-    const ADMIN_KEY = "CHANGE_ME_TO_SOMETHING_STRONG";
-    const LS_ADMIN = "dm_admin_on";
-    const LS_UNLOCK_PREFIX = "dm_unlock_";
+    // =========================
+    // ✅ 1) 여기에 firebaseConfig 붙여넣기
+    // =========================
+   const firebaseConfig = {
+  apiKey: "AIzaSyA1PxEOrwjVi4BOLA13UbFIncTYe6RdYIQ",
+  authDomain: "dear-miracle.firebaseapp.com",
+  projectId: "dear-miracle",
+  storageBucket: "dear-miracle.firebasestorage.app",
+  messagingSenderId: "793139917614",
+  appId: "1:793139917614:web:dec74f65af6a0df1c740bf",
+  measurementId: "G-VF22L8ZR6D"
+};
 
+    // ⚠️ 여기 빈 채로 두면 동작 안 함
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // =========================
+    // 1) 공용 유틸
+    // =========================
     const $ = (id)=>document.getElementById(id);
 
-    function esc(s=''){
-      return String(s).replace(/[&<>"']/g, m => (
-        { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m]
-      ));
-    }
-    function whenText(ts){
-      if (!ts) return "방금";
-      const d = ts.toDate ? ts.toDate() : ts;
-      return d.toLocaleDateString() + " " + d.toLocaleTimeString();
-    }
-    async function sha256Hex(str){
-      const enc = new TextEncoder().encode(str);
-      const buf = await crypto.subtle.digest("SHA-256", enc);
-      const arr = Array.from(new Uint8Array(buf));
-      return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
-    }
-    function randSalt(len=10){
-      const chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      let s="";
-      for(let i=0;i<len;i++) s += chars[Math.floor(Math.random()*chars.length)];
-      return s;
-    }
-    function isAdmin(){
-      return localStorage.getItem(LS_ADMIN)==="1";
-    }
-    function setAdmin(on){
-      localStorage.setItem(LS_ADMIN, on ? "1" : "0");
-      renderAdminState();
-      location.reload();
-    }
-    function isUnlocked(postId){
-      if (isAdmin()) return true;
-      return localStorage.getItem(LS_UNLOCK_PREFIX+postId)==="1";
-    }
-    function setUnlocked(postId, on){
-      localStorage.setItem(LS_UNLOCK_PREFIX+postId, on ? "1" : "0");
+    function fmtTime(ts){
+      if(!ts) return "";
+      // Firestore Timestamp 형태면 toDate() 가능
+      try{
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        const yy = String(d.getFullYear()).slice(2);
+        const mm = String(d.getMonth()+1).padStart(2,"0");
+        const dd = String(d.getDate()).padStart(2,"0");
+        const hh = String(d.getHours()).padStart(2,"0");
+        const mi = String(d.getMinutes()).padStart(2,"0");
+        return `${yy}.${mm}.${dd} ${hh}:${mi}`;
+      }catch{
+        return "";
+      }
     }
 
-    function layoutBoardWin(){
-      const win = $("boardWin");
-      const taskbarH = 44;
-      const pad = 12;
-
-      const w = Math.min(920, window.innerWidth - pad*2);
-      const h = Math.min(640, window.innerHeight - taskbarH - pad*2);
-
-      const left = Math.max(pad, Math.round((window.innerWidth - w)/2));
-      const top  = Math.max(pad, Math.round((window.innerHeight - taskbarH - h)/2));
-
-      win.style.width = w + "px";
-      win.style.height = h + "px";
-      win.style.left = left + "px";
-      win.style.top = top + "px";
+    function setStatus(msg){
+      $("status").textContent = msg || "";
     }
-    window.addEventListener("resize", layoutBoardWin);
 
+    // =========================
+    // 2) 닉네임(비번 없는 세션)
+    // =========================
+    const NICK_KEY = "dm_nick";
+    function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }
+    function setNick(n){ localStorage.setItem(NICK_KEY, n.trim()); }
+
+    function updateWhoAmI(){
+      const n = getNick();
+      $("whoami").textContent = n ? `닉네임: ${n}` : "닉네임: (없음)";
+      $("inpAuthor").value = n || "";
+      $("dmFrom").value = n || "";
+    }
+
+    // 닉 모달 열기/닫기
+    const nickBg = $("nickBg");
+    function openNickModal(force=false){
+      $("nickHint").textContent = "";
+      $("nickInput").value = getNick();
+      nickBg.style.display = "flex";
+      if(force) $("closeNick").style.display = "none";
+      else $("closeNick").style.display = "inline-flex";
+      setTimeout(()=> $("nickInput").focus(), 50);
+    }
+    function closeNickModal(){
+      nickBg.style.display = "none";
+    }
+
+    function ensureNick(){
+      const n = getNick();
+      if(!n){
+        openNickModal(true);
+        return false;
+      }
+      return true;
+    }
+
+    // 닉 저장
+    $("nickSave").onclick = async ()=>{
+      const val = $("nickInput").value.trim();
+      if(!val){
+        $("nickHint").textContent = "닉네임을 입력해주세요.";
+        return;
+      }
+      setNick(val);
+      updateWhoAmI();
+      closeNickModal();
+      await loadPosts();
+    };
+    $("nickCancel").onclick = ()=>{
+      if(getNick()) closeNickModal();
+      else $("nickHint").textContent = "닉네임을 입력해야 진행할 수 있습니다.";
+    };
+    $("closeNick").onclick = closeNickModal;
+    nickBg.addEventListener("click", (e)=>{ if(e.target===nickBg && getNick()) closeNickModal(); });
+
+    // =========================
+    // 3) 네비 버튼
+    // =========================
+    const goHome = ()=> location.href = "index.html";
+    $("homeBtn").onclick = goHome;
+    $("btnHome").onclick = goHome;
+    $("btnReload").onclick = ()=> location.reload();
+
+    $("btnNick").onclick = ()=> openNickModal(false);
+    $("changeNickBtn").onclick = ()=> openNickModal(false);
+
+    // =========================
+    // 4) 글쓰기/수정 모달
+    // =========================
+    const postBg = $("postBg");
+    let editingPostId = null;
+
+    function openPostModal(mode="new", post=null){
+      if(!ensureNick()) return;
+
+      $("postHint").textContent = "";
+      if(mode==="edit" && post){
+        editingPostId = post.id;
+        $("postModalTitle").textContent = "글 수정";
+        $("postSubmit").textContent = "수정";
+        $("inpTitle").value = post.title || "";
+        $("inpContent").value = post.content || "";
+      }else{
+        editingPostId = null;
+        $("postModalTitle").textContent = "새 글";
+        $("postSubmit").textContent = "등록";
+        $("inpTitle").value = "";
+        $("inpContent").value = "";
+      }
+      $("inpAuthor").value = getNick();
+      postBg.style.display = "flex";
+      setTimeout(()=> $("inpTitle").focus(), 50);
+    }
+    function closePostModal(){ postBg.style.display = "none"; }
+
+    $("writeBtn").onclick = ()=> openPostModal("new");
+    $("btnWrite").onclick = ()=> openPostModal("new");
+    $("postCancel").onclick = closePostModal;
+    $("closePost").onclick = closePostModal;
+    postBg.addEventListener("click", (e)=>{ if(e.target===postBg) closePostModal(); });
+
+    // 등록/수정 저장
+    $("postSubmit").onclick = async ()=>{
+      if(!ensureNick()) return;
+
+      const title = $("inpTitle").value.trim();
+      const content = $("inpContent").value.trim();
+      const author = getNick();
+
+      if(!title){
+        $("postHint").textContent = "제목을 입력해주세요.";
+        return;
+      }
+      if(!content){
+        $("postHint").textContent = "내용을 입력해주세요.";
+        return;
+      }
+
+      try{
+        $("postSubmit").disabled = true;
+        $("postHint").textContent = "저장 중…";
+
+        if(editingPostId){
+          const ref = doc(db, "posts", editingPostId);
+          await updateDoc(ref, {
+            title, content,
+            updatedAt: serverTimestamp()
+          });
+          $("postHint").textContent = "수정되었습니다.";
+        }else{
+          await addDoc(collection(db, "posts"), {
+            title, content, author,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+          $("postHint").textContent = "등록되었습니다.";
+        }
+
+        closePostModal();
+        await loadPosts();
+      }catch(err){
+        console.error(err);
+        $("postHint").textContent = "저장에 실패했습니다.";
+      }finally{
+        $("postSubmit").disabled = false;
+      }
+    };
+
+    // =========================
+    // 5) 쪽지 보내기 모달
+    // =========================
+    const dmBg = $("dmBg");
+    let dmTargetNick = "";
+    let dmTargetPostId = "";
+
+    function openDMModal(toNick, postId=""){
+      if(!ensureNick()) return;
+      dmTargetNick = toNick || "";
+      dmTargetPostId = postId || "";
+      $("dmHint").textContent = "";
+      $("dmTo").value = dmTargetNick;
+      $("dmFrom").value = getNick();
+      $("dmBody").value = "";
+      dmBg.style.display = "flex";
+      setTimeout(()=> $("dmBody").focus(), 50);
+    }
+    function closeDMModal(){ dmBg.style.display = "none"; }
+
+    $("closeDM").onclick = closeDMModal;
+    $("dmCancel").onclick = closeDMModal;
+    dmBg.addEventListener("click", (e)=>{ if(e.target===dmBg) closeDMModal(); });
+
+    $("dmSend").onclick = async ()=>{
+      if(!ensureNick()) return;
+      const from = getNick();
+      const to = (dmTargetNick || "").trim();
+      const body = $("dmBody").value.trim();
+
+      if(!to){
+        $("dmHint").textContent = "받는 사람이 없습니다.";
+        return;
+      }
+      if(to === from){
+        $("dmHint").textContent = "자기 자신에게는 보낼 수 없습니다.";
+        return;
+      }
+      if(!body){
+        $("dmHint").textContent = "내용을 입력해주세요.";
+        return;
+      }
+
+      try{
+        $("dmSend").disabled = true;
+        $("dmHint").textContent = "전송 중…";
+
+        await addDoc(collection(db, "messages"), {
+          from, to, body,
+          postId: dmTargetPostId || "",
+          createdAt: serverTimestamp()
+        });
+
+        $("dmHint").textContent = "전송되었습니다.";
+        closeDMModal();
+      }catch(err){
+        console.error(err);
+        $("dmHint").textContent = "전송에 실패했습니다.";
+      }finally{
+        $("dmSend").disabled = false;
+      }
+    };
+
+    // =========================
+    // 6) 쪽지함 모달
+    // =========================
+    const inboxBg = $("inboxBg");
+    let inboxMode = "recv"; // recv | sent
+
+    function openInbox(){
+      if(!ensureNick()) return;
+      inboxBg.style.display = "flex";
+      setInboxTab("recv");
+      loadInbox();
+    }
+    function closeInbox(){ inboxBg.style.display = "none"; }
+
+    function setInboxTab(mode){
+      inboxMode = mode;
+      $("tabRecv").classList.toggle("active", mode==="recv");
+      $("tabSent").classList.toggle("active", mode==="sent");
+    }
+
+    $("inboxBtn").onclick = openInbox;
+    $("btnInbox").onclick = openInbox;
+    $("closeInbox").onclick = closeInbox;
+    inboxBg.addEventListener("click", (e)=>{ if(e.target===inboxBg) closeInbox(); });
+
+    $("tabRecv").onclick = ()=>{ setInboxTab("recv"); loadInbox(); };
+    $("tabSent").onclick = ()=>{ setInboxTab("sent"); loadInbox(); };
+    $("inboxRefresh").onclick = ()=> loadInbox();
+
+    async function loadInbox(){
+      if(!ensureNick()) return;
+      const me = getNick();
+      $("inboxHint").textContent = "불러오는 중…";
+      $("inboxList").innerHTML = "";
+
+      try{
+        let qy;
+        if(inboxMode === "recv"){
+          qy = query(
+            collection(db, "messages"),
+            where("to", "==", me),
+            orderBy("createdAt", "desc"),
+            limit(50)
+          );
+        }else{
+          qy = query(
+            collection(db, "messages"),
+            where("from", "==", me),
+            orderBy("createdAt", "desc"),
+            limit(50)
+          );
+        }
+
+        const snap = await getDocs(qy);
+        if(snap.empty){
+          $("inboxHint").textContent = inboxMode==="recv" ? "받은 쪽지가 없습니다." : "보낸 쪽지가 없습니다.";
+          return;
+        }
+
+        const frag = document.createDocumentFragment();
+        snap.forEach(docu=>{
+          const m = docu.data();
+          const div = document.createElement("div");
+          div.className = "msg";
+          const top = document.createElement("div");
+          top.className = "top";
+          const who = inboxMode==="recv"
+            ? `보낸 사람: ${m.from || "-"}`
+            : `받는 사람: ${m.to || "-"}`;
+          const t = fmtTime(m.createdAt);
+          const ref = m.postId ? `연결글: ${m.postId}` : "";
+          top.textContent = `${who} · ${t}${ref ? " · " + ref : ""}`;
+
+          const body = document.createElement("div");
+          body.className = "body";
+          body.textContent = m.body || "";
+
+          div.appendChild(top);
+          div.appendChild(body);
+          frag.appendChild(div);
+        });
+
+        $("inboxList").appendChild(frag);
+        $("inboxHint").textContent = "";
+      }catch(err){
+        console.error(err);
+        $("inboxHint").textContent = "쪽지함을 불러오지 못했습니다.";
+      }
+    }
+
+    // =========================
+    // 7) 게시글 목록 로드/렌더
+    // =========================
+    async function loadPosts(){
+      setStatus("불러오는 중…");
+      $("list").innerHTML = "";
+
+      try{
+        // 최신순 50개
+        const qy = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50));
+        const snap = await getDocs(qy);
+
+        if(snap.empty){
+          setStatus("아직 글이 없습니다. 첫 글을 작성해보세요.");
+          return;
+        }
+
+        const me = getNick();
+        const frag = document.createDocumentFragment();
+
+        snap.forEach(docu=>{
+          const p = docu.data();
+          const id = docu.id;
+
+          const card = document.createElement("div");
+          card.className = "card";
+
+          const h = document.createElement("h3");
+          h.textContent = p.title || "(제목 없음)";
+
+          const meta = document.createElement("div");
+          meta.className = "meta";
+          const author = p.author || "-";
+          const created = fmtTime(p.createdAt);
+          const updated = fmtTime(p.updatedAt);
+          meta.textContent = `작성자: ${author} · 작성: ${created}${updated ? " · 수정: " + updated : ""}`;
+
+          const text = document.createElement("div");
+          text.className = "text";
+          text.textContent = p.content || "";
+
+          const actions = document.createElement("div");
+          actions.className = "card-actions";
+
+          // 쪽지 보내기
+          const btnDM = document.createElement("button");
+          btnDM.className = "mini";
+          btnDM.textContent = "쪽지 보내기";
+          btnDM.onclick = ()=> openDMModal(author, id);
+
+          // 내 글이면 수정/삭제 버튼 노출
+          actions.appendChild(btnDM);
+
+          if(me && author === me){
+            const btnEdit = document.createElement("button");
+            btnEdit.className = "mini ghost";
+            btnEdit.textContent = "수정";
+            btnEdit.onclick = ()=> openPostModal("edit", { id, title: p.title, content: p.content });
+
+            const btnDel = document.createElement("button");
+            btnDel.className = "mini danger";
+            btnDel.textContent = "삭제";
+            btnDel.onclick = async ()=>{
+              const ok = confirm("정말 삭제하시겠습니까?");
+              if(!ok) return;
+              try{
+                await deleteDoc(doc(db, "posts", id));
+                await loadPosts();
+              }catch(err){
+                console.error(err);
+                alert("삭제에 실패했습니다.");
+              }
+            };
+
+            actions.appendChild(btnEdit);
+            actions.appendChild(btnDel);
+          }
+
+          card.appendChild(h);
+          card.appendChild(meta);
+          card.appendChild(text);
+          card.appendChild(actions);
+
+          frag.appendChild(card);
+        });
+
+        $("list").appendChild(frag);
+        setStatus("");
+      }catch(err){
+        console.error(err);
+        setStatus("게시글을 불러오지 못했습니다.");
+      }
+    }
+
+    // =========================
+    // 8) 창 드래그 + 앞으로 가져오기
+    // =========================
     const wins = Array.from(document.querySelectorAll(".win"));
     let topZ = 100;
+
     function bringToFront(win){
       topZ += 1;
       win.style.zIndex = topZ;
       wins.forEach(w => w.classList.remove("is-front"));
       win.classList.add("is-front");
     }
+
     wins.forEach(win => {
       const initZ = parseInt(win.getAttribute("data-z") || "0", 10);
       win.style.zIndex = 50 + initZ;
+
       win.addEventListener("pointerdown", () => bringToFront(win));
 
       const bar = win.querySelector(".titlebar");
-      let dragging = false, startX=0, startY=0, winX=0, winY=0;
+      if(!bar) return;
+
+      let dragging = false;
+      let startX = 0, startY = 0, winX = 0, winY = 0;
 
       bar.addEventListener("pointerdown", (e) => {
+        // 버튼 클릭은 드래그로 안 잡히게
+        const t = e.target;
+        if(t && (t.tagName === "BUTTON" || t.classList.contains("btn") || t.classList.contains("iconbtn"))) return;
+
         bringToFront(win);
         dragging = true;
         bar.setPointerCapture(e.pointerId);
@@ -407,6 +1023,7 @@
 
       bar.addEventListener("pointermove", (e) => {
         if(!dragging) return;
+
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
 
@@ -414,7 +1031,7 @@
         let ny = winY + dy;
 
         const maxX = window.innerWidth - 60;
-        const maxY = window.innerHeight - 120;
+        const maxY = window.innerHeight - 120; // taskbar 고려
         nx = Math.min(Math.max(nx, -40), maxX);
         ny = Math.min(Math.max(ny, -20), maxY);
 
@@ -426,387 +1043,27 @@
       bar.addEventListener("pointercancel", () => dragging = false);
     });
 
+    // =========================
+    // 9) 시계
+    // =========================
     const clock = $("clock");
     function tick(){
       const d = new Date();
       clock.textContent = String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
     }
-    tick(); setInterval(tick, 10_000);
+    tick(); setInterval(tick, 10000);
 
-    const modalBg = $("modalBg");
-    const openModal = ()=> modalBg.style.display = "flex";
-    const closeModal = ()=> modalBg.style.display = "none";
+    // =========================
+    // 10) 초기 실행
+    // =========================
+    updateWhoAmI();
 
-    $("btnWrite").onclick = ()=> startCreate();
-    $("writeBtn").onclick = ()=> startCreate();
-    $("closeModal").onclick = closeModal;
-    $("cancelBtn").onclick = closeModal;
-    modalBg.addEventListener("click", (e)=>{ if(e.target === modalBg) closeModal(); });
-
-    const goHome = ()=> location.href = "index.html";
-    $("homeBtn").onclick = goHome;
-    $("btnHome").onclick = goHome;
-    $("btnReload").onclick = ()=> location.reload();
-
-    $("btnAdmin").onclick = toggleAdminPrompt;
-    $("adminState").onclick = toggleAdminPrompt;
-
-    function renderAdminState(){
-      $("adminState").textContent = "ADMIN: " + (isAdmin() ? "ON" : "OFF");
+    // 닉 없으면 강제 모달
+    if(!getNick()){
+      openNickModal(true);
+    }else{
+      await loadPosts();
     }
-    function toggleAdminPrompt(){
-      if (isAdmin()){
-        if(confirm("관리자 모드를 해제하시겠습니까?")) setAdmin(false);
-        return;
-      }
-      const key = prompt("관리자 키를 입력해 주세요.");
-      if (!key) return;
-      if (key === ADMIN_KEY){
-        setAdmin(true);
-      } else {
-        alert("관리자 키가 올바르지 않습니다.");
-      }
-    }
-
-    let mode = "create";
-    let editPostId = null;
-
-    function clearModal(){
-      $("inpTitle").value = "";
-      $("inpAuthor").value = "";
-      $("inpContent").value = "";
-      $("inpPass").value = "";
-      editPostId = null;
-    }
-    function startCreate(){
-      mode = "create";
-      $("modalTitle").textContent = "새 글";
-      $("submitBtn").textContent = "등록";
-      clearModal();
-      openModal();
-    }
-    function startEdit(post){
-      mode = "edit";
-      editPostId = post.id;
-      $("modalTitle").textContent = "글 수정";
-      $("submitBtn").textContent = "수정 저장";
-
-      $("inpTitle").value = post.title || "";
-      $("inpAuthor").value = post.author || "";
-      $("inpContent").value = post.content || "";
-      $("inpPass").value = "";
-      openModal();
-    }
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyA1PxE0rwjVi4BOLA13UbFIncTYe6RdYIQ",
-      authDomain: "dear-miracle.firebaseapp.com",
-      projectId: "dear-miracle",
-      storageBucket: "dear-miracle.appspot.com",
-      messagingSenderId: "793139917614",
-      appId: "1:793139917614:web:dec74f65af6a0df1c740bf"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    const list = $("list");
-    const status = $("status");
-    let unsub = null;
-
-    function postDocToObj(doc){
-      const d = doc.data();
-      return {
-        id: doc.id,
-        title: d.title,
-        author: d.author,
-        content: d.content,
-        createdAt: d.createdAt,
-        updatedAt: d.updatedAt,
-        salt: d.salt,
-        passHash: d.passHash
-      };
-    }
-
-    function renderPostCard(post){
-      const card = document.createElement("div");
-      card.className = "card";
-      const when = post.createdAt ? whenText(post.createdAt) : "방금";
-      const updated = post.updatedAt ? (" · 수정 " + whenText(post.updatedAt)) : "";
-      const unlocked = isUnlocked(post.id);
-
-      card.innerHTML = `
-        <h3>${esc(post.title || "")}</h3>
-        <div class="meta">
-          <div class="meta-left">
-            <span>작성자: ${esc(post.author || "")}</span>
-            <span>작성 ${esc(when)}${esc(updated)}</span>
-            <span style="opacity:.55">id: ${esc(post.id)}</span>
-            ${unlocked ? `<span class="lock">🔓 열람 가능</span>` : `<span class="lock">🔒 잠김</span>`}
-          </div>
-          <div class="meta-right">
-            <button class="pill ghost" data-act="unlock">잠금 해제</button>
-            <button class="pill" data-act="comment">댓글</button>
-            <button class="pill" data-act="edit">수정</button>
-            <button class="pill danger" data-act="del">삭제</button>
-          </div>
-        </div>
-        <div class="text">${esc(post.content || "")}</div>
-
-        <div class="comments" id="comments_${post.id}">
-          <div class="empty">댓글을 불러오는 중입니다…</div>
-        </div>
-
-        <div class="comment-form" id="cform_${post.id}" style="display:none;">
-          <div class="row">
-            <input id="cAuthor_${post.id}" placeholder="댓글 작성자(닉네임)" />
-            <button class="pill ghost" id="cSecret_${post.id}" data-on="0">비밀댓글: OFF</button>
-          </div>
-          <div class="row">
-            <textarea id="cText_${post.id}" placeholder="댓글 내용"></textarea>
-          </div>
-          <div class="row">
-            <button class="pill" id="cSubmit_${post.id}">댓글 등록</button>
-          </div>
-          <div class="hint">* 비밀댓글은 글 비밀번호를 확인한 사용자(글쓴이/운영자)만 열람할 수 있습니다.</div>
-        </div>
-      `;
-
-      card.querySelector('[data-act="unlock"]').onclick = ()=> unlockPostFlow(post);
-      card.querySelector('[data-act="comment"]').onclick = ()=> toggleCommentForm(post.id);
-      card.querySelector('[data-act="edit"]').onclick = ()=> editFlow(post);
-      card.querySelector('[data-act="del"]').onclick = ()=> deleteFlow(post);
-
-      const secBtn = card.querySelector(`#cSecret_${post.id}`);
-      secBtn.onclick = ()=>{
-        const on = secBtn.getAttribute("data-on")==="1";
-        secBtn.setAttribute("data-on", on ? "0":"1");
-        secBtn.textContent = "비밀댓글: " + (on ? "OFF" : "ON");
-      };
-
-      card.querySelector(`#cSubmit_${post.id}`).onclick = ()=> submitComment(post);
-      return card;
-    }
-
-    function toggleCommentForm(postId){
-      const f = document.getElementById(`cform_${postId}`);
-      f.style.display = (f.style.display === "none") ? "block" : "none";
-    }
-
-    function mountComments(postId){
-      const wrap = document.getElementById(`comments_${postId}`);
-      if (!wrap) return;
-
-      db.collection("posts").doc(postId).collection("comments")
-        .orderBy("createdAt","asc")
-        .onSnapshot(snap => {
-          wrap.innerHTML = "";
-          if (snap.empty){
-            wrap.innerHTML = `<div class="empty">등록된 댓글이 없습니다.</div>`;
-            return;
-          }
-          snap.forEach(doc=>{
-            const c = doc.data();
-            const secret = !!c.secret;
-            const canSee = !secret || isUnlocked(postId) || isAdmin();
-
-            const item = document.createElement("div");
-            item.className = "c-item";
-            item.innerHTML = `
-              <div class="c-meta">
-                <span>작성자: ${esc(c.author || "")}</span>
-                <span>${esc(c.createdAt ? whenText(c.createdAt) : "방금")}</span>
-                ${secret ? `<span class="lock">🔒 비밀댓글</span>` : ``}
-                ${isAdmin() ? `<span style="opacity:.6">cid: ${esc(doc.id)}</span>` : ``}
-              </div>
-              <div class="c-text">${
-                canSee ? esc(c.content || "") : `<span class="lock">비밀댓글입니다.</span>`
-              }</div>
-            `;
-            wrap.appendChild(item);
-          });
-        }, err=>{
-          console.error(err);
-          wrap.innerHTML = `<div class="empty">댓글을 불러오지 못했습니다.</div>`;
-        });
-    }
-
-    function mountList(){
-      status.textContent = "목록을 불러오는 중입니다…";
-      if (unsub) unsub();
-
-      unsub = db.collection("posts")
-        .orderBy("createdAt","desc")
-        .onSnapshot(snap => {
-          list.innerHTML = "";
-          if (snap.empty){
-            list.innerHTML = `<div class="empty">등록된 글이 없습니다.</div>`;
-            status.textContent = "";
-            return;
-          }
-          snap.forEach(doc => {
-            const post = postDocToObj(doc);
-            list.appendChild(renderPostCard(post));
-            mountComments(post.id);
-          });
-          status.textContent = `총 ${snap.size}개 · 실시간 반영`;
-        }, err => {
-          console.error(err);
-          status.textContent = "목록을 불러오지 못했습니다. (권한/설정 확인 필요)";
-        });
-    }
-
-    async function verifyPass(salt, storedHash){
-      const pass = prompt("비밀번호를 입력해 주세요.");
-      if (!pass) return false;
-      const h = await sha256Hex(salt + "::" + pass);
-      return h === storedHash;
-    }
-
-    async function unlockPostFlow(post){
-      if (isUnlocked(post.id) || isAdmin()){
-        alert("이미 열람 가능한 상태입니다.");
-        return;
-      }
-      const ok = await verifyPass(post.salt, post.passHash);
-      if (ok){
-        setUnlocked(post.id, true);
-        alert("잠금 해제가 완료되었습니다.");
-        location.reload();
-      } else {
-        alert("비밀번호가 올바르지 않습니다.");
-      }
-    }
-
-    async function editFlow(post){
-      if (!isUnlocked(post.id) && !isAdmin()){
-        const ok = await verifyPass(post.salt, post.passHash);
-        if (!ok){
-          alert("비밀번호가 올바르지 않습니다.");
-          return;
-        }
-        setUnlocked(post.id, true);
-      }
-      startEdit(post);
-    }
-
-    async function deleteFlow(post){
-      if (!confirm("해당 글을 삭제하시겠습니까? (삭제 후 복구할 수 없습니다.)")) return;
-
-      if (!isAdmin()){
-        const ok = await verifyPass(post.salt, post.passHash);
-        if (!ok){
-          alert("비밀번호가 올바르지 않습니다.");
-          return;
-        }
-      }
-
-      try{
-        const ref = db.collection("posts").doc(post.id);
-        const csnap = await ref.collection("comments").get();
-        const batch = db.batch();
-        csnap.forEach(cdoc => batch.delete(cdoc.ref));
-        batch.delete(ref);
-        await batch.commit();
-
-        alert("삭제가 완료되었습니다.");
-      }catch(err){
-        console.error(err);
-        alert("삭제에 실패했습니다. 잠시 후 다시 시도해 주세요.");
-      }
-    }
-
-    $("submitBtn").onclick = async () => {
-      const title = $("inpTitle").value.trim();
-      const author = $("inpAuthor").value.trim();
-      const content = $("inpContent").value.trim();
-      const pass = $("inpPass").value;
-
-      if(!title || !author || !content){
-        alert("제목, 작성자, 내용을 모두 입력해 주세요.");
-        return;
-      }
-      if(!pass || pass.length < 4){
-        alert("비밀번호는 4자리 이상으로 입력해 주세요.");
-        return;
-      }
-
-      try{
-        if (mode === "create"){
-          const salt = randSalt(12);
-          const passHash = await sha256Hex(salt + "::" + pass);
-
-          await db.collection("posts").add({
-            title, author, content,
-            salt, passHash,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: null
-          });
-
-          closeModal();
-          clearModal();
-          alert("등록이 완료되었습니다.");
-        } else {
-          if (!editPostId) return;
-          const ref = db.collection("posts").doc(editPostId);
-          const snap = await ref.get();
-          if (!snap.exists){
-            alert("해당 글을 찾을 수 없습니다.");
-            return;
-          }
-          const d = snap.data();
-          const ok = await verifyPass(d.salt, d.passHash);
-          if (!ok){
-            alert("비밀번호가 올바르지 않습니다.");
-            return;
-          }
-
-          await ref.update({
-            title, author, content,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-
-          setUnlocked(editPostId, true);
-          closeModal();
-          clearModal();
-          alert("수정이 완료되었습니다.");
-        }
-      }catch(err){
-        console.error(err);
-        alert("저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
-      }
-    };
-
-    async function submitComment(post){
-      const postId = post.id;
-      const author = (document.getElementById(`cAuthor_${postId}`).value || "").trim();
-      const content = (document.getElementById(`cText_${postId}`).value || "").trim();
-      const secBtn = document.getElementById(`cSecret_${postId}`);
-      const secret = secBtn.getAttribute("data-on")==="1";
-
-      if (!author || !content){
-        alert("댓글 작성자와 내용을 입력해 주세요.");
-        return;
-      }
-
-      try{
-        await db.collection("posts").doc(postId).collection("comments").add({
-          author,
-          content,
-          secret,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        document.getElementById(`cText_${postId}`).value = "";
-        alert("댓글이 등록되었습니다.");
-      }catch(err){
-        console.error(err);
-        alert("댓글 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.");
-      }
-    }
-
-    renderAdminState();
-    layoutBoardWin();
-    mountList();
   </script>
 </body>
 </html>

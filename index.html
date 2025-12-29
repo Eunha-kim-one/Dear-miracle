@@ -824,6 +824,7 @@
     let left = marginX + (usableW * x01);
     let top  = marginTop + (usableH * y01);
 
+    // 화면 밖으로 너무 나가지 않게
     const maxX = vw - 60;
     const maxY = vh - 120;
     left = clamp(left, -40, maxX);
@@ -834,64 +835,87 @@
   }
 
   function autoLayout(){
-  if(hasUserMoved) return;
+    if(hasUserMoved) return;
 
-  const byKey = {};
-  wins.forEach(w => { byKey[w.dataset.key] = w; });
+    const byKey = {};
+    wins.forEach(w => { byKey[w.dataset.key] = w; });
 
-  const vw = window.innerWidth;
+    const vw = window.innerWidth;
 
-  // ===== PC (원래 버전) =====
-  if(vw >= 1100){
-    if(byKey.notice) place(byKey.notice, 0.02, 0.03);
-    if(byKey.yt)     place(byKey.yt,     0.05, 0.45);
+    // ===== PC (원래 버전) =====
+    if(vw >= 1100){
+      if(byKey.notice) place(byKey.notice, 0.02, 0.03);
+      if(byKey.yt)     place(byKey.yt,     0.05, 0.45);
 
-    if(byKey.w1)     place(byKey.w1,     0.22, 0.12);
-    if(byKey.w2)     place(byKey.w2,     0.50, 0.15);
-    if(byKey.w3)     place(byKey.w3,     0.28, 0.42);
+      if(byKey.w1)     place(byKey.w1,     0.22, 0.12);
+      if(byKey.w2)     place(byKey.w2,     0.50, 0.15);
+      if(byKey.w3)     place(byKey.w3,     0.28, 0.42);
 
-    if(byKey.w4)     place(byKey.w4,     0.05, 0.78);
-    if(byKey.w5)     place(byKey.w5,     0.35, 0.80);
+      if(byKey.w4)     place(byKey.w4,     0.05, 0.78);
+      if(byKey.w5)     place(byKey.w5,     0.35, 0.80);
 
-    if(byKey.w7)     place(byKey.w7,     0.78, 0.10);
-    if(byKey.w6)     place(byKey.w6,     0.70, 0.45);
-    if(byKey.w8)     place(byKey.w8,     0.80, 0.62);
+      if(byKey.w7)     place(byKey.w7,     0.78, 0.10);
+      if(byKey.w6)     place(byKey.w6,     0.70, 0.45);
+      if(byKey.w8)     place(byKey.w8,     0.80, 0.62);
 
-    if(byKey.w10)    place(byKey.w10,    0.72, 0.82);
-    return;
+      if(byKey.w10)    place(byKey.w10,    0.72, 0.82);
+      return;
+    }
+
+    // ===== 태블릿 (원래 버전) =====
+    if(vw >= 700){
+      if(byKey.notice) place(byKey.notice, 0.03, 0.03);
+      if(byKey.yt)     place(byKey.yt,     0.03, 0.55);
+
+      if(byKey.w1)     place(byKey.w1,     0.45, 0.10);
+      if(byKey.w2)     place(byKey.w2,     0.45, 0.35);
+      if(byKey.w3)     place(byKey.w3,     0.20, 0.30);
+
+      if(byKey.w4)     place(byKey.w4,     0.03, 0.78);
+      if(byKey.w5)     place(byKey.w5,     0.45, 0.78);
+
+      if(byKey.w6)     place(byKey.w6,     0.70, 0.50);
+      if(byKey.w7)     place(byKey.w7,     0.70, 0.05);
+      if(byKey.w8)     place(byKey.w8,     0.70, 0.70);
+
+      if(byKey.w10)    place(byKey.w10,    0.45, 0.60);
+      return;
+    }
+
+    // ===== 모바일 (원래 버전) =====
+    const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10"];
+    let y = 0.03;
+    order.forEach((k, i) => {
+      const w = byKey[k];
+      if(!w) return;
+      place(w, (i % 2 ? 0.08 : 0.02), y);
+      y += 0.07;
+    });
   }
 
-  // ===== 태블릿 (원래 버전) =====
-  if(vw >= 700){
-    if(byKey.notice) place(byKey.notice, 0.03, 0.03);
-    if(byKey.yt)     place(byKey.yt,     0.03, 0.55);
+  // ===== 드래그 기능(에러 없이 정상) =====
+  wins.forEach((win) => {
+    const bar = win.querySelector(".titlebar");
+    if(!bar) return;
 
-    if(byKey.w1)     place(byKey.w1,     0.45, 0.10);
-    if(byKey.w2)     place(byKey.w2,     0.45, 0.35);
-    if(byKey.w3)     place(byKey.w3,     0.20, 0.30);
+    let dragging = false;
+    let startX = 0, startY = 0;
+    let winX = 0, winY = 0;
 
-    if(byKey.w4)     place(byKey.w4,     0.03, 0.78);
-    if(byKey.w5)     place(byKey.w5,     0.45, 0.78);
+    bar.addEventListener("pointerdown", (e) => {
+      dragging = true;
+      hasUserMoved = true;
+      bringToFront(win);
 
-    if(byKey.w6)     place(byKey.w6,     0.70, 0.50);
-    if(byKey.w7)     place(byKey.w7,     0.70, 0.05);
-    if(byKey.w8)     place(byKey.w8,     0.70, 0.70);
+      startX = e.clientX;
+      startY = e.clientY;
 
-    if(byKey.w10)    place(byKey.w10,    0.45, 0.60);
-    return;
-  }
+      winX = parseFloat(win.style.left) || win.offsetLeft;
+      winY = parseFloat(win.style.top)  || win.offsetTop;
 
-  // ===== 모바일 (원래 버전) =====
-  const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10"];
-  let y = 0.03;
-  order.forEach((k, i) => {
-    const w = byKey[k];
-    if(!w) return;
-    place(w, (i % 2 ? 0.08 : 0.02), y);
-    y += 0.07;
-  });
-}
-
+      bar.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
 
     bar.addEventListener("pointermove", (e) => {
       if(!dragging) return;
@@ -913,6 +937,9 @@
 
     bar.addEventListener("pointerup", () => dragging = false);
     bar.addEventListener("pointercancel", () => dragging = false);
+
+    // 클릭만 해도 앞으로 오게
+    win.addEventListener("pointerdown", ()=> bringToFront(win));
   });
 
   window.addEventListener("load", () => autoLayout());
@@ -934,7 +961,7 @@
   const soundBtn = document.getElementById("ytSoundBtn");
   let isMuted = true;
 
-  soundBtn.addEventListener("click", (e) => {
+  soundBtn?.addEventListener("click", (e) => {
     e.stopPropagation();
     const url = new URL(ytFrame.src);
     url.searchParams.set("mute", isMuted ? "0" : "1");
@@ -943,7 +970,7 @@
     isMuted = !isMuted;
     soundBtn.textContent = isMuted ? "🔇" : "🔊";
   });
-  </script>
+</script>
 
   <!-- =========================================================
        ✅ Firebase 카톡식 쪽지 (실시간 + read 필드 + 안읽음뱃지)

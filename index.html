@@ -621,22 +621,40 @@
      <div style="display:flex; gap:10px; margin-top:12px;">
 
   <!-- 메신저 버튼 -->
- <div style="margin-top:12px;">
-        <button
-          onclick="document.getElementById('dmFabBtn').click()"
-          style="
-            width:100%;
-            padding:10px;
-            border-radius:8px;
-            border:1px solid rgba(0,0,0,0.25);
-            background:rgba(0,0,0,0.75);
-            color:#fff;
-            font-weight:700;
-            cursor:pointer;
-          ">
-          메신저 열기
-        </button>
-      </div>
+<div style="margin-top:12px; display:flex; gap:10px;">
+  <button
+    onclick="document.getElementById('dmFabBtn').click()"
+    style="
+      flex:1;
+      padding:12px 0;
+      border-radius:10px;
+      border:1px solid rgba(0,0,0,0.25);
+      background:rgba(0,0,0,0.78);
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
+      font-size:14px;
+    ">
+    컨택 확인하기
+  </button>
+
+  <button
+    onclick="location.href='board.html'"
+    style="
+      width:110px;
+      padding:12px 0;
+      border-radius:10px;
+      border:1px solid rgba(0,0,0,0.18);
+      background:rgba(255,255,255,0.85);
+      color:#111;
+      font-weight:800;
+      cursor:pointer;
+      font-size:14px;
+    ">
+    게시판
+  </button>
+</div>
+
     </div>
   </div>
 </div>

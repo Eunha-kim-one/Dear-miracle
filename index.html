@@ -429,89 +429,197 @@
   </div>
 
   <script>
-    // ===== 창 드래그 + 앞으로 가져오기 (win 전부 포함) =====
-    const wins = Array.from(document.querySelectorAll(".win"));
-    let topZ = 100;
+  // ===== 창 드래그 + 앞으로 가져오기 + (첫 로딩) 화면별 자동 배치 =====
+  const wins = Array.from(document.querySelectorAll(".win"));
+  let topZ = 100;
+  let hasUserMoved = false; // 드래그한 뒤엔 자동배치가 다시 덮어쓰지 않게
 
-    function bringToFront(win){
-      topZ += 1;
-      win.style.zIndex = topZ;
-      wins.forEach(w => w.classList.remove("is-front"));
-      win.classList.add("is-front");
+  function bringToFront(win){
+    topZ += 1;
+    win.style.zIndex = topZ;
+    wins.forEach(w => w.classList.remove("is-front"));
+    win.classList.add("is-front");
+  }
+
+  function clamp(n, min, max){ return Math.min(Math.max(n, min), max); }
+
+  function place(win, x01, y01){
+    // x01/y01: 0~1 비율 좌표(화면에 맞춰 퍼지게)
+    const taskbar = document.querySelector(".taskbar");
+    const taskH = taskbar ? taskbar.offsetHeight : 44;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    const marginX = 18;
+    const marginTop = 18;
+    const marginBottom = taskH + 18;
+
+    const w = win.offsetWidth;
+    const h = win.offsetHeight;
+
+    const usableW = vw - marginX*2 - w;
+    const usableH = vh - marginTop - marginBottom - h;
+
+    let left = marginX + (usableW * x01);
+    let top  = marginTop + (usableH * y01);
+
+    // 드래그 제한과 비슷하게 화면 밖 안 나가게 클램프
+    const maxX = vw - 60;
+    const maxY = vh - 120;
+    left = clamp(left, -40, maxX);
+    top  = clamp(top,  -20, maxY);
+
+    win.style.left = left + "px";
+    win.style.top  = top  + "px";
+  }
+
+  function autoLayout(){
+    // 사용자가 한 번이라도 움직였으면 재배치 안 함(사용자 배치 존중)
+    if(hasUserMoved) return;
+
+    // 키로 찾아서 배치
+    const byKey = {};
+    wins.forEach(w => { byKey[w.dataset.key] = w; });
+
+    const vw = window.innerWidth;
+
+    // ✅ PC(가로 넓음): “퍼지게” + w10(0722_1029_010.mp4)은 우하단
+    if(vw >= 1100){
+      if(byKey.notice) place(byKey.notice, 0.02, 0.03);
+      if(byKey.yt)     place(byKey.yt,     0.05, 0.45);
+
+      if(byKey.w1)     place(byKey.w1,     0.22, 0.12);
+      if(byKey.w2)     place(byKey.w2,     0.50, 0.15);
+      if(byKey.w3)     place(byKey.w3,     0.28, 0.42);
+
+      if(byKey.w4)     place(byKey.w4,     0.05, 0.78);
+      if(byKey.w5)     place(byKey.w5,     0.35, 0.80);
+
+      if(byKey.w7)     place(byKey.w7,     0.78, 0.10);
+      if(byKey.w6)     place(byKey.w6,     0.70, 0.45);
+      if(byKey.w8)     place(byKey.w8,     0.80, 0.62);
+
+      // ✅ 네가 말한 “10번(가리는 창)” 우하단으로
+      if(byKey.w10)    place(byKey.w10,    0.72, 0.82);
+      return;
     }
 
-    wins.forEach(win => {
-      const initZ = parseInt(win.getAttribute("data-z") || "0", 10);
-      win.style.zIndex = 50 + initZ;
+    // ✅ 태블릿/중간 화면: 2열 느낌으로 덜 겹치게
+    if(vw >= 700){
+      if(byKey.notice) place(byKey.notice, 0.03, 0.03);
+      if(byKey.yt)     place(byKey.yt,     0.03, 0.55);
 
-      win.addEventListener("pointerdown", () => bringToFront(win));
+      if(byKey.w1)     place(byKey.w1,     0.45, 0.10);
+      if(byKey.w2)     place(byKey.w2,     0.45, 0.35);
+      if(byKey.w3)     place(byKey.w3,     0.20, 0.30);
 
-      const bar = win.querySelector(".titlebar");
-      let dragging = false;
-      let startX = 0, startY = 0;
-      let winX = 0, winY = 0;
+      if(byKey.w4)     place(byKey.w4,     0.03, 0.78);
+      if(byKey.w5)     place(byKey.w5,     0.45, 0.78);
 
-      bar.addEventListener("pointerdown", (e) => {
-        bringToFront(win);
-        dragging = true;
-        bar.setPointerCapture(e.pointerId);
+      if(byKey.w6)     place(byKey.w6,     0.70, 0.50);
+      if(byKey.w7)     place(byKey.w7,     0.70, 0.05);
+      if(byKey.w8)     place(byKey.w8,     0.70, 0.70);
 
-        const rect = win.getBoundingClientRect();
-        startX = e.clientX;
-        startY = e.clientY;
-        winX = rect.left;
-        winY = rect.top;
-
-        e.preventDefault();
-      });
-
-      bar.addEventListener("pointermove", (e) => {
-        if(!dragging) return;
-
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-
-        let nx = winX + dx;
-        let ny = winY + dy;
-
-        const maxX = window.innerWidth - 60;
-        const maxY = window.innerHeight - 120;
-        nx = Math.min(Math.max(nx, -40), maxX);
-        ny = Math.min(Math.max(ny, -20), maxY);
-
-        win.style.left = nx + "px";
-        win.style.top  = ny + "px";
-      });
-
-      bar.addEventListener("pointerup", () => dragging = false);
-      bar.addEventListener("pointercancel", () => dragging = false);
-    });
-
-    // ===== 시계 =====
-    const clock = document.getElementById("clock");
-    function tick(){
-      const d = new Date();
-      const hh = String(d.getHours()).padStart(2,"0");
-      const mm = String(d.getMinutes()).padStart(2,"0");
-      clock.textContent = ${hh}:${mm};
+      if(byKey.w10)    place(byKey.w10,    0.45, 0.60);
+      return;
     }
-    tick();
-    setInterval(tick, 1000 * 10);
 
-    // ===== 유튜브 소리 버튼(iframe src 토글) =====
-    const ytFrame = document.getElementById("ytFrame");
-    const soundBtn = document.getElementById("ytSoundBtn");
-    let isMuted = true;
-
-    soundBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const url = new URL(ytFrame.src);
-      url.searchParams.set("mute", isMuted ? "0" : "1");
-      ytFrame.src = url.toString();
-
-      isMuted = !isMuted;
-      soundBtn.textContent = isMuted ? "🔇" : "🔊";
+    // ✅ 모바일: 위에서부터 “계단식”으로 (겹치긴 하지만 보기 좋게)
+    const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10"];
+    let y = 0.03;
+    order.forEach((k, i) => {
+      const w = byKey[k];
+      if(!w) return;
+      place(w, (i % 2 ? 0.08 : 0.02), y);
+      y += 0.07;
     });
-  </script>
+  }
+
+  // 초기 z 적용 + 드래그/포커스
+  wins.forEach(win => {
+    const initZ = parseInt(win.getAttribute("data-z") || "0", 10);
+    win.style.zIndex = 50 + initZ;
+
+    win.addEventListener("pointerdown", () => bringToFront(win));
+
+    const bar = win.querySelector(".titlebar");
+    let dragging = false;
+    let startX = 0, startY = 0;
+    let winX = 0, winY = 0;
+
+    bar.addEventListener("pointerdown", (e) => {
+      bringToFront(win);
+      dragging = true;
+      hasUserMoved = true; // ✅ 사용자가 움직였으니 이제 자동배치 금지
+      bar.setPointerCapture(e.pointerId);
+
+      const rect = win.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      winX = rect.left;
+      winY = rect.top;
+
+      e.preventDefault();
+    });
+
+    bar.addEventListener("pointermove", (e) => {
+      if(!dragging) return;
+
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      let nx = winX + dx;
+      let ny = winY + dy;
+
+      const maxX = window.innerWidth - 60;
+      const maxY = window.innerHeight - 120;
+      nx = Math.min(Math.max(nx, -40), maxX);
+      ny = Math.min(Math.max(ny, -20), maxY);
+
+      win.style.left = nx + "px";
+      win.style.top  = ny + "px";
+    });
+
+    bar.addEventListener("pointerup", () => dragging = false);
+    bar.addEventListener("pointercancel", () => dragging = false);
+  });
+
+  // ✅ 첫 로딩 때만 자동배치
+  window.addEventListener("load", () => {
+    autoLayout();
+  });
+
+  // 리사이즈 시에도 “사용자가 안 건드렸을 때만” 다시 배치
+  window.addEventListener("resize", () => {
+    autoLayout();
+  });
+
+  // ===== 시계 =====
+  const clock = document.getElementById("clock");
+  function tick(){
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2,"0");
+    const mm = String(d.getMinutes()).padStart(2,"0");
+    clock.textContent = `${hh}:${mm}`;
+  }
+  tick();
+  setInterval(tick, 1000 * 10);
+
+  // ===== 유튜브 소리 버튼(iframe src 토글) =====
+  const ytFrame = document.getElementById("ytFrame");
+  const soundBtn = document.getElementById("ytSoundBtn");
+  let isMuted = true;
+
+  soundBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const url = new URL(ytFrame.src);
+    url.searchParams.set("mute", isMuted ? "0" : "1");
+    ytFrame.src = url.toString();
+
+    isMuted = !isMuted;
+    soundBtn.textContent = isMuted ? "🔇" : "🔊";
+  });
+</script>
 </body>
   </html>

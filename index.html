@@ -523,6 +523,44 @@
       line-height: 1.35;
       min-height: 18px;
     }
+    /* 우측 하단 메신저 버튼: 잿빛 검정으로 가시성 업 */
+.dm-fab button{
+  background: rgba(25,25,28,0.88) !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+  box-shadow: 0 16px 46px rgba(0,0,0,0.45) !important;
+  color: rgba(255,255,255,0.92) !important;
+}
+
+.dm-fab button:hover{
+  background: rgba(35,35,40,0.92) !important;
+}
+
+.dm-fab button:active{
+  transform: translateY(1px);
+}
+
+/* 뱃지도 어두운 버튼 위에서 잘 보이게 */
+.dm-badge{
+  background: rgba(255,255,255,0.95) !important;
+  color: rgba(0,0,0,0.85) !important;
+  border: 1px solid rgba(0,0,0,0.25) !important;
+}
+/* 왼쪽 안내창 안의 메신저 안내문 */
+.dm-guide{
+  margin-top: 10px;
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: rgba(255,255,255,0.72);
+  font-size: 13px;
+  line-height: 1.35;
+  color: rgba(0,0,0,0.75);
+}
+.dm-guide b{
+  font-weight: 900;
+  color: rgba(0,0,0,0.88);
+}
+
   </style>
 </head>
 

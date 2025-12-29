@@ -424,6 +424,33 @@
       </div>
     </div>
   </div>
+  
+<!-- ✅ 관리자 모달 -->
+<div class="modal-backdrop" id="adminBg">
+  <div class="modal">
+    <div class="titlebar" style="cursor: default;">
+      <div class="title-left">
+        <div class="dot"></div>
+        <div class="title">관리자 코드</div>
+      </div>
+      <div class="title-btns">
+        <button class="btn" id="closeAdmin" title="닫기"></button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="field">
+        <div class="label">코드</div>
+        <input id="adminInput" placeholder="관리자 코드 입력" />
+      </div>
+      <div class="modal-actions">
+        <button class="pill" id="adminOff">관리 해제</button>
+        <button class="pill" id="adminOn">확인</button>
+      </div>
+      <div class="hint" id="adminHint"></div>
+    </div>
+  </div>
+</div>
 
   <!-- ✅ 글쓰기/수정 모달 -->
   <div class="modal-backdrop" id="postBg">

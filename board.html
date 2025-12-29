@@ -105,7 +105,7 @@
       padding: 10px;
     }
 
-    /* ===== Board UI (홈 미감에 맞춘 심플 카드) ===== */
+    /* ===== Board UI ===== */
     .board-top {
       display:flex; align-items:center; justify-content:space-between;
       gap: 10px;
@@ -131,6 +131,7 @@
       font-size: 12px;
       cursor: pointer;
     }
+    .pill:active{ transform: translateY(1px); }
 
     .list {
       display: grid;
@@ -162,6 +163,7 @@
       align-items:center; justify-content:center;
       padding: 16px;
       z-index: 9999;
+      pointer-events: auto;
     }
     .modal{
       width: min(720px, 100%);
@@ -172,6 +174,7 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.35);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      user-select: text;
     }
     .modal .content{ background: transparent; }
     .field{ display:grid; gap:6px; margin-bottom: 10px; }
@@ -203,6 +206,7 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-top: 1px solid rgba(0,0,0,0.18);
+      pointer-events: none;
     }
     .brand { font-size: 13px; color:#222; font-weight:700; letter-spacing:0.2px; }
     .spacer { flex:1; }
@@ -241,9 +245,7 @@
           </div>
         </div>
 
-        <div class="list" id="list">
-          <!-- 글 목록이 여기 뜸 -->
-        </div>
+        <div class="list" id="list"></div>
 
         <div style="margin-top:10px; font-size:11px; color:rgba(0,0,0,0.55);" id="status"></div>
       </div>
@@ -288,8 +290,14 @@
     <div class="clock" id="clock">--:--</div>
   </div>
 
+  <!-- ✅ Firebase SDK (JS 코드보다 위에 있어야 함) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
   <script>
-    // ==== window drag + z ====
+    // =========================
+    // 1) Window drag + z
+    // =========================
     const wins = Array.from(document.querySelectorAll(".win"));
     let topZ = 100;
 
@@ -342,42 +350,178 @@
       bar.addEventListener("pointercancel", () => dragging = false);
     });
 
-    // ==== clock ====
+    // =========================
+    // 2) Clock
+    // =========================
     const clock = document.getElementById("clock");
     function tick(){
       const d = new Date();
-      clock.textContent = String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+      clock.textContent =
+        String(d.getHours()).padStart(2,"0") + ":" +
+        String(d.getMinutes()).padStart(2,"0");
     }
     tick(); setInterval(tick, 10000);
 
-    // ==== nav buttons ====
+    // =========================
+    // 3) Nav buttons
+    // =========================
     const goHome = ()=> location.href = "index.html";
     document.getElementById("homeBtn").onclick = goHome;
     document.getElementById("btnHome").onclick = goHome;
 
-    // ==== modal ui ====
+    // =========================
+    // 4) Modal UI
+    // =========================
     const modalBg = document.getElementById("modalBg");
-    const openModal = ()=> modalBg.style.display = "flex";
+    const openModal = ()=> {
+      modalBg.style.display = "flex";
+      modalHint.textContent = "";
+      // 포커스
+      setTimeout(()=> inpTitle.focus(), 0);
+    };
     const closeModal = ()=> modalBg.style.display = "none";
+
     document.getElementById("writeBtn").onclick = openModal;
     document.getElementById("btnWrite").onclick = openModal;
     document.getElementById("closeModal").onclick = closeModal;
     document.getElementById("cancelBtn").onclick = closeModal;
     modalBg.addEventListener("click", (e)=>{ if(e.target === modalBg) closeModal(); });
 
-    document.getElementById("btnReload").onclick = ()=> location.reload();
+    document.getElementById("btnReload").onclick = ()=> loadPosts();
 
+    // =========================
+    // 5) Firebase 설정 (🔥 네 스샷 값 반영)
+    // =========================
     const firebaseConfig = {
-  apiKey: "AIzaSyA1PxEOrwjVi4BOLA13UbFIncTYe6RdYIQ",
-  authDomain: "dear-miracle.firebaseapp.com",
-  projectId: "dear-miracle",
-  storageBucket: "dear-miracle.firebasestorage.app",
-  messagingSenderId: "793139917614",
-  appId: "1:793139917614:web:dec74f65af6a0df1c740bf",
-  measurementId: "G-VF22L8ZR6D"
-      <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-};
+      apiKey: "AIzaSyA1PxE0rwjVi4BOLA13UbFIncTYe6RdYIQ",
+      authDomain: "dear-miracle.firebaseapp.com",
+      projectId: "dear-miracle",
+      storageBucket: "dear-miracle.appspot.com",
+      messagingSenderId: "793139917614",
+      appId: "1:793139917614:web:dec74f65af6a0df1c740bf"
+      // measurementId는 필요 없어서 빼도 됨
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // =========================
+    // 6) Board logic
+    // =========================
+    const list = document.getElementById("list");
+    const status = document.getElementById("status");
+
+    const inpTitle = document.getElementById("inpTitle");
+    const inpAuthor = document.getElementById("inpAuthor");
+    const inpContent = document.getElementById("inpContent");
+    const submitBtn = document.getElementById("submitBtn");
+    const modalHint = document.getElementById("modalHint");
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (m)=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function fmtTime(ts){
+      try{
+        const d = ts.toDate();
+        const yy = d.getFullYear();
+        const mm = String(d.getMonth()+1).padStart(2,"0");
+        const dd = String(d.getDate()).padStart(2,"0");
+        const hh = String(d.getHours()).padStart(2,"0");
+        const mi = String(d.getMinutes()).padStart(2,"0");
+        return `${yy}-${mm}-${dd} ${hh}:${mi}`;
+      }catch(e){
+        return "방금";
+      }
+    }
+
+    async function loadPosts(){
+      status.textContent = "불러오는 중...";
+      list.innerHTML = "";
+
+      try{
+        const snap = await db
+          .collection("posts")
+          .orderBy("createdAt", "desc")
+          .limit(50)
+          .get();
+
+        if(snap.empty){
+          status.textContent = "아직 글이 없어. 첫 글을 올려줘!";
+          return;
+        }
+
+        status.textContent = "";
+
+        snap.forEach(doc=>{
+          const d = doc.data();
+          const title = escapeHtml(d.title || "");
+          const author = escapeHtml(d.author || "");
+          const content = escapeHtml(d.content || "");
+          const timeText = d.createdAt ? fmtTime(d.createdAt) : "방금";
+
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h3>${title}</h3>
+            <div class="meta">
+              <span>작성자: ${author || "익명"}</span>
+              <span>·</span>
+              <span>${timeText}</span>
+              <span style="margin-left:auto; opacity:.55;">id: ${doc.id}</span>
+            </div>
+            <div class="text">${content}</div>
+          `;
+          list.appendChild(card);
+        });
+
+      }catch(err){
+        console.error(err);
+        status.textContent = "불러오기 실패… Firestore 규칙/인덱스/프로젝트 연결 확인 필요(콘솔 에러 확인).";
+      }
+    }
+
+    submitBtn.onclick = async ()=>{
+      const title = inpTitle.value.trim();
+      const author = inpAuthor.value.trim();
+      const content = inpContent.value.trim();
+
+      if(!title || !author || !content){
+        modalHint.textContent = "제목/작성자/내용을 모두 입력해줘.";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "등록중...";
+
+      try{
+        await db.collection("posts").add({
+          title,
+          author,
+          content,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // 입력 초기화 + 닫기 + 새로고침
+        inpTitle.value = "";
+        inpAuthor.value = "";
+        inpContent.value = "";
+        closeModal();
+        await loadPosts();
+
+      }catch(err){
+        console.error(err);
+        modalHint.textContent = "등록 실패… Firestore 규칙(쓰기 허용) / 연결 상태를 확인해줘.";
+      }finally{
+        submitBtn.disabled = false;
+        submitBtn.textContent = "등록";
+      }
+    };
+
+    // 최초 로드
+    loadPosts();
   </script>
 </body>
 </html>

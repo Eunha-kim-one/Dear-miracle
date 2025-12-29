@@ -925,7 +925,7 @@
     // ===== PC (원래 버전) =====
     if(vw >= 1100){
   if(byKey.notice) place(byKey.notice, 0.02, 0.03);
-  if(byKey.yt) place(byKey.yt, 0.05, 0.53);
+  if(byKey.yt) place(byKey.yt, 0.05, 0.50);
 
       if(byKey.w1)     place(byKey.w1,     0.22, 0.12);
       if(byKey.w2)     place(byKey.w2,     0.50, 0.15);
@@ -938,7 +938,7 @@
       if(byKey.w6)     place(byKey.w6,     0.70, 0.45);
       if(byKey.w8)     place(byKey.w8,     0.80, 0.62);
       if(byKey.w10)    place(byKey.w10,    0.92, 0.75);
-      if(byKey["dm-notice"]) place(byKey["dm-notice"], 0.92, 0.38);
+      if(byKey["dm-notice"]) place(byKey["dm-notice"], 0.92, 0.30);
 
       return;
     }
@@ -964,7 +964,7 @@
     }
 
     // ===== 모바일 (원래 버전) =====
-    const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10"];
+    const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10","dm-notice"];
     let y = 0.03;
     order.forEach((k, i) => {
       const w = byKey[k];

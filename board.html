@@ -1779,6 +1779,127 @@ if(!getNick()){
 })();
 </script>
   
+  <!-- =========================
+     💬 Messenger (Index와 동일)
+     ========================= -->
+
+<!-- 메신저 플로팅 버튼 -->
+<button id="dmFabBtn" title="메신저"
+  style="
+    position:fixed;
+    right:18px;
+    bottom:calc(80px + env(safe-area-inset-bottom));
+    width:64px; height:64px;
+    border-radius:22px;
+    border:1px solid rgba(0,0,0,0.22);
+    background:rgba(255,255,255,0.92);
+    box-shadow:0 12px 30px rgba(0,0,0,0.28);
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px;
+    cursor:pointer;
+    z-index:99998;">
+  💬
+</button>
+
+<!-- 메신저 창 -->
+<div id="dmWin"
+  style="
+    position:fixed;
+    right:14px;
+    bottom:calc(160px + env(safe-area-inset-bottom));
+    width:min(380px, calc(100vw - 28px));
+    height:min(600px, calc(100vh - 220px));
+    background:rgba(255,255,255,0.88);
+    border:1px solid rgba(0,0,0,0.25);
+    border-radius:14px;
+    box-shadow:0 18px 46px rgba(0,0,0,0.35);
+    backdrop-filter:blur(10px);
+    display:none;
+    flex-direction:column;
+    z-index:99999;
+  ">
+
+  <div style="
+    height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+    border-bottom:1px solid rgba(0,0,0,0.15);
+    font-weight:800;">
+    <span>메신저</span>
+    <button id="dmCloseBtn"
+      style="border:none;background:none;font-size:20px;cursor:pointer;">×</button>
+  </div>
+
+  <div id="dmBodyArea"
+    style="flex:1; overflow:auto; padding:12px; font-size:14px; line-height:1.5;">
+    <div style="opacity:.6;">쪽지함을 불러오는 중…</div>
+  </div>
+</div>
+
+  <script>
+const dmFabBtn = document.getElementById("dmFabBtn");
+const dmWin = document.getElementById("dmWin");
+const dmCloseBtn = document.getElementById("dmCloseBtn");
+const dmBodyArea = document.getElementById("dmBodyArea");
+
+dmFabBtn.onclick = () => {
+  dmWin.style.display = "flex";
+  loadDMInbox();
+};
+
+dmCloseBtn.onclick = () => {
+  dmWin.style.display = "none";
+};
+
+async function loadDMInbox(){
+  const nick = localStorage.getItem("dm_nick");
+  if(!nick){
+    dmBodyArea.innerHTML = "<b>닉네임을 먼저 설정해주세요.</b>";
+    return;
+  }
+
+  dmBodyArea.innerHTML = "불러오는 중…";
+
+  try{
+    const qy = window.__fb.query(
+      window.__fb.collection(window.db, "messages"),
+      window.__fb.where("to", "==", nick),
+      window.__fb.orderBy("createdAt", "desc"),
+      window.__fb.limit(30)
+    );
+
+    const snap = await window.__fb.getDocs(qy);
+
+    if(snap.empty){
+      dmBodyArea.innerHTML = "<div style='opacity:.6'>받은 쪽지가 없습니다.</div>";
+      return;
+    }
+
+    dmBodyArea.innerHTML = "";
+    snap.forEach(d=>{
+      const m = d.data();
+      const div = document.createElement("div");
+      div.style.marginBottom = "10px";
+      div.style.paddingBottom = "10px";
+      div.style.borderBottom = "1px solid rgba(0,0,0,0.1)";
+      div.innerHTML = `
+        <div style="font-size:12px;opacity:.6;">
+          ${m.from} · ${m.createdAt?.toDate().toLocaleString()}
+        </div>
+        <div>${m.body}</div>
+      `;
+      dmBodyArea.appendChild(div);
+    });
+
+  }catch(e){
+    dmBodyArea.innerHTML = "쪽지 불러오기 실패";
+    console.error(e);
+  }
+}
+  </script>
+  
 </body>
   <!-- 컨택 / 바로가기 -->
 <div style="

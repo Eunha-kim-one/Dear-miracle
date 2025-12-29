@@ -834,100 +834,64 @@
   }
 
   function autoLayout(){
-    if(hasUserMoved) return;
+  if(hasUserMoved) return;
 
-    const byKey = {};
-    wins.forEach(w => { byKey[w.dataset.key] = w; });
+  const byKey = {};
+  wins.forEach(w => { byKey[w.dataset.key] = w; });
 
-    const vw = window.innerWidth;
+  const vw = window.innerWidth;
 
-    if(vw >= 1100){
-      if(byKey.notice) place(byKey.notice, 0.02, 0.03);
-      if(byKey.yt)     place(byKey.yt,     0.05, 0.45);
+  // ===== PC (원래 버전) =====
+  if(vw >= 1100){
+    if(byKey.notice) place(byKey.notice, 0.02, 0.03);
+    if(byKey.yt)     place(byKey.yt,     0.05, 0.45);
 
-      if(byKey.w1)     place(byKey.w1,     0.22, 0.12);
-      if(byKey.w2)     place(byKey.w2,     0.50, 0.15);
-      if(byKey.w3)     place(byKey.w3,     0.28, 0.42);
+    if(byKey.w1)     place(byKey.w1,     0.22, 0.12);
+    if(byKey.w2)     place(byKey.w2,     0.50, 0.15);
+    if(byKey.w3)     place(byKey.w3,     0.28, 0.42);
 
-      if(byKey.w4)     place(byKey.w4,     0.05, 0.78);
-      if(byKey.w5)     place(byKey.w5,     0.35, 0.80);
+    if(byKey.w4)     place(byKey.w4,     0.05, 0.78);
+    if(byKey.w5)     place(byKey.w5,     0.35, 0.80);
 
-      if(byKey.w7)     place(byKey.w7,     0.78, 0.10);
-      if(byKey.w6)     place(byKey.w6,     0.70, 0.45);
-      if(byKey.w8)     place(byKey.w8,     0.80, 0.62);
+    if(byKey.w7)     place(byKey.w7,     0.78, 0.10);
+    if(byKey.w6)     place(byKey.w6,     0.70, 0.45);
+    if(byKey.w8)     place(byKey.w8,     0.80, 0.62);
 
-      if(byKey.w10)    place(byKey.w10,    0.72, 0.82);
-      return;
-    }
+    if(byKey.w10)    place(byKey.w10,    0.72, 0.82);
+    return;
+  }
 
-    if(vw >= 700){
-      if(byKey.notice) place(byKey.notice, 0.03, 0.03);
-      if(byKey.yt)     place(byKey.yt,     0.03, 0.55);
+  // ===== 태블릿 (원래 버전) =====
+  if(vw >= 700){
+    if(byKey.notice) place(byKey.notice, 0.03, 0.03);
+    if(byKey.yt)     place(byKey.yt,     0.03, 0.55);
 
-      if(byKey.w1)     place(byKey.w1,     0.45, 0.10);
-      if(byKey.w2)     place(byKey.w2,     0.45, 0.35);
-      if(byKey.w3)     place(byKey.w3,     0.20, 0.30);
+    if(byKey.w1)     place(byKey.w1,     0.45, 0.10);
+    if(byKey.w2)     place(byKey.w2,     0.45, 0.35);
+    if(byKey.w3)     place(byKey.w3,     0.20, 0.30);
 
-      if(byKey.w4)     place(byKey.w4,     0.03, 0.78);
-      if(byKey.w5)     place(byKey.w5,     0.45, 0.78);
+    if(byKey.w4)     place(byKey.w4,     0.03, 0.78);
+    if(byKey.w5)     place(byKey.w5,     0.45, 0.78);
 
-      if(byKey.w6)     place(byKey.w6,     0.70, 0.50);
-      if(byKey.w7)     place(byKey.w7,     0.70, 0.05);
-      if(byKey.w8)     place(byKey.w8,     0.70, 0.70);
+    if(byKey.w6)     place(byKey.w6,     0.70, 0.50);
+    if(byKey.w7)     place(byKey.w7,     0.70, 0.05);
+    if(byKey.w8)     place(byKey.w8,     0.70, 0.70);
 
-      if(byKey.w10)    place(byKey.w10,    0.45, 0.60);
-      return;
-    }
+    if(byKey.w10)    place(byKey.w10,    0.45, 0.60);
+    return;
+  }
 
-    // --- 모바일(작은 화면) 레이아웃: 화면 폭을 "꽉" 쓰도록 1~2열 자동 ---
-const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10"];
-let y = 0.03;
+  // ===== 모바일 (원래 버전) =====
+  const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10"];
+  let y = 0.03;
+  order.forEach((k, i) => {
+    const w = byKey[k];
+    if(!w) return;
+    place(w, (i % 2 ? 0.08 : 0.02), y);
+    y += 0.07;
+  });
+}
 
-// 화면 폭을 더 쓰도록 x를 3~4개 존으로 분산
-const xs = (vw < 460)
-  ? [0.08, 0.22, 0.36]               // 아주 좁으면 3존
-  : [0.06, 0.22, 0.38, 0.54];        // 보통 모바일은 4존
-
-order.forEach((k, i) => {
-  const w = byKey[k];
-  if(!w) return;
-
-  // i에 따라 x존을 바꿔주고, 약간씩 흔들어서 "퍼진" 느낌 만들기
-  const baseX = xs[i % xs.length];
-  const jitter = ((i * 17) % 9 - 4) * 0.003; // -0.012~+0.012 정도
-  place(w, baseX + jitter, y);
-
-  y += (vw < 460 ? 0.09 : 0.075); // 세로 간격만 살짝 넉넉
-});
-
-  wins.forEach(win => {
-    const initZ = parseInt(win.getAttribute("data-z") || "0", 10);
-    win.style.zIndex = 50 + initZ;
-
-    win.addEventListener("pointerdown", () => bringToFront(win));
-
-    const bar = win.querySelector(".titlebar");
-    let dragging = false;
-    let startX = 0, startY = 0;
-    let winX = 0, winY = 0;
-
-    bar.addEventListener("pointerdown", (e) => {
-      const t = e.target;
-      if(t && t.tagName === "BUTTON") return;
-
-      bringToFront(win);
-      dragging = true;
-      hasUserMoved = true;
-      bar.setPointerCapture(e.pointerId);
-
-      const rect = win.getBoundingClientRect();
-      startX = e.clientX;
-      startY = e.clientY;
-      winX = rect.left;
-      winY = rect.top;
-
-      e.preventDefault();
-    });
 
     bar.addEventListener("pointermove", (e) => {
       if(!dragging) return;

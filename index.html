@@ -253,6 +253,231 @@
       cursor: pointer;
     }
     .yt-window .sound-btn:active { transform: translateY(1px); }
+
+    /* =========================================================
+       ✅ 인덱스 전용: 쪽지 아이콘(큰 버튼) + 안읽음 뱃지 + 메신저 모달
+       (기존 디자인/레이아웃 건드리지 않음)
+       ========================================================= */
+    .dm-fab{
+      position: fixed;
+      right: 18px;
+      bottom: 64px; /* taskbar 위 */
+      z-index: 99999;
+      pointer-events: auto;
+    }
+    .dm-fab button{
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.25);
+      cursor: pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 28px; /* ✅ 아이콘 큼 */
+      line-height: 1;
+    }
+    .dm-fab button:active{ transform: translateY(1px); }
+
+    .dm-badge{
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      min-width: 26px;
+      height: 26px;
+      padding: 0 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.92);
+      font-weight: 900;
+      font-size: 13px;
+      display:none;
+      align-items:center;
+      justify-content:center;
+    }
+
+    @media (max-width: 560px){
+      .dm-fab{ right: 14px; bottom: 66px; }
+      .dm-fab button{
+        width: 78px;
+        height: 78px;
+        border-radius: 22px;
+        font-size: 34px;
+      }
+      .dm-badge{
+        min-width: 30px;
+        height: 30px;
+        font-size: 14px;
+      }
+    }
+
+    .dm-backdrop{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 14px;
+      z-index: 99998;
+      pointer-events: auto;
+    }
+    .dm-modal{
+      width: min(840px, 100%);
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 12px;
+      overflow:hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .dm-modal .titlebar{ cursor: default; }
+    .dm-modal .content{ background: transparent; }
+
+    .dm-head{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content: space-between;
+      padding: 10px;
+      background: rgba(255,255,255,0.55);
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+    }
+    .dm-tabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .dm-tab{
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.75);
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .dm-tab.active{ background: rgba(255,255,255,0.92); }
+
+    .dm-pill{
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.92);
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .dm-pill:active{ transform: translateY(1px); }
+
+    .dm-body{
+      padding: 10px;
+    }
+
+    .dm-list{
+      max-height: min(56vh, 520px);
+      overflow:auto;
+      padding-right: 4px;
+    }
+
+    .dm-msg{
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(0,0,0,0.14);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .dm-msg .top{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size: 12px;
+      color: rgba(0,0,0,0.60);
+      margin-bottom: 8px;
+    }
+    .dm-msg .body{
+      font-size: 14px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      color:#222;
+    }
+    .dm-actions{
+      margin-top: 10px;
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .dm-mini{
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.92);
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .dm-mini.ghost{ background: rgba(255,255,255,0.65); }
+    .dm-mini:active{ transform: translateY(1px); }
+
+    .dm-compose{
+      margin-top: 10px;
+      display:none;
+      gap: 8px;
+    }
+    .dm-compose .field{
+      display:grid;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .dm-compose .label{
+      font-size: 12px;
+      color: rgba(0,0,0,0.65);
+      font-weight: 900;
+    }
+    .dm-compose input, .dm-compose textarea{
+      width:100%;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.90);
+      padding: 11px 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    .dm-compose textarea{
+      min-height: 140px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+    .dm-compose input[readonly]{
+      background: rgba(255,255,255,0.70);
+      color: rgba(0,0,0,0.65);
+    }
+
+    .dm-hint{
+      margin-top: 8px;
+      font-size: 12px;
+      color: rgba(0,0,0,0.60);
+      line-height: 1.35;
+      min-height: 18px;
+    }
+
+    @media (max-width: 560px){
+      .dm-tab, .dm-pill, .dm-mini{ height: 44px; font-size: 14px; }
+      .dm-msg .body{ font-size: 15px; }
+      .dm-list{ max-height: min(62vh, 560px); }
+    }
   </style>
 </head>
 
@@ -396,7 +621,7 @@
       </div>
     </div>
 
-    <!-- 🎵 YouTube Playlist Window (✅ win 클래스라 드래그/앞으로오기 같이 됨) -->
+    <!-- 🎵 YouTube Playlist Window -->
     <div class="win yt-window" data-key="yt" id="ytWin" style="top:260px; left:40px;" data-z="9">
       <div class="titlebar" id="ytDrag">
         <div class="title-left">
@@ -421,6 +646,64 @@
 
   </div>
 
+  <!-- ✅ 쪽지 아이콘(인덱스 전용) -->
+  <div class="dm-fab">
+    <button id="dmFabBtn" title="쪽지함">✉️</button>
+    <div class="dm-badge" id="dmBadge">0</div>
+  </div>
+
+  <!-- ✅ 메신저(인덱스 전용 모달): 받은/보낸 + 즉시답장 -->
+  <div class="dm-backdrop" id="dmBg">
+    <div class="dm-modal">
+      <div class="titlebar">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title" id="dmTitle">내 쪽지함</div>
+        </div>
+        <div class="title-btns">
+          <div class="btn" id="dmCloseBtn" title="닫기"></div>
+        </div>
+      </div>
+
+      <div class="dm-head">
+        <div class="dm-tabs">
+          <button class="dm-tab active" id="dmTabRecv">받은 쪽지</button>
+          <button class="dm-tab" id="dmTabSent">보낸 쪽지</button>
+          <button class="dm-pill" id="dmRefresh">새로고침</button>
+        </div>
+        <button class="dm-pill" id="dmNickBtn">닉네임</button>
+      </div>
+
+      <div class="dm-body">
+        <div class="dm-list" id="dmList"></div>
+
+        <!-- 답장/새 쪽지 작성 -->
+        <div class="dm-compose" id="dmCompose">
+          <div style="flex:1; min-width: 240px;">
+            <div class="field">
+              <div class="label">받는 사람</div>
+              <input id="dmTo" readonly />
+            </div>
+            <div class="field">
+              <div class="label">보내는 사람</div>
+              <input id="dmFrom" readonly />
+            </div>
+            <div class="field">
+              <div class="label">내용</div>
+              <textarea id="dmBody" placeholder="답장 내용을 적어주세요."></textarea>
+            </div>
+            <div class="dm-actions">
+              <button class="dm-mini ghost" id="dmCancel">취소</button>
+              <button class="dm-mini" id="dmSend">보내기</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dm-hint" id="dmHint"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="taskbar">
     <div class="start" onclick="alert('Dear Miracle')">Start</div>
     <div class="brand">Dear Miracle</div>
@@ -428,11 +711,39 @@
     <div class="clock" id="clock">--:--</div>
   </div>
 
+  <!-- ✅ 닉네임 입력(인덱스 전용, board.html과 키 공유) -->
+  <div class="dm-backdrop" id="nickBg" style="z-index: 100000; display:none;">
+    <div class="dm-modal" style="width: min(520px, 100%);">
+      <div class="titlebar" style="cursor: default;">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">닉네임 입력</div>
+        </div>
+        <div class="title-btns">
+          <div class="btn" id="nickClose" title="닫기"></div>
+        </div>
+      </div>
+      <div class="dm-body">
+        <div class="dm-compose" style="display:block;">
+          <div class="field">
+            <div class="label">닉네임</div>
+            <input id="nickInput" placeholder="예: DearMiracle / ㅇㅇ / 닉네임" maxlength="30" />
+          </div>
+          <div class="dm-actions" style="justify-content:flex-end;">
+            <button class="dm-mini ghost" id="nickCancel">취소</button>
+            <button class="dm-mini" id="nickSave">확인</button>
+          </div>
+        </div>
+        <div class="dm-hint" id="nickHint"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
   // ===== 창 드래그 + 앞으로 가져오기 + (첫 로딩) 화면별 자동 배치 =====
   const wins = Array.from(document.querySelectorAll(".win"));
   let topZ = 100;
-  let hasUserMoved = false; // 드래그한 뒤엔 자동배치가 다시 덮어쓰지 않게
+  let hasUserMoved = false;
 
   function bringToFront(win){
     topZ += 1;
@@ -444,7 +755,6 @@
   function clamp(n, min, max){ return Math.min(Math.max(n, min), max); }
 
   function place(win, x01, y01){
-    // x01/y01: 0~1 비율 좌표(화면에 맞춰 퍼지게)
     const taskbar = document.querySelector(".taskbar");
     const taskH = taskbar ? taskbar.offsetHeight : 44;
 
@@ -464,7 +774,6 @@
     let left = marginX + (usableW * x01);
     let top  = marginTop + (usableH * y01);
 
-    // 드래그 제한과 비슷하게 화면 밖 안 나가게 클램프
     const maxX = vw - 60;
     const maxY = vh - 120;
     left = clamp(left, -40, maxX);
@@ -475,16 +784,13 @@
   }
 
   function autoLayout(){
-    // 사용자가 한 번이라도 움직였으면 재배치 안 함(사용자 배치 존중)
     if(hasUserMoved) return;
 
-    // 키로 찾아서 배치
     const byKey = {};
     wins.forEach(w => { byKey[w.dataset.key] = w; });
 
     const vw = window.innerWidth;
 
-    // ✅ PC(가로 넓음): “퍼지게” + w10(0722_1029_010.mp4)은 우하단
     if(vw >= 1100){
       if(byKey.notice) place(byKey.notice, 0.02, 0.03);
       if(byKey.yt)     place(byKey.yt,     0.05, 0.45);
@@ -500,12 +806,10 @@
       if(byKey.w6)     place(byKey.w6,     0.70, 0.45);
       if(byKey.w8)     place(byKey.w8,     0.80, 0.62);
 
-      // ✅ 네가 말한 “10번(가리는 창)” 우하단으로
       if(byKey.w10)    place(byKey.w10,    0.72, 0.82);
       return;
     }
 
-    // ✅ 태블릿/중간 화면: 2열 느낌으로 덜 겹치게
     if(vw >= 700){
       if(byKey.notice) place(byKey.notice, 0.03, 0.03);
       if(byKey.yt)     place(byKey.yt,     0.03, 0.55);
@@ -525,7 +829,6 @@
       return;
     }
 
-    // ✅ 모바일: 위에서부터 “계단식”으로 (겹치긴 하지만 보기 좋게)
     const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10"];
     let y = 0.03;
     order.forEach((k, i) => {
@@ -536,7 +839,6 @@
     });
   }
 
-  // 초기 z 적용 + 드래그/포커스
   wins.forEach(win => {
     const initZ = parseInt(win.getAttribute("data-z") || "0", 10);
     win.style.zIndex = 50 + initZ;
@@ -549,9 +851,13 @@
     let winX = 0, winY = 0;
 
     bar.addEventListener("pointerdown", (e) => {
+      // 유튜브 sound-btn 같은 버튼 클릭은 드래그로 안 잡히게
+      const t = e.target;
+      if(t && t.tagName === "BUTTON") return;
+
       bringToFront(win);
       dragging = true;
-      hasUserMoved = true; // ✅ 사용자가 움직였으니 이제 자동배치 금지
+      hasUserMoved = true;
       bar.setPointerCapture(e.pointerId);
 
       const rect = win.getBoundingClientRect();
@@ -585,15 +891,8 @@
     bar.addEventListener("pointercancel", () => dragging = false);
   });
 
-  // ✅ 첫 로딩 때만 자동배치
-  window.addEventListener("load", () => {
-    autoLayout();
-  });
-
-  // 리사이즈 시에도 “사용자가 안 건드렸을 때만” 다시 배치
-  window.addEventListener("resize", () => {
-    autoLayout();
-  });
+  window.addEventListener("load", () => autoLayout());
+  window.addEventListener("resize", () => autoLayout());
 
   // ===== 시계 =====
   const clock = document.getElementById("clock");
@@ -620,6 +919,378 @@
     isMuted = !isMuted;
     soundBtn.textContent = isMuted ? "🔇" : "🔊";
   });
-</script>
+  </script>
+
+  <!-- =========================================================
+       ✅ Firebase 쪽지(인덱스): 안읽음 뱃지 + 메신저 모달 + 즉시 답장
+       - board.html이랑 같은 messages 컬렉션 사용
+       - 닉네임 키도 board랑 공유: localStorage "dm_nick"
+       ========================================================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // ✅ board.html의 firebaseConfig와 "완전히 동일" 해야 함
+    const firebaseConfig = {
+      apiKey: "AIzaSyA1PxEOrwjVi4BOLA13UbFIncTYe6RdYIQ",
+      authDomain: "dear-miracle.firebaseapp.com",
+      projectId: "dear-miracle",
+      storageBucket: "dear-miracle.firebasestorage.app",
+      messagingSenderId: "793139917614",
+      appId: "1:793139917614:web:dec74f65af6a0df1c740bf",
+      measurementId: "G-VF22L8ZR6D"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const $ = (id)=>document.getElementById(id);
+
+    // ===== 닉네임(세션) =====
+    const NICK_KEY = "dm_nick";
+    const READ_KEY_PREFIX = "dm_read_cutoff_"; // dm_read_cutoff_<nick>
+
+    function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }
+    function setNick(n){ localStorage.setItem(NICK_KEY, (n||"").trim()); }
+    function getReadCutoff(nick){
+      const raw = localStorage.getItem(READ_KEY_PREFIX + nick);
+      const ms = raw ? parseInt(raw, 10) : 0;
+      return Number.isFinite(ms) ? ms : 0;
+    }
+    function setReadCutoff(nick, ms){
+      localStorage.setItem(READ_KEY_PREFIX + nick, String(ms));
+    }
+
+    function fmtTime(ts){
+      if(!ts) return "";
+      try{
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        const yy = String(d.getFullYear()).slice(2);
+        const mm = String(d.getMonth()+1).padStart(2,"0");
+        const dd = String(d.getDate()).padStart(2,"0");
+        const hh = String(d.getHours()).padStart(2,"0");
+        const mi = String(d.getMinutes()).padStart(2,"0");
+        return `${yy}.${mm}.${dd} ${hh}:${mi}`;
+      }catch{
+        return "";
+      }
+    }
+
+    // ===== UI refs =====
+    const dmFabBtn = $("dmFabBtn");
+    const dmBadge  = $("dmBadge");
+
+    const dmBg     = $("dmBg");
+    const dmCloseBtn = $("dmCloseBtn");
+
+    const dmTabRecv = $("dmTabRecv");
+    const dmTabSent = $("dmTabSent");
+    const dmRefresh = $("dmRefresh");
+    const dmNickBtn = $("dmNickBtn");
+
+    const dmList   = $("dmList");
+    const dmHint   = $("dmHint");
+
+    const dmCompose = $("dmCompose");
+    const dmTo    = $("dmTo");
+    const dmFrom  = $("dmFrom");
+    const dmBody  = $("dmBody");
+    const dmCancel = $("dmCancel");
+    const dmSend   = $("dmSend");
+
+    // 닉 모달
+    const nickBg = $("nickBg");
+    const nickClose = $("nickClose");
+    const nickInput = $("nickInput");
+    const nickCancel = $("nickCancel");
+    const nickSave = $("nickSave");
+    const nickHint = $("nickHint");
+
+    // ===== 모드 =====
+    let inboxMode = "recv"; // recv | sent
+
+    function setTab(mode){
+      inboxMode = mode;
+      dmTabRecv.classList.toggle("active", mode==="recv");
+      dmTabSent.classList.toggle("active", mode==="sent");
+    }
+
+    function openNickModal(force=false){
+      nickHint.textContent = "";
+      nickInput.value = getNick();
+      nickBg.style.display = "flex";
+      // force일 때 닫기 숨기려면:
+      nickClose.style.display = force ? "none" : "block";
+      setTimeout(()=> nickInput.focus(), 30);
+    }
+    function closeNickModal(){
+      nickBg.style.display = "none";
+    }
+
+    function ensureNick(){
+      const n = getNick();
+      if(!n){
+        openNickModal(true);
+        return false;
+      }
+      return true;
+    }
+
+    nickSave.addEventListener("click", ()=>{
+      const val = (nickInput.value || "").trim();
+      if(!val){
+        nickHint.textContent = "닉네임을 입력해주세요.";
+        return;
+      }
+      setNick(val);
+      closeNickModal();
+      refreshBadge(); // 닉 설정 후 뱃지 갱신
+    });
+    nickCancel.addEventListener("click", ()=>{
+      if(getNick()) closeNickModal();
+      else nickHint.textContent = "닉네임을 입력해야 진행할 수 있습니다.";
+    });
+    nickClose.addEventListener("click", closeNickModal);
+    nickBg.addEventListener("click", (e)=>{ if(e.target===nickBg && getNick()) closeNickModal(); });
+
+    // ===== DM 모달 열기/닫기 =====
+    function openDM(){
+      if(!ensureNick()) return;
+      dmBg.style.display = "flex";
+      setTab("recv");
+      dmCompose.style.display = "none";
+      dmFrom.value = getNick();
+      loadInbox();     // 목록
+      markReadNow();   // 열었으면 "지금까지는 읽음" 처리
+    }
+    function closeDM(){
+      dmBg.style.display = "none";
+      dmCompose.style.display = "none";
+      dmHint.textContent = "";
+    }
+
+    dmFabBtn.addEventListener("click", openDM);
+    dmCloseBtn.addEventListener("click", closeDM);
+    dmBg.addEventListener("click", (e)=>{ if(e.target===dmBg) closeDM(); });
+
+    dmNickBtn.addEventListener("click", ()=> openNickModal(false));
+
+    dmTabRecv.addEventListener("click", ()=>{ if(!ensureNick()) return; setTab("recv"); dmCompose.style.display="none"; loadInbox(); });
+    dmTabSent.addEventListener("click", ()=>{ if(!ensureNick()) return; setTab("sent"); dmCompose.style.display="none"; loadInbox(); });
+    dmRefresh.addEventListener("click", ()=>{ if(!ensureNick()) return; dmCompose.style.display="none"; loadInbox(); refreshBadge(); });
+
+    // ===== 안읽음 계산(로컬 기준) =====
+    // - "진짜 읽음" 필드는 DB에 없음(지금 구조 그대로)
+    // - 그래서: "쪽지함을 연 시간"을 내 로컬에 저장해서
+    //   그 이후로 온 '받은 쪽지'만 안읽음으로 표시
+    function markReadNow(){
+      const me = getNick();
+      if(!me) return;
+      setReadCutoff(me, Date.now());
+      updateBadge(0);
+    }
+
+    function updateBadge(n){
+      const num = Math.max(0, Number(n)||0);
+      dmBadge.textContent = String(num);
+      dmBadge.style.display = num > 0 ? "inline-flex" : "none";
+    }
+
+    async function refreshBadge(){
+      const me = getNick();
+      if(!me){
+        updateBadge(0);
+        return;
+      }
+
+      // "받은 쪽지" 중, cutoff 이후 createdAt인 것만 카운트
+      const cutoffMs = getReadCutoff(me);
+      try{
+        const qy = query(
+          collection(db, "messages"),
+          where("to", "==", me),
+          orderBy("createdAt", "desc"),
+          limit(50)
+        );
+
+        const snap = await getDocs(qy);
+        let cnt = 0;
+        snap.forEach(docu=>{
+          const m = docu.data();
+          const t = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          if(t && t > cutoffMs) cnt += 1;
+        });
+
+        updateBadge(cnt);
+      }catch(err){
+        console.error(err);
+        // 실패해도 뱃지는 그냥 유지/숨김
+      }
+    }
+
+    // ===== 목록 로드 + 렌더 + “바로 답장” =====
+    function showHint(s){ dmHint.textContent = s || ""; }
+
+    function openCompose(toNick){
+      if(!ensureNick()) return;
+      dmCompose.style.display = "flex";
+      dmFrom.value = getNick();
+      dmTo.value = (toNick || "").trim();
+      dmBody.value = "";
+      setTimeout(()=> dmBody.focus(), 20);
+    }
+    function closeCompose(){
+      dmCompose.style.display = "none";
+      dmTo.value = "";
+      dmBody.value = "";
+    }
+
+    dmCancel.addEventListener("click", closeCompose);
+
+    dmSend.addEventListener("click", async ()=>{
+      if(!ensureNick()) return;
+
+      const from = getNick();
+      const to = (dmTo.value || "").trim();
+      const body = (dmBody.value || "").trim();
+
+      if(!to){
+        showHint("받는 사람이 없습니다.");
+        return;
+      }
+      if(to === from){
+        showHint("자기 자신에게는 보낼 수 없습니다.");
+        return;
+      }
+      if(!body){
+        showHint("내용을 입력해주세요.");
+        return;
+      }
+
+      try{
+        dmSend.disabled = true;
+        showHint("전송 중…");
+
+        await addDoc(collection(db, "messages"), {
+          from, to, body,
+          postId: "", // 인덱스에서 보낸 건 연결글 없음
+          createdAt: serverTimestamp()
+        });
+
+        showHint("전송되었습니다.");
+        closeCompose();
+        // 보낸함 갱신까지 원하면 유지:
+        if(inboxMode === "sent") await loadInbox();
+        await refreshBadge();
+      }catch(err){
+        console.error(err);
+        showHint("전송에 실패했습니다.");
+      }finally{
+        dmSend.disabled = false;
+      }
+    });
+
+    async function loadInbox(){
+      const me = getNick();
+      if(!me) return;
+
+      dmList.innerHTML = "";
+      showHint("불러오는 중…");
+
+      try{
+        let qy;
+        if(inboxMode === "recv"){
+          qy = query(
+            collection(db, "messages"),
+            where("to", "==", me),
+            orderBy("createdAt", "desc"),
+            limit(50)
+          );
+        }else{
+          qy = query(
+            collection(db, "messages"),
+            where("from", "==", me),
+            orderBy("createdAt", "desc"),
+            limit(50)
+          );
+        }
+
+        const snap = await getDocs(qy);
+
+        if(snap.empty){
+          showHint(inboxMode==="recv" ? "받은 쪽지가 없습니다." : "보낸 쪽지가 없습니다.");
+          return;
+        }
+
+        const cutoffMs = getReadCutoff(me);
+        const frag = document.createDocumentFragment();
+
+        snap.forEach(docu=>{
+          const m = docu.data();
+          const div = document.createElement("div");
+          div.className = "dm-msg";
+
+          const top = document.createElement("div");
+          top.className = "top";
+
+          const t = fmtTime(m.createdAt);
+          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+
+          // 안읽음 표시(받은함에서만)
+          const isUnread = inboxMode==="recv" && whenMs && whenMs > cutoffMs;
+
+          const who = inboxMode==="recv"
+            ? `보낸 사람: ${m.from || "-"}`
+            : `받는 사람: ${m.to || "-"}`;
+
+          top.textContent = `${who} · ${t}${isUnread ? " · 안읽음" : ""}`;
+
+          const body = document.createElement("div");
+          body.className = "body";
+          body.textContent = m.body || "";
+
+          div.appendChild(top);
+          div.appendChild(body);
+
+          // ✅ 받은함에서는 "바로 답장" 버튼 제공
+          if(inboxMode === "recv"){
+            const actions = document.createElement("div");
+            actions.className = "dm-actions";
+
+            const reply = document.createElement("button");
+            reply.className = "dm-mini";
+            reply.textContent = "바로 답장";
+            reply.addEventListener("click", (e)=>{
+              e.stopPropagation();
+              openCompose(m.from || "");
+            });
+
+            actions.appendChild(reply);
+            div.appendChild(actions);
+          }
+
+          frag.appendChild(div);
+        });
+
+        dmList.appendChild(frag);
+        showHint("");
+
+        // 목록을 열어봤으니 읽음 처리 + 뱃지 갱신
+        markReadNow();
+        await refreshBadge();
+      }catch(err){
+        console.error(err);
+        showHint("쪽지함을 불러오지 못했습니다.");
+      }
+    }
+
+    // ===== 초기: 뱃지 주기적으로 갱신 =====
+    // (firebase onSnapshot 안 쓰고, 가벼운 폴링로직)
+    await refreshBadge();
+    setInterval(refreshBadge, 15000); // 15초마다
+
+  </script>
 </body>
-  </html>
+</html>

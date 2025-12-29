@@ -27,8 +27,7 @@
     }
 
     .wallpaper {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image: url("bg.png");
       background-size: cover;
       background-position: center;
@@ -37,9 +36,7 @@
       transform: scale(1.02);
     }
     .wallpaper::after{
-      content:"";
-      position:absolute;
-      inset:0;
+      content:""; position:absolute; inset:0;
       background:
         radial-gradient(1200px 600px at 20% 15%, rgba(255,255,255,0.30), transparent 60%),
         radial-gradient(900px 500px at 80% 25%, rgba(255,255,255,0.22), transparent 55%),
@@ -66,9 +63,7 @@
 
     .titlebar {
       height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
       padding: 0 8px 0 10px;
       background: linear-gradient(to bottom, var(--titlebar-top), var(--titlebar-bot));
       border-bottom: 1px solid rgba(0,0,0,0.18);
@@ -76,7 +71,6 @@
       cursor: grab;
     }
     .titlebar:active { cursor: grabbing; }
-
     .title-left { display:flex; align-items:center; gap:8px; min-width:0; }
     .dot {
       width: 10px; height: 10px; border-radius: 2px;
@@ -86,10 +80,8 @@
     }
     .title {
       font-size: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 420px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 520px;
     }
     .title-btns { display:flex; gap:6px; flex:0 0 auto; }
     .btn {
@@ -100,46 +92,41 @@
       cursor: pointer;
     }
 
-    .content {
-      background: var(--glass);
-      padding: 10px;
-    }
+    .content { background: var(--glass); padding: 10px; height: calc(100% - 30px); display:flex; flex-direction:column; }
 
-    /* ===== Board UI ===== */
     .board-top {
       display:flex; align-items:center; justify-content:space-between;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 10px; margin-bottom: 10px;
     }
     .board-top .desc {
       font-size: 12px;
-      color: rgba(0,0,0,0.55);
+      color: rgba(0,0,0,0.65);
       background: rgba(255,255,255,0.55);
       border: 1px solid rgba(0,0,0,0.12);
       padding: 6px 8px;
       border-radius: 8px;
       flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .board-top .actions { display:flex; gap:8px; }
+    .board-top .actions { display:flex; gap:8px; align-items:center; }
     .pill {
-      height: 30px;
-      padding: 0 12px;
-      border-radius: 8px;
+      height: 30px; padding: 0 12px; border-radius: 8px;
       border: 1px solid rgba(0,0,0,0.22);
-      background: rgba(255,255,255,0.85);
-      font-weight: 700;
-      font-size: 12px;
-      cursor: pointer;
+      background: rgba(255,255,255,0.90);
+      font-weight: 700; font-size: 12px; cursor: pointer;
     }
-    .pill:active{ transform: translateY(1px); }
+    .pill.ghost { background: rgba(255,255,255,0.70); }
+    .pill.danger { background: rgba(255,240,240,0.85); }
 
     .list {
-      display: grid;
-      gap: 10px;
-      max-height: 420px;
+      display: grid; gap: 10px;
       overflow: auto;
       padding-right: 4px;
+      flex: 1;
     }
+    .empty { font-size: 12px; color: var(--muted); }
 
     .card {
       background: rgba(255,255,255,0.62);
@@ -152,68 +139,94 @@
       display:flex; gap:10px; flex-wrap:wrap;
       font-size: 11px; color: rgba(0,0,0,0.55);
       margin-bottom: 8px;
+      align-items:center;
+      justify-content:space-between;
     }
-    .text { font-size: 13px; line-height: 1.4; white-space: pre-wrap; }
+    .meta-left { display:flex; gap:10px; flex-wrap:wrap; }
+    .meta-right { display:flex; gap:6px; align-items:center; }
+    .text { font-size: 13px; line-height: 1.45; white-space: pre-wrap; }
 
-    /* 모달 */
+    .comments {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,0.10);
+      display: grid;
+      gap: 8px;
+    }
+    .c-item{
+      background: rgba(255,255,255,0.52);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 10px;
+      padding: 8px;
+    }
+    .c-meta{
+      display:flex; gap:10px; flex-wrap:wrap;
+      font-size: 11px; color: rgba(0,0,0,0.55);
+      margin-bottom: 6px;
+    }
+    .c-text{ font-size: 13px; white-space: pre-wrap; line-height: 1.4; }
+    .lock{ font-weight:700; }
+
+    .comment-form{
+      display:grid; gap:8px;
+      background: rgba(255,255,255,0.45);
+      border: 1px dashed rgba(0,0,0,0.14);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .row input, .row textarea{
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.92);
+      padding: 10px;
+      font-size: 14px;
+      outline: none;
+      flex: 1;
+      min-width: 180px;
+    }
+    .row textarea{ width:100%; min-height: 90px; resize: vertical; flex: 1 1 100%; }
+
     .modal-backdrop{
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.35);
-      display:none;
-      align-items:center; justify-content:center;
-      padding: 16px;
-      z-index: 9999;
-      pointer-events: auto;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+      display:none; align-items:center; justify-content:center;
+      padding: 16px; z-index: 9999;
     }
     .modal{
       width: min(720px, 100%);
       background: rgba(255,255,255,0.78);
       border: 1px solid rgba(0,0,0,0.18);
-      border-radius: 12px;
-      overflow:hidden;
+      border-radius: 12px; overflow:hidden;
       box-shadow: 0 20px 60px rgba(0,0,0,0.35);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      user-select: text;
     }
-    .modal .content{ background: transparent; }
+    .modal .content{ background: transparent; height:auto; }
     .field{ display:grid; gap:6px; margin-bottom: 10px; }
     .field input, .field textarea{
-      width:100%;
-      border-radius: 10px;
+      width:100%; border-radius: 10px;
       border: 1px solid rgba(0,0,0,0.18);
-      background: rgba(255,255,255,0.85);
-      padding: 10px;
-      font-size: 14px;
-      outline: none;
+      background: rgba(255,255,255,0.92);
+      padding: 10px; font-size: 14px; outline: none;
     }
     .field textarea{ min-height: 160px; resize: vertical; }
-    .modal-actions{
-      display:flex; justify-content:flex-end; gap:8px;
-      margin-top: 10px;
-    }
+    .hint { font-size: 11px; color: rgba(0,0,0,0.55); }
+    .modal-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top: 10px; }
 
-    /* taskbar */
     .taskbar {
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0 12px;
+      position: fixed; left: 0; right: 0; bottom: 0;
+      height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 12px;
       background: rgba(255,255,255,0.55);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-top: 1px solid rgba(0,0,0,0.18);
-      pointer-events: none;
     }
     .brand { font-size: 13px; color:#222; font-weight:700; letter-spacing:0.2px; }
     .spacer { flex:1; }
     .clock { font-size: 12px; color: rgba(0,0,0,0.65); font-variant-numeric: tabular-nums; }
 
     @media (max-width: 820px){
-      #boardWin { width: calc(100vw - 24px) !important; left: 12px !important; }
+      .board-top .desc { max-width: 52vw; }
     }
   </style>
 </head>
@@ -222,43 +235,45 @@
   <div class="wallpaper"></div>
 
   <div class="desk" id="desk">
-    <!-- ✅ 게시판 전용 윈도우 -->
-    <div class="win is-front" id="boardWin" style="left:60px; top:50px; width: 920px;" data-z="50">
+    <div class="win is-front" id="boardWin" data-z="50">
       <div class="titlebar">
         <div class="title-left">
           <div class="dot"></div>
-          <div class="title">구인 게시판</div>
+          <div class="title" id="winTitle">구인 게시판</div>
         </div>
         <div class="title-btns">
           <div class="btn" id="btnHome" title="홈으로"></div>
           <div class="btn" id="btnWrite" title="글쓰기"></div>
           <div class="btn" id="btnReload" title="새로고침"></div>
+          <div class="btn" id="btnAdmin" title="관리자"></div>
         </div>
       </div>
 
       <div class="content">
         <div class="board-top">
-          <div class="desc">전체 공개 · 컨택은 비밀댓글(관리자+글쓴이)로 진행 예정</div>
+          <div class="desc" id="descText">전체 공개 · 컨택은 비밀댓글(글쓴이/운영자 열람)로 진행 예정</div>
           <div class="actions">
+            <button class="pill ghost" id="adminState">ADMIN: OFF</button>
             <button class="pill" id="homeBtn">← 홈으로</button>
             <button class="pill" id="writeBtn">글쓰기</button>
           </div>
         </div>
 
-        <div class="list" id="list"></div>
+        <div class="list" id="list">
+          <div class="empty">불러오는 중입니다…</div>
+        </div>
 
         <div style="margin-top:10px; font-size:11px; color:rgba(0,0,0,0.55);" id="status"></div>
       </div>
     </div>
   </div>
 
-  <!-- 글쓰기 모달 -->
   <div class="modal-backdrop" id="modalBg">
     <div class="modal">
       <div class="titlebar" style="cursor: default;">
         <div class="title-left">
           <div class="dot"></div>
-          <div class="title">새 글</div>
+          <div class="title" id="modalTitle">새 글</div>
         </div>
         <div class="title-btns">
           <div class="btn" id="closeModal"></div>
@@ -275,11 +290,18 @@
         <div class="field">
           <textarea id="inpContent" placeholder="내용"></textarea>
         </div>
+        <div class="field">
+          <input id="inpPass" placeholder="글 비밀번호 (수정/삭제/비밀댓글 열람용)" type="password" />
+          <div class="hint">* 비밀번호는 저장 후 복구할 수 없습니다. 반드시 기억해 주세요.</div>
+        </div>
+
         <div class="modal-actions">
           <button class="pill" id="cancelBtn">취소</button>
           <button class="pill" id="submitBtn">등록</button>
         </div>
-        <div style="margin-top:8px; font-size:11px; color:rgba(0,0,0,0.55);" id="modalHint"></div>
+        <div class="hint" id="modalHint" style="margin-top:8px;">
+          * 현재는 “누구나 글 작성 가능” 상태입니다.
+        </div>
       </div>
     </div>
   </div>
@@ -290,33 +312,87 @@
     <div class="clock" id="clock">--:--</div>
   </div>
 
-  <!-- ✅ Firebase SDK (JS 코드보다 위에 있어야 함) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
-    // =========================
-    // 1) Window drag + z
-    // =========================
+    const ADMIN_KEY = "CHANGE_ME_TO_SOMETHING_STRONG";
+    const LS_ADMIN = "dm_admin_on";
+    const LS_UNLOCK_PREFIX = "dm_unlock_";
+
+    const $ = (id)=>document.getElementById(id);
+
+    function esc(s=''){
+      return String(s).replace(/[&<>"']/g, m => (
+        { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m]
+      ));
+    }
+    function whenText(ts){
+      if (!ts) return "방금";
+      const d = ts.toDate ? ts.toDate() : ts;
+      return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+    }
+    async function sha256Hex(str){
+      const enc = new TextEncoder().encode(str);
+      const buf = await crypto.subtle.digest("SHA-256", enc);
+      const arr = Array.from(new Uint8Array(buf));
+      return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
+    }
+    function randSalt(len=10){
+      const chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let s="";
+      for(let i=0;i<len;i++) s += chars[Math.floor(Math.random()*chars.length)];
+      return s;
+    }
+    function isAdmin(){
+      return localStorage.getItem(LS_ADMIN)==="1";
+    }
+    function setAdmin(on){
+      localStorage.setItem(LS_ADMIN, on ? "1" : "0");
+      renderAdminState();
+      location.reload();
+    }
+    function isUnlocked(postId){
+      if (isAdmin()) return true;
+      return localStorage.getItem(LS_UNLOCK_PREFIX+postId)==="1";
+    }
+    function setUnlocked(postId, on){
+      localStorage.setItem(LS_UNLOCK_PREFIX+postId, on ? "1" : "0");
+    }
+
+    function layoutBoardWin(){
+      const win = $("boardWin");
+      const taskbarH = 44;
+      const pad = 12;
+
+      const w = Math.min(920, window.innerWidth - pad*2);
+      const h = Math.min(640, window.innerHeight - taskbarH - pad*2);
+
+      const left = Math.max(pad, Math.round((window.innerWidth - w)/2));
+      const top  = Math.max(pad, Math.round((window.innerHeight - taskbarH - h)/2));
+
+      win.style.width = w + "px";
+      win.style.height = h + "px";
+      win.style.left = left + "px";
+      win.style.top = top + "px";
+    }
+    window.addEventListener("resize", layoutBoardWin);
+
     const wins = Array.from(document.querySelectorAll(".win"));
     let topZ = 100;
-
     function bringToFront(win){
       topZ += 1;
       win.style.zIndex = topZ;
       wins.forEach(w => w.classList.remove("is-front"));
       win.classList.add("is-front");
     }
-
     wins.forEach(win => {
       const initZ = parseInt(win.getAttribute("data-z") || "0", 10);
       win.style.zIndex = 50 + initZ;
-
       win.addEventListener("pointerdown", () => bringToFront(win));
 
       const bar = win.querySelector(".titlebar");
-      let dragging = false;
-      let startX = 0, startY = 0, winX = 0, winY = 0;
+      let dragging = false, startX=0, startY=0, winX=0, winY=0;
 
       bar.addEventListener("pointerdown", (e) => {
         bringToFront(win);
@@ -350,48 +426,78 @@
       bar.addEventListener("pointercancel", () => dragging = false);
     });
 
-    // =========================
-    // 2) Clock
-    // =========================
-    const clock = document.getElementById("clock");
+    const clock = $("clock");
     function tick(){
       const d = new Date();
-      clock.textContent =
-        String(d.getHours()).padStart(2,"0") + ":" +
-        String(d.getMinutes()).padStart(2,"0");
+      clock.textContent = String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
     }
-    tick(); setInterval(tick, 10000);
+    tick(); setInterval(tick, 10_000);
 
-    // =========================
-    // 3) Nav buttons
-    // =========================
-    const goHome = ()=> location.href = "index.html";
-    document.getElementById("homeBtn").onclick = goHome;
-    document.getElementById("btnHome").onclick = goHome;
-
-    // =========================
-    // 4) Modal UI
-    // =========================
-    const modalBg = document.getElementById("modalBg");
-    const openModal = ()=> {
-      modalBg.style.display = "flex";
-      modalHint.textContent = "";
-      // 포커스
-      setTimeout(()=> inpTitle.focus(), 0);
-    };
+    const modalBg = $("modalBg");
+    const openModal = ()=> modalBg.style.display = "flex";
     const closeModal = ()=> modalBg.style.display = "none";
 
-    document.getElementById("writeBtn").onclick = openModal;
-    document.getElementById("btnWrite").onclick = openModal;
-    document.getElementById("closeModal").onclick = closeModal;
-    document.getElementById("cancelBtn").onclick = closeModal;
+    $("btnWrite").onclick = ()=> startCreate();
+    $("writeBtn").onclick = ()=> startCreate();
+    $("closeModal").onclick = closeModal;
+    $("cancelBtn").onclick = closeModal;
     modalBg.addEventListener("click", (e)=>{ if(e.target === modalBg) closeModal(); });
 
-    document.getElementById("btnReload").onclick = ()=> loadPosts();
+    const goHome = ()=> location.href = "index.html";
+    $("homeBtn").onclick = goHome;
+    $("btnHome").onclick = goHome;
+    $("btnReload").onclick = ()=> location.reload();
 
-    // =========================
-    // 5) Firebase 설정 (🔥 네 스샷 값 반영)
-    // =========================
+    $("btnAdmin").onclick = toggleAdminPrompt;
+    $("adminState").onclick = toggleAdminPrompt;
+
+    function renderAdminState(){
+      $("adminState").textContent = "ADMIN: " + (isAdmin() ? "ON" : "OFF");
+    }
+    function toggleAdminPrompt(){
+      if (isAdmin()){
+        if(confirm("관리자 모드를 해제하시겠습니까?")) setAdmin(false);
+        return;
+      }
+      const key = prompt("관리자 키를 입력해 주세요.");
+      if (!key) return;
+      if (key === ADMIN_KEY){
+        setAdmin(true);
+      } else {
+        alert("관리자 키가 올바르지 않습니다.");
+      }
+    }
+
+    let mode = "create";
+    let editPostId = null;
+
+    function clearModal(){
+      $("inpTitle").value = "";
+      $("inpAuthor").value = "";
+      $("inpContent").value = "";
+      $("inpPass").value = "";
+      editPostId = null;
+    }
+    function startCreate(){
+      mode = "create";
+      $("modalTitle").textContent = "새 글";
+      $("submitBtn").textContent = "등록";
+      clearModal();
+      openModal();
+    }
+    function startEdit(post){
+      mode = "edit";
+      editPostId = post.id;
+      $("modalTitle").textContent = "글 수정";
+      $("submitBtn").textContent = "수정 저장";
+
+      $("inpTitle").value = post.title || "";
+      $("inpAuthor").value = post.author || "";
+      $("inpContent").value = post.content || "";
+      $("inpPass").value = "";
+      openModal();
+    }
+
     const firebaseConfig = {
       apiKey: "AIzaSyA1PxE0rwjVi4BOLA13UbFIncTYe6RdYIQ",
       authDomain: "dear-miracle.firebaseapp.com",
@@ -399,129 +505,308 @@
       storageBucket: "dear-miracle.appspot.com",
       messagingSenderId: "793139917614",
       appId: "1:793139917614:web:dec74f65af6a0df1c740bf"
-      // measurementId는 필요 없어서 빼도 됨
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // =========================
-    // 6) Board logic
-    // =========================
-    const list = document.getElementById("list");
-    const status = document.getElementById("status");
+    const list = $("list");
+    const status = $("status");
+    let unsub = null;
 
-    const inpTitle = document.getElementById("inpTitle");
-    const inpAuthor = document.getElementById("inpAuthor");
-    const inpContent = document.getElementById("inpContent");
-    const submitBtn = document.getElementById("submitBtn");
-    const modalHint = document.getElementById("modalHint");
-
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, (m)=>({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
+    function postDocToObj(doc){
+      const d = doc.data();
+      return {
+        id: doc.id,
+        title: d.title,
+        author: d.author,
+        content: d.content,
+        createdAt: d.createdAt,
+        updatedAt: d.updatedAt,
+        salt: d.salt,
+        passHash: d.passHash
+      };
     }
 
-    function fmtTime(ts){
-      try{
-        const d = ts.toDate();
-        const yy = d.getFullYear();
-        const mm = String(d.getMonth()+1).padStart(2,"0");
-        const dd = String(d.getDate()).padStart(2,"0");
-        const hh = String(d.getHours()).padStart(2,"0");
-        const mi = String(d.getMinutes()).padStart(2,"0");
-        return `${yy}-${mm}-${dd} ${hh}:${mi}`;
-      }catch(e){
-        return "방금";
+    function renderPostCard(post){
+      const card = document.createElement("div");
+      card.className = "card";
+      const when = post.createdAt ? whenText(post.createdAt) : "방금";
+      const updated = post.updatedAt ? (" · 수정 " + whenText(post.updatedAt)) : "";
+      const unlocked = isUnlocked(post.id);
+
+      card.innerHTML = `
+        <h3>${esc(post.title || "")}</h3>
+        <div class="meta">
+          <div class="meta-left">
+            <span>작성자: ${esc(post.author || "")}</span>
+            <span>작성 ${esc(when)}${esc(updated)}</span>
+            <span style="opacity:.55">id: ${esc(post.id)}</span>
+            ${unlocked ? `<span class="lock">🔓 열람 가능</span>` : `<span class="lock">🔒 잠김</span>`}
+          </div>
+          <div class="meta-right">
+            <button class="pill ghost" data-act="unlock">잠금 해제</button>
+            <button class="pill" data-act="comment">댓글</button>
+            <button class="pill" data-act="edit">수정</button>
+            <button class="pill danger" data-act="del">삭제</button>
+          </div>
+        </div>
+        <div class="text">${esc(post.content || "")}</div>
+
+        <div class="comments" id="comments_${post.id}">
+          <div class="empty">댓글을 불러오는 중입니다…</div>
+        </div>
+
+        <div class="comment-form" id="cform_${post.id}" style="display:none;">
+          <div class="row">
+            <input id="cAuthor_${post.id}" placeholder="댓글 작성자(닉네임)" />
+            <button class="pill ghost" id="cSecret_${post.id}" data-on="0">비밀댓글: OFF</button>
+          </div>
+          <div class="row">
+            <textarea id="cText_${post.id}" placeholder="댓글 내용"></textarea>
+          </div>
+          <div class="row">
+            <button class="pill" id="cSubmit_${post.id}">댓글 등록</button>
+          </div>
+          <div class="hint">* 비밀댓글은 글 비밀번호를 확인한 사용자(글쓴이/운영자)만 열람할 수 있습니다.</div>
+        </div>
+      `;
+
+      card.querySelector('[data-act="unlock"]').onclick = ()=> unlockPostFlow(post);
+      card.querySelector('[data-act="comment"]').onclick = ()=> toggleCommentForm(post.id);
+      card.querySelector('[data-act="edit"]').onclick = ()=> editFlow(post);
+      card.querySelector('[data-act="del"]').onclick = ()=> deleteFlow(post);
+
+      const secBtn = card.querySelector(`#cSecret_${post.id}`);
+      secBtn.onclick = ()=>{
+        const on = secBtn.getAttribute("data-on")==="1";
+        secBtn.setAttribute("data-on", on ? "0":"1");
+        secBtn.textContent = "비밀댓글: " + (on ? "OFF" : "ON");
+      };
+
+      card.querySelector(`#cSubmit_${post.id}`).onclick = ()=> submitComment(post);
+      return card;
+    }
+
+    function toggleCommentForm(postId){
+      const f = document.getElementById(`cform_${postId}`);
+      f.style.display = (f.style.display === "none") ? "block" : "none";
+    }
+
+    function mountComments(postId){
+      const wrap = document.getElementById(`comments_${postId}`);
+      if (!wrap) return;
+
+      db.collection("posts").doc(postId).collection("comments")
+        .orderBy("createdAt","asc")
+        .onSnapshot(snap => {
+          wrap.innerHTML = "";
+          if (snap.empty){
+            wrap.innerHTML = `<div class="empty">등록된 댓글이 없습니다.</div>`;
+            return;
+          }
+          snap.forEach(doc=>{
+            const c = doc.data();
+            const secret = !!c.secret;
+            const canSee = !secret || isUnlocked(postId) || isAdmin();
+
+            const item = document.createElement("div");
+            item.className = "c-item";
+            item.innerHTML = `
+              <div class="c-meta">
+                <span>작성자: ${esc(c.author || "")}</span>
+                <span>${esc(c.createdAt ? whenText(c.createdAt) : "방금")}</span>
+                ${secret ? `<span class="lock">🔒 비밀댓글</span>` : ``}
+                ${isAdmin() ? `<span style="opacity:.6">cid: ${esc(doc.id)}</span>` : ``}
+              </div>
+              <div class="c-text">${
+                canSee ? esc(c.content || "") : `<span class="lock">비밀댓글입니다.</span>`
+              }</div>
+            `;
+            wrap.appendChild(item);
+          });
+        }, err=>{
+          console.error(err);
+          wrap.innerHTML = `<div class="empty">댓글을 불러오지 못했습니다.</div>`;
+        });
+    }
+
+    function mountList(){
+      status.textContent = "목록을 불러오는 중입니다…";
+      if (unsub) unsub();
+
+      unsub = db.collection("posts")
+        .orderBy("createdAt","desc")
+        .onSnapshot(snap => {
+          list.innerHTML = "";
+          if (snap.empty){
+            list.innerHTML = `<div class="empty">등록된 글이 없습니다.</div>`;
+            status.textContent = "";
+            return;
+          }
+          snap.forEach(doc => {
+            const post = postDocToObj(doc);
+            list.appendChild(renderPostCard(post));
+            mountComments(post.id);
+          });
+          status.textContent = `총 ${snap.size}개 · 실시간 반영`;
+        }, err => {
+          console.error(err);
+          status.textContent = "목록을 불러오지 못했습니다. (권한/설정 확인 필요)";
+        });
+    }
+
+    async function verifyPass(salt, storedHash){
+      const pass = prompt("비밀번호를 입력해 주세요.");
+      if (!pass) return false;
+      const h = await sha256Hex(salt + "::" + pass);
+      return h === storedHash;
+    }
+
+    async function unlockPostFlow(post){
+      if (isUnlocked(post.id) || isAdmin()){
+        alert("이미 열람 가능한 상태입니다.");
+        return;
+      }
+      const ok = await verifyPass(post.salt, post.passHash);
+      if (ok){
+        setUnlocked(post.id, true);
+        alert("잠금 해제가 완료되었습니다.");
+        location.reload();
+      } else {
+        alert("비밀번호가 올바르지 않습니다.");
       }
     }
 
-    async function loadPosts(){
-      status.textContent = "불러오는 중...";
-      list.innerHTML = "";
-
-      try{
-        const snap = await db
-          .collection("posts")
-          .orderBy("createdAt", "desc")
-          .limit(50)
-          .get();
-
-        if(snap.empty){
-          status.textContent = "아직 글이 없어. 첫 글을 올려줘!";
+    async function editFlow(post){
+      if (!isUnlocked(post.id) && !isAdmin()){
+        const ok = await verifyPass(post.salt, post.passHash);
+        if (!ok){
+          alert("비밀번호가 올바르지 않습니다.");
           return;
         }
+        setUnlocked(post.id, true);
+      }
+      startEdit(post);
+    }
 
-        status.textContent = "";
+    async function deleteFlow(post){
+      if (!confirm("해당 글을 삭제하시겠습니까? (삭제 후 복구할 수 없습니다.)")) return;
 
-        snap.forEach(doc=>{
-          const d = doc.data();
-          const title = escapeHtml(d.title || "");
-          const author = escapeHtml(d.author || "");
-          const content = escapeHtml(d.content || "");
-          const timeText = d.createdAt ? fmtTime(d.createdAt) : "방금";
+      if (!isAdmin()){
+        const ok = await verifyPass(post.salt, post.passHash);
+        if (!ok){
+          alert("비밀번호가 올바르지 않습니다.");
+          return;
+        }
+      }
 
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `
-            <h3>${title}</h3>
-            <div class="meta">
-              <span>작성자: ${author || "익명"}</span>
-              <span>·</span>
-              <span>${timeText}</span>
-              <span style="margin-left:auto; opacity:.55;">id: ${doc.id}</span>
-            </div>
-            <div class="text">${content}</div>
-          `;
-          list.appendChild(card);
-        });
+      try{
+        const ref = db.collection("posts").doc(post.id);
+        const csnap = await ref.collection("comments").get();
+        const batch = db.batch();
+        csnap.forEach(cdoc => batch.delete(cdoc.ref));
+        batch.delete(ref);
+        await batch.commit();
 
+        alert("삭제가 완료되었습니다.");
       }catch(err){
         console.error(err);
-        status.textContent = "불러오기 실패… Firestore 규칙/인덱스/프로젝트 연결 확인 필요(콘솔 에러 확인).";
+        alert("삭제에 실패했습니다. 잠시 후 다시 시도해 주세요.");
       }
     }
 
-    submitBtn.onclick = async ()=>{
-      const title = inpTitle.value.trim();
-      const author = inpAuthor.value.trim();
-      const content = inpContent.value.trim();
+    $("submitBtn").onclick = async () => {
+      const title = $("inpTitle").value.trim();
+      const author = $("inpAuthor").value.trim();
+      const content = $("inpContent").value.trim();
+      const pass = $("inpPass").value;
 
       if(!title || !author || !content){
-        modalHint.textContent = "제목/작성자/내용을 모두 입력해줘.";
+        alert("제목, 작성자, 내용을 모두 입력해 주세요.");
+        return;
+      }
+      if(!pass || pass.length < 4){
+        alert("비밀번호는 4자리 이상으로 입력해 주세요.");
         return;
       }
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = "등록중...";
-
       try{
-        await db.collection("posts").add({
-          title,
-          author,
-          content,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        if (mode === "create"){
+          const salt = randSalt(12);
+          const passHash = await sha256Hex(salt + "::" + pass);
 
-        // 입력 초기화 + 닫기 + 새로고침
-        inpTitle.value = "";
-        inpAuthor.value = "";
-        inpContent.value = "";
-        closeModal();
-        await loadPosts();
+          await db.collection("posts").add({
+            title, author, content,
+            salt, passHash,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: null
+          });
 
+          closeModal();
+          clearModal();
+          alert("등록이 완료되었습니다.");
+        } else {
+          if (!editPostId) return;
+          const ref = db.collection("posts").doc(editPostId);
+          const snap = await ref.get();
+          if (!snap.exists){
+            alert("해당 글을 찾을 수 없습니다.");
+            return;
+          }
+          const d = snap.data();
+          const ok = await verifyPass(d.salt, d.passHash);
+          if (!ok){
+            alert("비밀번호가 올바르지 않습니다.");
+            return;
+          }
+
+          await ref.update({
+            title, author, content,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+
+          setUnlocked(editPostId, true);
+          closeModal();
+          clearModal();
+          alert("수정이 완료되었습니다.");
+        }
       }catch(err){
         console.error(err);
-        modalHint.textContent = "등록 실패… Firestore 규칙(쓰기 허용) / 연결 상태를 확인해줘.";
-      }finally{
-        submitBtn.disabled = false;
-        submitBtn.textContent = "등록";
+        alert("저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
       }
     };
 
-    // 최초 로드
-    loadPosts();
+    async function submitComment(post){
+      const postId = post.id;
+      const author = (document.getElementById(`cAuthor_${postId}`).value || "").trim();
+      const content = (document.getElementById(`cText_${postId}`).value || "").trim();
+      const secBtn = document.getElementById(`cSecret_${postId}`);
+      const secret = secBtn.getAttribute("data-on")==="1";
+
+      if (!author || !content){
+        alert("댓글 작성자와 내용을 입력해 주세요.");
+        return;
+      }
+
+      try{
+        await db.collection("posts").doc(postId).collection("comments").add({
+          author,
+          content,
+          secret,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        document.getElementById(`cText_${postId}`).value = "";
+        alert("댓글이 등록되었습니다.");
+      }catch(err){
+        console.error(err);
+        alert("댓글 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+      }
+    }
+
+    renderAdminState();
+    layoutBoardWin();
+    mountList();
   </script>
 </body>
 </html>

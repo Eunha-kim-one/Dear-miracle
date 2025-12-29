@@ -635,6 +635,42 @@
       $("status").textContent = msg || "";
     }
 
+    // --- 보드 윈도우: 처음 로딩/리사이즈 시 중앙 배치(사용자가 드래그했으면 건드리지 않음)
+let boardUserMoved = false;
+
+function centerBoardWin(){
+  const win = document.getElementById("boardWin");
+  if(!win) return;
+  if(boardUserMoved) return;
+
+  const vw = window.innerWidth;
+  const taskH = document.querySelector(".taskbar")?.offsetHeight || 44;
+
+  // 화면 폭에 맞춰 윈도우 폭을 적당히 제한
+  const targetW = Math.min(1180, vw - 24);
+  win.style.width = targetW + "px";
+
+  const left = Math.max(12, Math.round((vw - targetW) / 2));
+  const top  = 50;
+
+  win.style.left = left + "px";
+  win.style.top  = top + "px";
+}
+
+// 드래그로 움직였으면 이후 자동중앙정렬 끔
+(function hookBoardDragFlag(){
+  const win = document.getElementById("boardWin");
+  if(!win) return;
+  const bar = win.querySelector(".titlebar");
+  if(!bar) return;
+
+  bar.addEventListener("pointerdown", (e)=>{
+    const t = e.target;
+    if(t && (t.tagName === "BUTTON" || t.classList.contains("btn") || t.classList.contains("iconbtn"))) return;
+    boardUserMoved = true;
+  });
+})();
+    
     // =========================
     // ✅ 닉네임(인덱스와 공유)
     // =========================
@@ -1215,14 +1251,16 @@
     // =========================
     // ✅ 초기 실행
     // =========================
-    updateWhoAmI();
+   updateWhoAmI();
 
-    if(!getNick()){
-      openNickModal(true);
-    }else{
-      await loadPosts();
-      await refreshInboxBadge();
-    }
+centerBoardWin();
+window.addEventListener("resize", centerBoardWin);
+
+if(!getNick()){
+  openNickModal(true);
+}else{
+  await loadPosts();
+}
 
     // ✅ 뱃지 15초마다 갱신(가벼운 폴링)
     setInterval(()=>{ refreshInboxBadge(); }, 15000);

@@ -230,15 +230,14 @@
     }
 
     /* ===== YouTube playlist window ===== */
-    .yt-window { width: 280px; }      /* ✅ 살짝 키움 */
+    .yt-window { width: 280px; }
     .yt-window .content { padding: 0; background: #fff; }
     .yt-window iframe {
       width: 100%;
-      height: 190px;                  /* ✅ 살짝 키움(음소거 버튼 뜨게) */
+      height: 190px;
       border: 0;
       display: block;
     }
-
     .yt-window .titlebar .buttons {
       display: flex;
       gap: 6px;
@@ -255,13 +254,12 @@
     .yt-window .sound-btn:active { transform: translateY(1px); }
 
     /* =========================================================
-       ✅ 인덱스 전용: 쪽지 아이콘(큰 버튼) + 안읽음 뱃지 + 메신저 모달
-       (기존 디자인/레이아웃 건드리지 않음)
+       ✅ 카톡식 쪽지: FAB + 안읽음 뱃지 + 대화방목록/대화창 모달
        ========================================================= */
     .dm-fab{
       position: fixed;
       right: 18px;
-      bottom: 64px; /* taskbar 위 */
+      bottom: 64px;
       z-index: 99999;
       pointer-events: auto;
     }
@@ -278,7 +276,7 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size: 28px; /* ✅ 아이콘 큼 */
+      font-size: 28px;
       line-height: 1;
     }
     .dm-fab button:active{ transform: translateY(1px); }
@@ -327,7 +325,7 @@
       pointer-events: auto;
     }
     .dm-modal{
-      width: min(840px, 100%);
+      width: min(920px, 100%);
       background: rgba(255,255,255,0.78);
       border: 1px solid rgba(0,0,0,0.18);
       border-radius: 12px;
@@ -337,7 +335,7 @@
       -webkit-backdrop-filter: blur(10px);
     }
     .dm-modal .titlebar{ cursor: default; }
-    .dm-modal .content{ background: transparent; }
+    .dm-modal .content{ background: transparent; padding: 0; }
 
     .dm-head{
       display:flex;
@@ -355,18 +353,6 @@
       flex-wrap:wrap;
       align-items:center;
     }
-    .dm-tab{
-      height: 36px;
-      padding: 0 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(0,0,0,0.22);
-      background: rgba(255,255,255,0.75);
-      font-weight: 900;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .dm-tab.active{ background: rgba(255,255,255,0.92); }
-
     .dm-pill{
       height: 36px;
       padding: 0 12px;
@@ -377,92 +363,157 @@
       font-size: 13px;
       cursor: pointer;
     }
+    .dm-pill.ghost{ background: rgba(255,255,255,0.65); }
     .dm-pill:active{ transform: translateY(1px); }
 
     .dm-body{
       padding: 10px;
     }
 
-    .dm-list{
-      max-height: min(56vh, 520px);
-      overflow:auto;
-      padding-right: 4px;
+    /* ====== 카톡식 레이아웃 ====== */
+    .dm-split{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 860px){
+      .dm-split{ grid-template-columns: 1fr; }
     }
 
-    .dm-msg{
+    .panel{
       background: rgba(255,255,255,0.62);
       border: 1px solid rgba(0,0,0,0.14);
       border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
+      overflow:hidden;
     }
-    .dm-msg .top{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      font-size: 12px;
-      color: rgba(0,0,0,0.60);
-      margin-bottom: 8px;
-    }
-    .dm-msg .body{
-      font-size: 14px;
-      line-height: 1.55;
-      white-space: pre-wrap;
-      color:#222;
-    }
-    .dm-actions{
-      margin-top: 10px;
-      display:flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
-    .dm-mini{
-      height: 36px;
-      padding: 0 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(0,0,0,0.22);
-      background: rgba(255,255,255,0.92);
+    .panel .ph{
+      padding: 10px 12px;
       font-weight: 900;
       font-size: 13px;
-      cursor: pointer;
-    }
-    .dm-mini.ghost{ background: rgba(255,255,255,0.65); }
-    .dm-mini:active{ transform: translateY(1px); }
-
-    .dm-compose{
-      margin-top: 10px;
-      display:none;
+      color: rgba(0,0,0,0.70);
+      background: rgba(255,255,255,0.55);
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
       gap: 8px;
     }
-    .dm-compose .field{
-      display:grid;
-      gap: 6px;
-      margin-bottom: 10px;
+
+    .rooms{
+      max-height: min(62vh, 560px);
+      overflow:auto;
     }
-    .dm-compose .label{
-      font-size: 12px;
-      color: rgba(0,0,0,0.65);
+    .room{
+      padding: 10px 12px;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      cursor:pointer;
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .room:hover{ background: rgba(255,255,255,0.55); }
+    .room .name{
       font-weight: 900;
+      font-size: 14px;
+      color:#222;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
     }
-    .dm-compose input, .dm-compose textarea{
-      width:100%;
+    .room .last{
+      font-size: 12px;
+      color: rgba(0,0,0,0.60);
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+    }
+    .room .right{
+      display:flex;
+      flex-direction: column;
+      align-items:flex-end;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+    .room .time{
+      font-size: 11px;
+      color: rgba(0,0,0,0.55);
+      font-variant-numeric: tabular-nums;
+    }
+    .room .unread{
+      min-width: 22px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.92);
+      font-weight: 900;
+      font-size: 12px;
+      display:none;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .chat{
+      display:flex;
+      flex-direction: column;
+      height: min(62vh, 560px);
+    }
+    .chat-list{
+      flex: 1;
+      overflow:auto;
+      padding: 12px;
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .chat-row{ display:flex; }
+    .bubble{
+      max-width: 78%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.14);
+      background: rgba(255,255,255,0.70);
+      color:#222;
+      font-size: 14px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      position: relative;
+    }
+    .bubble.me{
+      margin-left: auto;
+      background: rgba(255,255,255,0.92);
+    }
+    .bubble .t{
+      margin-top: 6px;
+      font-size: 11px;
+      color: rgba(0,0,0,0.55);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chat-send{
+      padding: 10px;
+      border-top: 1px solid rgba(0,0,0,0.12);
+      display:flex;
+      gap: 8px;
+      align-items: flex-end;
+      background: rgba(255,255,255,0.55);
+    }
+    .chat-send textarea{
+      flex: 1;
+      min-height: 44px;
+      max-height: 160px;
+      resize: vertical;
       border-radius: 12px;
       border: 1px solid rgba(0,0,0,0.18);
       background: rgba(255,255,255,0.90);
-      padding: 11px 12px;
+      padding: 10px 12px;
       font-size: 14px;
       outline: none;
-    }
-    .dm-compose textarea{
-      min-height: 140px;
-      resize: vertical;
-      line-height: 1.55;
-    }
-    .dm-compose input[readonly]{
-      background: rgba(255,255,255,0.70);
-      color: rgba(0,0,0,0.65);
+      line-height: 1.45;
     }
 
     .dm-hint{
@@ -471,12 +522,6 @@
       color: rgba(0,0,0,0.60);
       line-height: 1.35;
       min-height: 18px;
-    }
-
-    @media (max-width: 560px){
-      .dm-tab, .dm-pill, .dm-mini{ height: 44px; font-size: 14px; }
-      .dm-msg .body{ font-size: 15px; }
-      .dm-list{ max-height: min(62vh, 560px); }
     }
   </style>
 </head>
@@ -549,7 +594,7 @@
       </div>
     </div>
 
-    <!-- 4 (✅ 오류 수정 완료) -->
+    <!-- 4 -->
     <div class="win" data-key="w4" style="left:40px; top:520px; width: 440px;" data-z="13">
       <div class="titlebar">
         <div class="title-left"><div class="dot"></div><div class="title">0722_1029_004.mp4</div></div>
@@ -646,16 +691,16 @@
 
   </div>
 
-  <!-- ✅ 쪽지 아이콘(인덱스 전용) -->
+  <!-- ✅ 쪽지 아이콘 -->
   <div class="dm-fab">
     <button id="dmFabBtn" title="쪽지함">✉️</button>
     <div class="dm-badge" id="dmBadge">0</div>
   </div>
 
-  <!-- ✅ 메신저(인덱스 전용 모달): 받은/보낸 + 즉시답장 -->
+  <!-- ✅ 카톡식 메신저 모달 -->
   <div class="dm-backdrop" id="dmBg">
     <div class="dm-modal">
-      <div class="titlebar">
+      <div class="titlebar" style="cursor:default;">
         <div class="title-left">
           <div class="dot"></div>
           <div class="title" id="dmTitle">내 쪽지함</div>
@@ -667,36 +712,40 @@
 
       <div class="dm-head">
         <div class="dm-tabs">
-          <button class="dm-tab active" id="dmTabRecv">받은 쪽지</button>
-          <button class="dm-tab" id="dmTabSent">보낸 쪽지</button>
+          <button class="dm-pill ghost" id="chatBackBtn" style="display:none;">← 목록</button>
           <button class="dm-pill" id="dmRefresh">새로고침</button>
         </div>
         <button class="dm-pill" id="dmNickBtn">닉네임</button>
       </div>
 
       <div class="dm-body">
-        <div class="dm-list" id="dmList"></div>
+        <div class="dm-split">
 
-        <!-- 답장/새 쪽지 작성 -->
-        <div class="dm-compose" id="dmCompose">
-          <div style="flex:1; min-width: 240px;">
-            <div class="field">
-              <div class="label">받는 사람</div>
-              <input id="dmTo" readonly />
+          <!-- 왼쪽: 대화방 목록 -->
+          <div class="panel" id="roomPanel">
+            <div class="ph">
+              <span>대화</span>
+              <span style="font-size:11px;color:rgba(0,0,0,0.55);" id="roomHint"></span>
             </div>
-            <div class="field">
-              <div class="label">보내는 사람</div>
-              <input id="dmFrom" readonly />
+            <div class="rooms" id="roomList"></div>
+          </div>
+
+          <!-- 오른쪽: 대화창 -->
+          <div class="panel" id="chatPanel">
+            <div class="ph">
+              <span id="chatWith">대화를 선택하세요</span>
+              <span style="font-size:11px;color:rgba(0,0,0,0.55);" id="chatHintTop"></span>
             </div>
-            <div class="field">
-              <div class="label">내용</div>
-              <textarea id="dmBody" placeholder="답장 내용을 적어주세요."></textarea>
-            </div>
-            <div class="dm-actions">
-              <button class="dm-mini ghost" id="dmCancel">취소</button>
-              <button class="dm-mini" id="dmSend">보내기</button>
+
+            <div class="chat">
+              <div class="chat-list" id="chatList"></div>
+              <div class="chat-send">
+                <textarea id="chatInput" placeholder="메시지 입력…"></textarea>
+                <button class="dm-pill" id="chatSend">보내기</button>
+              </div>
             </div>
           </div>
+
         </div>
 
         <div class="dm-hint" id="dmHint"></div>
@@ -711,7 +760,7 @@
     <div class="clock" id="clock">--:--</div>
   </div>
 
-  <!-- ✅ 닉네임 입력(인덱스 전용, board.html과 키 공유) -->
+  <!-- ✅ 닉네임 입력(키 공유: localStorage "dm_nick") -->
   <div class="dm-backdrop" id="nickBg" style="z-index: 100000; display:none;">
     <div class="dm-modal" style="width: min(520px, 100%);">
       <div class="titlebar" style="cursor: default;">
@@ -724,14 +773,15 @@
         </div>
       </div>
       <div class="dm-body">
-        <div class="dm-compose" style="display:block;">
-          <div class="field">
-            <div class="label">닉네임</div>
-            <input id="nickInput" placeholder="예: DearMiracle / ㅇㅇ / 닉네임" maxlength="30" />
+        <div style="display:block;">
+          <div class="field" style="display:grid; gap:6px; margin-bottom:10px;">
+            <div class="label" style="font-size:12px;color:rgba(0,0,0,0.65);font-weight:900;">닉네임</div>
+            <input id="nickInput" placeholder="예: DearMiracle / ㅇㅇ / 닉네임" maxlength="30"
+              style="width:100%;border-radius:12px;border:1px solid rgba(0,0,0,0.18);background:rgba(255,255,255,0.90);padding:11px 12px;font-size:14px;outline:none;" />
           </div>
-          <div class="dm-actions" style="justify-content:flex-end;">
-            <button class="dm-mini ghost" id="nickCancel">취소</button>
-            <button class="dm-mini" id="nickSave">확인</button>
+          <div class="dm-actions" style="display:flex; gap:8px; justify-content:flex-end;">
+            <button class="dm-pill ghost" id="nickCancel">취소</button>
+            <button class="dm-pill" id="nickSave">확인</button>
           </div>
         </div>
         <div class="dm-hint" id="nickHint"></div>
@@ -851,7 +901,6 @@
     let winX = 0, winY = 0;
 
     bar.addEventListener("pointerdown", (e) => {
-      // 유튜브 sound-btn 같은 버튼 클릭은 드래그로 안 잡히게
       const t = e.target;
       if(t && t.tagName === "BUTTON") return;
 
@@ -922,17 +971,16 @@
   </script>
 
   <!-- =========================================================
-       ✅ Firebase 쪽지(인덱스): 안읽음 뱃지 + 메신저 모달 + 즉시 답장
-       - board.html이랑 같은 messages 컬렉션 사용
-       - 닉네임 키도 board랑 공유: localStorage "dm_nick"
+       ✅ Firebase 카톡식 쪽지 (실시간 + read 필드 + 안읽음뱃지)
        ========================================================= -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import {
-      getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit, serverTimestamp
+      getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit,
+      serverTimestamp, doc, updateDoc, onSnapshot
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // ✅ board.html의 firebaseConfig와 "완전히 동일" 해야 함
+    // ✅ 동일해야 함
     const firebaseConfig = {
       apiKey: "AIzaSyA1PxEOrwjVi4BOLA13UbFIncTYe6RdYIQ",
       authDomain: "dear-miracle.firebaseapp.com",
@@ -945,23 +993,12 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
     const $ = (id)=>document.getElementById(id);
 
-    // ===== 닉네임(세션) =====
+    // ===== 닉네임 =====
     const NICK_KEY = "dm_nick";
-    const READ_KEY_PREFIX = "dm_read_cutoff_"; // dm_read_cutoff_<nick>
-
     function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }
     function setNick(n){ localStorage.setItem(NICK_KEY, (n||"").trim()); }
-    function getReadCutoff(nick){
-      const raw = localStorage.getItem(READ_KEY_PREFIX + nick);
-      const ms = raw ? parseInt(raw, 10) : 0;
-      return Number.isFinite(ms) ? ms : 0;
-    }
-    function setReadCutoff(nick, ms){
-      localStorage.setItem(READ_KEY_PREFIX + nick, String(ms));
-    }
 
     function fmtTime(ts){
       if(!ts) return "";
@@ -978,27 +1015,25 @@
       }
     }
 
-    // ===== UI refs =====
+    // ===== UI =====
     const dmFabBtn = $("dmFabBtn");
     const dmBadge  = $("dmBadge");
 
-    const dmBg     = $("dmBg");
+    const dmBg = $("dmBg");
     const dmCloseBtn = $("dmCloseBtn");
-
-    const dmTabRecv = $("dmTabRecv");
-    const dmTabSent = $("dmTabSent");
     const dmRefresh = $("dmRefresh");
     const dmNickBtn = $("dmNickBtn");
+    const dmHint = $("dmHint");
 
-    const dmList   = $("dmList");
-    const dmHint   = $("dmHint");
+    const roomList = $("roomList");
+    const roomHint = $("roomHint");
 
-    const dmCompose = $("dmCompose");
-    const dmTo    = $("dmTo");
-    const dmFrom  = $("dmFrom");
-    const dmBody  = $("dmBody");
-    const dmCancel = $("dmCancel");
-    const dmSend   = $("dmSend");
+    const chatWith = $("chatWith");
+    const chatHintTop = $("chatHintTop");
+    const chatList = $("chatList");
+    const chatInput = $("chatInput");
+    const chatSend = $("chatSend");
+    const chatBackBtn = $("chatBackBtn");
 
     // 닉 모달
     const nickBg = $("nickBg");
@@ -1008,27 +1043,40 @@
     const nickSave = $("nickSave");
     const nickHint = $("nickHint");
 
-    // ===== 모드 =====
-    let inboxMode = "recv"; // recv | sent
+    let currentPeer = "";
+    let unsubRoomsA = null;
+    let unsubRoomsB = null;
+    let unsubChatA = null;
+    let unsubChatB = null;
+    let unsubBadge = null;
 
-    function setTab(mode){
-      inboxMode = mode;
-      dmTabRecv.classList.toggle("active", mode==="recv");
-      dmTabSent.classList.toggle("active", mode==="sent");
+    function stopRooms(){
+      if(unsubRoomsA) unsubRoomsA();
+      if(unsubRoomsB) unsubRoomsB();
+      unsubRoomsA = unsubRoomsB = null;
     }
+    function stopChat(){
+      if(unsubChatA) unsubChatA();
+      if(unsubChatB) unsubChatB();
+      unsubChatA = unsubChatB = null;
+    }
+    function stopBadge(){
+      if(unsubBadge) unsubBadge();
+      unsubBadge = null;
+    }
+
+    function showHint(s){ dmHint.textContent = s || ""; }
 
     function openNickModal(force=false){
       nickHint.textContent = "";
       nickInput.value = getNick();
       nickBg.style.display = "flex";
-      // force일 때 닫기 숨기려면:
       nickClose.style.display = force ? "none" : "block";
       setTimeout(()=> nickInput.focus(), 30);
     }
     function closeNickModal(){
       nickBg.style.display = "none";
     }
-
     function ensureNick(){
       const n = getNick();
       if(!n){
@@ -1046,7 +1094,7 @@
       }
       setNick(val);
       closeNickModal();
-      refreshBadge(); // 닉 설정 후 뱃지 갱신
+      startBadge(); // 닉 설정 후 뱃지 시작
     });
     nickCancel.addEventListener("click", ()=>{
       if(getNick()) closeNickModal();
@@ -1055,242 +1103,347 @@
     nickClose.addEventListener("click", closeNickModal);
     nickBg.addEventListener("click", (e)=>{ if(e.target===nickBg && getNick()) closeNickModal(); });
 
-    // ===== DM 모달 열기/닫기 =====
+    // ===== 안읽음 뱃지(진짜 read=false) =====
+    function updateBadge(n){
+      const num = Math.max(0, Number(n)||0);
+      dmBadge.textContent = num > 99 ? "99+" : String(num);
+      dmBadge.style.display = num > 0 ? "inline-flex" : "none";
+    }
+
+    function startBadge(){
+      stopBadge();
+      const me = getNick();
+      if(!me){ updateBadge(0); return; }
+
+      const qy = query(
+        collection(db, "messages"),
+        where("to", "==", me),
+        where("read", "==", false)
+      );
+
+      unsubBadge = onSnapshot(qy, (snap)=>{
+        updateBadge(snap.size);
+      });
+    }
+
+    // ===== 모달 열기/닫기 =====
     function openDM(){
       if(!ensureNick()) return;
       dmBg.style.display = "flex";
-      setTab("recv");
-      dmCompose.style.display = "none";
-      dmFrom.value = getNick();
-      loadInbox();     // 목록
-      markReadNow();   // 열었으면 "지금까지는 읽음" 처리
+      showHint("");
+      showRooms();
+      startRooms();
     }
     function closeDM(){
       dmBg.style.display = "none";
-      dmCompose.style.display = "none";
-      dmHint.textContent = "";
+      showHint("");
+      stopRooms();
+      stopChat();
     }
 
     dmFabBtn.addEventListener("click", openDM);
     dmCloseBtn.addEventListener("click", closeDM);
     dmBg.addEventListener("click", (e)=>{ if(e.target===dmBg) closeDM(); });
-
     dmNickBtn.addEventListener("click", ()=> openNickModal(false));
+    dmRefresh.addEventListener("click", ()=>{
+      if(!ensureNick()) return;
+      if(currentPeer){
+        stopChat();
+        startChat(currentPeer);
+      }else{
+        stopRooms();
+        startRooms();
+      }
+    });
 
-    dmTabRecv.addEventListener("click", ()=>{ if(!ensureNick()) return; setTab("recv"); dmCompose.style.display="none"; loadInbox(); });
-    dmTabSent.addEventListener("click", ()=>{ if(!ensureNick()) return; setTab("sent"); dmCompose.style.display="none"; loadInbox(); });
-    dmRefresh.addEventListener("click", ()=>{ if(!ensureNick()) return; dmCompose.style.display="none"; loadInbox(); refreshBadge(); });
-
-    // ===== 안읽음 계산(로컬 기준) =====
-    // - "진짜 읽음" 필드는 DB에 없음(지금 구조 그대로)
-    // - 그래서: "쪽지함을 연 시간"을 내 로컬에 저장해서
-    //   그 이후로 온 '받은 쪽지'만 안읽음으로 표시
-    function markReadNow(){
-      const me = getNick();
-      if(!me) return;
-      setReadCutoff(me, Date.now());
-      updateBadge(0);
+    function showRooms(){
+      currentPeer = "";
+      chatBackBtn.style.display = "none";
+      chatWith.textContent = "대화를 선택하세요";
+      chatHintTop.textContent = "";
+      chatList.innerHTML = "";
+      chatInput.value = "";
+      roomHint.textContent = "";
     }
 
-    function updateBadge(n){
-      const num = Math.max(0, Number(n)||0);
-      dmBadge.textContent = String(num);
-      dmBadge.style.display = num > 0 ? "inline-flex" : "none";
+    function showChat(peer){
+      currentPeer = peer;
+      chatBackBtn.style.display = "inline-flex";
+      chatWith.textContent = `상대: ${peer}`;
+      chatHintTop.textContent = "";
+      chatList.innerHTML = "";
+      chatInput.value = "";
     }
 
-    async function refreshBadge(){
-      const me = getNick();
-      if(!me){
-        updateBadge(0);
+    chatBackBtn.addEventListener("click", ()=>{
+      stopChat();
+      showRooms();
+      startRooms();
+    });
+
+    // ===== 대화방 목록 실시간(받은+보낸 합쳐서 방 만들기) =====
+    function renderRoomsFromMixed(all, me){
+      roomList.innerHTML = "";
+      if(all.length === 0){
+        roomHint.textContent = "쪽지가 없습니다.";
         return;
       }
 
-      // "받은 쪽지" 중, cutoff 이후 createdAt인 것만 카운트
-      const cutoffMs = getReadCutoff(me);
-      try{
-        const qy = query(
-          collection(db, "messages"),
-          where("to", "==", me),
-          orderBy("createdAt", "desc"),
-          limit(50)
-        );
+      // 최신순 정렬
+      all.sort((a,b)=>{
+        const at = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+        const bt = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+        return bt - at;
+      });
 
-        const snap = await getDocs(qy);
-        let cnt = 0;
-        snap.forEach(docu=>{
-          const m = docu.data();
-          const t = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
-          if(t && t > cutoffMs) cnt += 1;
+      // 상대방 기준 방 묶기 + 안읽음(상대->나 read=false) 카운트
+      const rooms = new Map();
+      const unreadCnt = new Map();
+
+      for(const m of all){
+        const peer = (m.from === me) ? (m.to || "") : (m.from || "");
+        if(!peer) continue;
+
+        // 최신 메시지 1개
+        if(!rooms.has(peer)) rooms.set(peer, m);
+
+        // 안읽음 카운트(상대가 보낸 것 중 read=false만)
+        if(m.to === me && m.from === peer && m.read === false){
+          unreadCnt.set(peer, (unreadCnt.get(peer)||0) + 1);
+        }
+      }
+
+      const frag = document.createDocumentFragment();
+      for(const [peer, lastMsg] of rooms.entries()){
+        const div = document.createElement("div");
+        div.className = "room";
+        div.onclick = ()=>{
+          stopRooms();
+          showChat(peer);
+          startChat(peer);
+        };
+
+        const left = document.createElement("div");
+        left.style.minWidth = "0";
+
+        const name = document.createElement("div");
+        name.className = "name";
+        name.textContent = peer;
+
+        const last = document.createElement("div");
+        last.className = "last";
+        last.textContent = lastMsg.body || "";
+
+        left.appendChild(name);
+        left.appendChild(last);
+
+        const right = document.createElement("div");
+        right.className = "right";
+
+        const time = document.createElement("div");
+        time.className = "time";
+        time.textContent = fmtTime(lastMsg.createdAt);
+
+        const badge = document.createElement("div");
+        badge.className = "unread";
+        const n = unreadCnt.get(peer) || 0;
+        badge.textContent = n > 99 ? "99+" : String(n);
+        badge.style.display = n > 0 ? "inline-flex" : "none";
+
+        right.appendChild(time);
+        right.appendChild(badge);
+
+        div.appendChild(left);
+        div.appendChild(right);
+        frag.appendChild(div);
+      }
+
+      roomList.appendChild(frag);
+      roomHint.textContent = "";
+    }
+
+    function startRooms(){
+      if(!ensureNick()) return;
+      const me = getNick();
+      roomHint.textContent = "불러오는 중…";
+      roomList.innerHTML = "";
+
+      stopRooms();
+
+      const recvQ = query(
+        collection(db, "messages"),
+        where("to", "==", me),
+        orderBy("createdAt", "desc"),
+        limit(80)
+      );
+      const sentQ = query(
+        collection(db, "messages"),
+        where("from", "==", me),
+        orderBy("createdAt", "desc"),
+        limit(80)
+      );
+
+      let recvArr = [];
+      let sentArr = [];
+
+      unsubRoomsA = onSnapshot(recvQ, (snap)=>{
+        recvArr = [];
+        snap.forEach(d => recvArr.push({ id:d.id, ...d.data() }));
+        renderRoomsFromMixed([...recvArr, ...sentArr], me);
+      });
+
+      unsubRoomsB = onSnapshot(sentQ, (snap)=>{
+        sentArr = [];
+        snap.forEach(d => sentArr.push({ id:d.id, ...d.data() }));
+        renderRoomsFromMixed([...recvArr, ...sentArr], me);
+      });
+    }
+
+    // ===== 읽음 처리: 내가 대화창 열면 상대->나 read=false 를 read=true로 =====
+    async function markRead(peer){
+      const me = getNick();
+      const qy = query(
+        collection(db, "messages"),
+        where("from", "==", peer),
+        where("to", "==", me),
+        where("read", "==", false),
+        limit(80)
+      );
+      const snap = await getDocs(qy);
+      const jobs = [];
+      snap.forEach(d=>{
+        jobs.push(updateDoc(doc(db, "messages", d.id), { read:true }));
+      });
+      if(jobs.length) await Promise.all(jobs);
+    }
+
+    // ===== 대화 실시간(양쪽 쿼리 합쳐서 렌더) =====
+    function startChat(peer){
+      if(!ensureNick()) return;
+      const me = getNick();
+
+      stopChat();
+      chatHintTop.textContent = "불러오는 중…";
+      chatList.innerHTML = "";
+
+      const aQ = query(
+        collection(db, "messages"),
+        where("from", "==", me),
+        where("to", "==", peer),
+        orderBy("createdAt", "desc"),
+        limit(120)
+      );
+      const bQ = query(
+        collection(db, "messages"),
+        where("from", "==", peer),
+        where("to", "==", me),
+        orderBy("createdAt", "desc"),
+        limit(120)
+      );
+
+      let aArr = [];
+      let bArr = [];
+
+      function render(){
+        const all = [...aArr, ...bArr];
+        if(all.length === 0){
+          chatHintTop.textContent = "대화가 없습니다.";
+          chatList.innerHTML = "";
+          return;
+        }
+
+        all.sort((x,y)=>{
+          const xt = x.createdAt?.toMillis ? x.createdAt.toMillis() : 0;
+          const yt = y.createdAt?.toMillis ? y.createdAt.toMillis() : 0;
+          return xt - yt;
         });
 
-        updateBadge(cnt);
-      }catch(err){
-        console.error(err);
-        // 실패해도 뱃지는 그냥 유지/숨김
+        chatList.innerHTML = "";
+        const frag = document.createDocumentFragment();
+
+        for(const m of all){
+          const row = document.createElement("div");
+          row.className = "chat-row";
+
+          const bubble = document.createElement("div");
+          bubble.className = "bubble" + (m.from === me ? " me" : "");
+          bubble.textContent = m.body || "";
+
+          const t = document.createElement("div");
+          t.className = "t";
+          t.textContent = `${m.from === me ? "나" : (m.from || "-")} · ${fmtTime(m.createdAt)}`;
+
+          bubble.appendChild(t);
+          row.appendChild(bubble);
+          frag.appendChild(row);
+        }
+
+        chatList.appendChild(frag);
+        chatHintTop.textContent = "";
+        setTimeout(()=>{ chatList.scrollTop = chatList.scrollHeight; }, 0);
       }
+
+      unsubChatA = onSnapshot(aQ, (snap)=>{
+        aArr = [];
+        snap.forEach(d => aArr.push({ id:d.id, ...d.data() }));
+        render();
+      });
+
+      unsubChatB = onSnapshot(bQ, async (snap)=>{
+        bArr = [];
+        snap.forEach(d => bArr.push({ id:d.id, ...d.data() }));
+        render();
+
+        // 상대가 보낸 걸 읽음 처리
+        try{ await markRead(peer); }catch(e){}
+      });
     }
 
-    // ===== 목록 로드 + 렌더 + “바로 답장” =====
-    function showHint(s){ dmHint.textContent = s || ""; }
-
-    function openCompose(toNick){
+    // ===== 보내기 =====
+    chatSend.addEventListener("click", async ()=>{
       if(!ensureNick()) return;
-      dmCompose.style.display = "flex";
-      dmFrom.value = getNick();
-      dmTo.value = (toNick || "").trim();
-      dmBody.value = "";
-      setTimeout(()=> dmBody.focus(), 20);
-    }
-    function closeCompose(){
-      dmCompose.style.display = "none";
-      dmTo.value = "";
-      dmBody.value = "";
-    }
+      const me = getNick();
+      const peer = currentPeer;
+      const body = (chatInput.value || "").trim();
 
-    dmCancel.addEventListener("click", closeCompose);
-
-    dmSend.addEventListener("click", async ()=>{
-      if(!ensureNick()) return;
-
-      const from = getNick();
-      const to = (dmTo.value || "").trim();
-      const body = (dmBody.value || "").trim();
-
-      if(!to){
-        showHint("받는 사람이 없습니다.");
-        return;
-      }
-      if(to === from){
-        showHint("자기 자신에게는 보낼 수 없습니다.");
-        return;
-      }
-      if(!body){
-        showHint("내용을 입력해주세요.");
-        return;
-      }
+      if(!peer){ showHint("대화 상대를 먼저 선택해주세요."); return; }
+      if(!body){ showHint("내용을 입력해주세요."); return; }
+      if(peer === me){ showHint("자기 자신에게는 보낼 수 없습니다."); return; }
 
       try{
-        dmSend.disabled = true;
+        chatSend.disabled = true;
         showHint("전송 중…");
 
         await addDoc(collection(db, "messages"), {
-          from, to, body,
-          postId: "", // 인덱스에서 보낸 건 연결글 없음
+          from: me,
+          to: peer,
+          body,
+          postId: "",
+          read: false,
           createdAt: serverTimestamp()
         });
 
-        showHint("전송되었습니다.");
-        closeCompose();
-        // 보낸함 갱신까지 원하면 유지:
-        if(inboxMode === "sent") await loadInbox();
-        await refreshBadge();
+        chatInput.value = "";
+        showHint("");
       }catch(err){
         console.error(err);
         showHint("전송에 실패했습니다.");
       }finally{
-        dmSend.disabled = false;
+        chatSend.disabled = false;
       }
     });
 
-    async function loadInbox(){
-      const me = getNick();
-      if(!me) return;
-
-      dmList.innerHTML = "";
-      showHint("불러오는 중…");
-
-      try{
-        let qy;
-        if(inboxMode === "recv"){
-          qy = query(
-            collection(db, "messages"),
-            where("to", "==", me),
-            orderBy("createdAt", "desc"),
-            limit(50)
-          );
-        }else{
-          qy = query(
-            collection(db, "messages"),
-            where("from", "==", me),
-            orderBy("createdAt", "desc"),
-            limit(50)
-          );
-        }
-
-        const snap = await getDocs(qy);
-
-        if(snap.empty){
-          showHint(inboxMode==="recv" ? "받은 쪽지가 없습니다." : "보낸 쪽지가 없습니다.");
-          return;
-        }
-
-        const cutoffMs = getReadCutoff(me);
-        const frag = document.createDocumentFragment();
-
-        snap.forEach(docu=>{
-          const m = docu.data();
-          const div = document.createElement("div");
-          div.className = "dm-msg";
-
-          const top = document.createElement("div");
-          top.className = "top";
-
-          const t = fmtTime(m.createdAt);
-          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
-
-          // 안읽음 표시(받은함에서만)
-          const isUnread = inboxMode==="recv" && whenMs && whenMs > cutoffMs;
-
-          const who = inboxMode==="recv"
-            ? `보낸 사람: ${m.from || "-"}`
-            : `받는 사람: ${m.to || "-"}`;
-
-          top.textContent = `${who} · ${t}${isUnread ? " · 안읽음" : ""}`;
-
-          const body = document.createElement("div");
-          body.className = "body";
-          body.textContent = m.body || "";
-
-          div.appendChild(top);
-          div.appendChild(body);
-
-          // ✅ 받은함에서는 "바로 답장" 버튼 제공
-          if(inboxMode === "recv"){
-            const actions = document.createElement("div");
-            actions.className = "dm-actions";
-
-            const reply = document.createElement("button");
-            reply.className = "dm-mini";
-            reply.textContent = "바로 답장";
-            reply.addEventListener("click", (e)=>{
-              e.stopPropagation();
-              openCompose(m.from || "");
-            });
-
-            actions.appendChild(reply);
-            div.appendChild(actions);
-          }
-
-          frag.appendChild(div);
-        });
-
-        dmList.appendChild(frag);
-        showHint("");
-
-        // 목록을 열어봤으니 읽음 처리 + 뱃지 갱신
-        markReadNow();
-        await refreshBadge();
-      }catch(err){
-        console.error(err);
-        showHint("쪽지함을 불러오지 못했습니다.");
+    // 엔터로 보내기(Shift+Enter는 줄바꿈)
+    chatInput.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" && !e.shiftKey){
+        e.preventDefault();
+        chatSend.click();
       }
-    }
+    });
 
-    // ===== 초기: 뱃지 주기적으로 갱신 =====
-    // (firebase onSnapshot 안 쓰고, 가벼운 폴링로직)
-    await refreshBadge();
-    setInterval(refreshBadge, 15000); // 15초마다
-
+    // ===== 초기 구동 =====
+    // 닉 있으면 뱃지 실시간 시작
+    if(getNick()) startBadge();
   </script>
 </body>
 </html>

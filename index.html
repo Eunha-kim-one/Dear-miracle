@@ -16,7 +16,7 @@
     
     
 
-    /* �� �고듃 媛뺤젣 �곸슜(�ㅻⅨ �ㅽ��쇱씠 ��뼱�⑤룄 �좎�) */
+    /* ✅ 폰트 강제 적용(다른 스타일이 덮어써도 유지) */
     html, body, button, input, textarea {
       font-family: 'RoundedFixedsys', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif !important;
     }
@@ -50,7 +50,6 @@ body {
     }
 
     .wallpaper {
-      z-index: -2;
       position: fixed;
       inset: 0;
       background-image: url("bg.png");
@@ -77,7 +76,6 @@ body {
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 1;
     }
 
     .win {
@@ -200,7 +198,54 @@ body {
     .note ul { margin: 8px 0 0 18px; padding:0; }
     .note li { margin: 3px 0; }
     .note a { color:#0b57d0; text-decoration: underline; }
-@media (max-width: 480px){
+
+    .taskbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
+      border-top: 1px solid rgba(0,0,0,0.18);
+    }
+
+    .start {
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.80);
+      font-weight: 700;
+      font-size: 12px;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .brand {
+      font-size: 13px;
+      color: #222;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .spacer { flex: 1; }
+    .clock {
+      font-size: 12px;
+      color: rgba(0,0,0,0.65);
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 480px){
       .win { width: min(86vw, 320px); }
   .win.media-win { width: min(78vw, 320px); }
       .title { max-width: 220px; }
@@ -231,7 +276,7 @@ body {
     .yt-window .sound-btn:active { transform: translateY(1px); }
 
     /* =========================================================
-       �� 移댄넚�� 履쎌�: FAB + �덉씫�� 諭껋� + ���붾갑紐⑸줉/���붿갹 紐⑤떖
+       ✅ 카톡식 쪽지: FAB + 안읽음 뱃지 + 대화방목록/대화창 모달
        ========================================================= */
     .dm-fab{
       position: fixed;
@@ -347,7 +392,7 @@ body {
       padding: 10px;
     }
 
-    /* ====== 移댄넚�� �덉씠�꾩썐 ====== */
+    /* ====== 카톡식 레이아웃 ====== */
     .dm-split{
       display:grid;
       grid-template-columns: 320px 1fr;
@@ -500,7 +545,7 @@ body {
       line-height: 1.35;
       min-height: 18px;
     }
-    /* �곗륫 �섎떒 硫붿떊�� 踰꾪듉: �용튆 寃��뺤쑝濡� 媛��쒖꽦 �� */
+    /* 우측 하단 메신저 버튼: 잿빛 검정으로 가시성 업 */
 .dm-fab button{
   background: rgba(25,25,28,0.88) !important;
   border: 1px solid rgba(255,255,255,0.18) !important;
@@ -516,13 +561,13 @@ body {
   transform: translateY(1px);
 }
 
-/* 諭껋��� �대몢�� 踰꾪듉 �꾩뿉�� �� 蹂댁씠寃� */
+/* 뱃지도 어두운 버튼 위에서 잘 보이게 */
 .dm-badge{
   background: rgba(255,255,255,0.95) !important;
   color: rgba(0,0,0,0.85) !important;
   border: 1px solid rgba(0,0,0,0.25) !important;
 }
-/* �쇱そ �덈궡李� �덉쓽 硫붿떊�� �덈궡臾� */
+/* 왼쪽 안내창 안의 메신저 안내문 */
 .dm-guide{
   margin-top: 10px;
   padding: 10px 10px;
@@ -538,27 +583,27 @@ body {
   color: rgba(0,0,0,0.88);
 }
     /* =========================
-   �벑 Mobile layout fix
+   📱 Mobile layout fix
    ========================= */
 @media (max-width: 560px){
 
-  /* 諛뷀깢 �ㅽ겕濡�/以� �덉젙 */
+  /* 바탕 스크롤/줌 안정 */
   html, body { overflow: hidden; }
 
-  /* �� 蹂대뱶 硫붿씤李�: 嫄곗쓽 ���붾㈃ */
+  /* ✅ 보드 메인창: 거의 풀화면 */
   #boardWin{
     left: 10px !important;
     top: 10px !important;
     width: calc(100vw - 20px) !important;
-    height: calc(100vh - 74px) !important; /* �꾨옒 taskbar(44px) + �ъ쑀 */
+    height: calc(100vh - 74px) !important; /* 아래 taskbar(44px) + 여유 */
   }
 
-  /* �� 蹂대뱶 �대� 由ъ뒪�� �ㅽ겕濡� 怨듦컙 �뺣낫 */
+  /* ✅ 보드 내부 리스트 스크롤 공간 확보 */
   #boardWin .list{
     max-height: calc(100vh - 260px) !important;
   }
 
-  /* �� 硫붿떊��(履쎌�) 紐⑤떖/李쎌씠 �덈Т 而ㅼ�硫� ���� */
+  /* ✅ 메신저(쪽지) 모달/창이 너무 커지면 풀폭 */
   .modal{
     width: calc(100vw - 20px) !important;
     max-height: calc(100vh - 40px) !important;
@@ -568,17 +613,17 @@ body {
     overflow: auto !important;
   }
 
-  /* �� �좏뒠釉� 李�(�덈떎硫�) : �묎쾶 + �쒖そ 援ъ꽍 */
+  /* ✅ 유튜브 창(있다면) : 작게 + 한쪽 구석 */
   #ytWin{
     width: 220px !important;
     height: 160px !important;
     left: 12px !important;
     top: auto !important;
-    bottom: 64px !important; /* taskbar �� */
+    bottom: 64px !important; /* taskbar 위 */
     right: auto !important;
   }
 
-  /* �� �곸긽/�대�吏� 李쎈뱾: 泥섏쓬�� �④꺼踰꾨━湲� (寃뱀묠 諛⑹�) */
+  /* ✅ 영상/이미지 창들: 처음엔 숨겨버리기 (겹침 방지) */
   .win[data-key^="0722_"],
   .win.videoWin,
   .win.photoWin{
@@ -586,7 +631,7 @@ body {
   }
 }
   
-    /* UX: 紐⑤컮�쇱뿉�� �뚯냼嫄� 踰꾪듉/�덈궡 媛뺥솕 */
+    /* UX: 모바일에서 음소거 버튼/안내 강화 */
     .sound-btn{
       display:flex; align-items:center; gap:6px;
       padding:6px 10px;
@@ -610,7 +655,7 @@ body {
 .floating-stickers {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
 }
 .sticker {
@@ -654,12 +699,12 @@ body {
 
   <div class="desk" id="desk">
 
-    <!-- 0) 怨듭�/寃뚯떆�� �덈궡 李� -->
+    <!-- 0) 공지/게시판 안내 창 -->
     <div class="win is-front" data-key="notice" style="left:18px; top:18px; width: 260px;" data-z="300">
       <div class="titlebar">
         <div class="title-left">
           <div class="dot"></div>
-          <div class="title">援ъ씤 寃뚯떆��</div>
+          <div class="title">구인 게시판</div>
         </div>
         <div class="title-btns">
           <div class="btn"></div><div class="btn"></div><div class="btn"></div>
@@ -668,29 +713,29 @@ body {
       <div class="content">
         <div class="note">
           <b>Dear Miracle</b>
-          媛�媛쒖옣 湲곌컙 �숈븞留� �댁쁺�⑸땲��.
+          가개장 기간 동안만 운영합니다.
           <ul>
-            <li>援ъ씤寃뚯떆��: �꾩껜 怨듦컻 (蹂몄씤 �됰꽕�꾨쭔 �뺤씤�댁＜�쒓린 諛붾엻�덈떎.) </li>
-            <li>�꾨즺 �� 寃뚯떆湲� 諛묒뿉 愿�怨� �� 以� �붿빟 湲곗옱</li>
+            <li>구인게시판: 전체 공개 (본인 닉네임만 확인해주시기 바랍니다.) </li>
+            <li>완료 시 게시글 밑에 관계 한 줄 요약 기재</li>
           </ul>
           <div class="dm-guide">
-  �벃 而⑦깮/履쎌��� <b>�곗륫 �섎떒 硫붿떊��</b>瑜� �댁슜�댁＜�몄슂.
+  📩 컨택/쪽지는 <b>우측 하단 메신저</b>를 이용해주세요.
 </div>
           <div style="margin-top:10px;">
-            <a href="board.html">寃뚯떆�� �ㅼ뼱媛�湲�</a>
+            <a href="board.html">게시판 들어가기</a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- �벃 硫붿떊�� �덈궡 -->
+    <!-- 📩 메신저 안내 -->
 <div class="win" data-key="dm-notice"
      style="left:920px; top:520px; width:260px;" data-z="18">
 
   <div class="titlebar">
     <div class="title-left">
       <div class="dot"></div>
-      <div class="title">硫붿떊��</div>
+      <div class="title">메신저</div>
     </div>
     <div class="title-btns">
       <div class="btn"></div><div class="btn"></div><div class="btn"></div>
@@ -699,13 +744,13 @@ body {
 
   <div class="content">
     <div class="note">
-      <b>而⑦깮 / 履쎌�</b>
-      �ㅻⅨ履� �섎떒 硫붿떊��瑜�<br>
-      �댁슜�댁＜�몄슂.
+      <b>컨택 / 쪽지</b>
+      오른쪽 하단 메신저를<br>
+      이용해주세요.
 
      <div style="display:flex; gap:10px; margin-top:12px;">
 
-  <!-- 硫붿떊�� 踰꾪듉 -->
+  <!-- 메신저 버튼 -->
 <div style="margin-top:12px; display:flex; gap:10px;">
   <button
     onclick="document.getElementById('dmFabBtn').click()"
@@ -720,7 +765,7 @@ body {
       cursor:pointer;
       font-size:14px;
     ">
-    而⑦깮 �뺤씤�섍린
+    컨택 확인하기
   </button>
 
   <button
@@ -736,7 +781,7 @@ body {
       cursor:pointer;
       font-size:14px;
     ">
-    寃뚯떆��
+    게시판
   </button>
 </div>
 
@@ -754,7 +799,7 @@ body {
       </div>
       <div class="content">
         <div class="media"><img src="img01.jpg" alt=""></div>
-        <div class="meta"><span>Preview 쨌 File 쨌 Edit 쨌 View</span><span>��</span></div>
+        <div class="meta"><span>Preview · File · Edit · View</span><span>—</span></div>
       </div>
     </div>
 
@@ -778,7 +823,7 @@ body {
       </div>
       <div class="content">
         <div class="media"><img src="img03.jpg" alt=""></div>
-        <div class="meta"><span>�� 02:47</span><span> </span></div>
+        <div class="meta"><span>▶ 02:47</span><span> </span></div>
       </div>
     </div>
 
@@ -843,7 +888,7 @@ body {
     </div>
 
     <!-- 8 -->
-<div class="win media-win" data-key="w9" style="left:1030px; top:470px; width: 320px;" data-z="17">
+<div class="win media-win" data-key="w8" style="left:1030px; top:470px; width: 320px;" data-z="17">
       <div class="titlebar">
         <div class="title-left"><div class="dot"></div><div class="title">0722_1029_010.mp4</div></div>
         <div class="title-btns"><div class="btn"></div><div class="btn"></div><div class="btn"></div></div>
@@ -854,7 +899,7 @@ body {
       </div>
     </div>
 
-    <!-- �렦 YouTube Playlist Window -->
+    <!-- 🎵 YouTube Playlist Window -->
 <div class="win media-win yt-window" data-key="yt" id="ytWin" style="top:520px; left:520px;" data-z="9">
       <div class="titlebar" id="ytDrag">
         <div class="title-left">
@@ -862,7 +907,7 @@ body {
           <div class="title">0722_1029_011.mp4</div>
         </div>
         <div class="title-btns">
-          <button class="sound-btn" id="ytSoundBtn" title="�뚯냼嫄� �댁젣" aria-label="�뚯냼嫄� �댁젣">�뵁 <span class="sound-label">�뚯냼嫄� �댁젣</span></button>
+          <button class="sound-btn" id="ytSoundBtn" title="음소거 해제" aria-label="음소거 해제">🔇 <span class="sound-label">음소거 해제</span></button>
           <div class="btn"></div><div class="btn"></div><div class="btn"></div>
         </div>
       </div>
@@ -874,63 +919,63 @@ body {
           allow="autoplay; encrypted-media"
           allowfullscreen>
         </iframe>
-        <div id="ytMuteHint" class="mute-hint">�꾩옱 <b>�뚯냼嫄�</b> �곹깭�덉슂. �� 踰꾪듉�� <b>�뚯냼嫄� �댁젣</b>瑜� �뚮윭二쇱꽭��.</div>
+        <div id="ytMuteHint" class="mute-hint">현재 <b>음소거</b> 상태예요. 위 버튼의 <b>음소거 해제</b>를 눌러주세요.</div>
       </div>
     </div>
 
   </div>
 
-  <!-- �� 履쎌� �꾩씠肄� -->
+  <!-- ✅ 쪽지 아이콘 -->
   <div class="dm-fab">
-    <button id="dmFabBtn" title="履쎌���">�됵툘</button>
+    <button id="dmFabBtn" title="쪽지함">✉️</button>
     <div class="dm-badge" id="dmBadge">0</div>
   </div>
 
-  <!-- �� 移댄넚�� 硫붿떊�� 紐⑤떖 -->
+  <!-- ✅ 카톡식 메신저 모달 -->
   <div class="dm-backdrop" id="dmBg">
     <div class="dm-modal">
       <div class="titlebar" style="cursor:default;">
         <div class="title-left">
           <div class="dot"></div>
-          <div class="title" id="dmTitle">�� 履쎌���</div>
+          <div class="title" id="dmTitle">내 쪽지함</div>
         </div>
         <div class="title-btns">
-          <div class="btn" id="dmCloseBtn" title="�リ린"></div>
+          <div class="btn" id="dmCloseBtn" title="닫기"></div>
         </div>
       </div>
 
       <div class="dm-head">
         <div class="dm-tabs">
-          <button class="dm-pill ghost" id="chatBackBtn" style="display:none;">�� 紐⑸줉</button>
-          <button class="dm-pill" id="dmRefresh">�덈줈怨좎묠</button>
+          <button class="dm-pill ghost" id="chatBackBtn" style="display:none;">← 목록</button>
+          <button class="dm-pill" id="dmRefresh">새로고침</button>
         </div>
-        <button class="dm-pill" id="dmNickBtn">�됰꽕��</button>
+        <button class="dm-pill" id="dmNickBtn">닉네임</button>
       </div>
 
       <div class="dm-body">
         <div class="dm-split">
 
-          <!-- �쇱そ: ���붾갑 紐⑸줉 -->
+          <!-- 왼쪽: 대화방 목록 -->
           <div class="panel" id="roomPanel">
             <div class="ph">
-              <span>����</span>
+              <span>대화</span>
               <span style="font-size:11px;color:rgba(0,0,0,0.55);" id="roomHint"></span>
             </div>
             <div class="rooms" id="roomList"></div>
           </div>
 
-          <!-- �ㅻⅨ履�: ���붿갹 -->
+          <!-- 오른쪽: 대화창 -->
           <div class="panel" id="chatPanel">
             <div class="ph">
-              <span id="chatWith">���붾� �좏깮�섏꽭��</span>
+              <span id="chatWith">대화를 선택하세요</span>
               <span style="font-size:11px;color:rgba(0,0,0,0.55);" id="chatHintTop"></span>
             </div>
 
             <div class="chat">
               <div class="chat-list" id="chatList"></div>
               <div class="chat-send">
-                <textarea id="chatInput" placeholder="硫붿떆吏� �낅젰��"></textarea>
-                <button class="dm-pill" id="chatSend">蹂대궡湲�</button>
+                <textarea id="chatInput" placeholder="메시지 입력…"></textarea>
+                <button class="dm-pill" id="chatSend">보내기</button>
               </div>
             </div>
           </div>
@@ -941,32 +986,33 @@ body {
       </div>
     </div>
   </div>
-<div class="spacer"></div>
+<div class="brand">Dear Miracle</div>
+    <div class="spacer"></div>
     <div class="clock" id="clock">--:--</div>
   </div>
 
-<!-- �� �됰꽕�� �낅젰(�� 怨듭쑀: localStorage "dm_nick") -->
+  <!-- ✅ 닉네임 입력(키 공유: localStorage "dm_nick") -->
   <div class="dm-backdrop" id="nickBg" style="z-index: 100000; display:none;">
     <div class="dm-modal" style="width: min(520px, 100%);">
       <div class="titlebar" style="cursor: default;">
         <div class="title-left">
           <div class="dot"></div>
-          <div class="title">�됰꽕�� �낅젰</div>
+          <div class="title">닉네임 입력</div>
         </div>
         <div class="title-btns">
-          <div class="btn" id="nickClose" title="�リ린"></div>
+          <div class="btn" id="nickClose" title="닫기"></div>
         </div>
       </div>
       <div class="dm-body">
         <div style="display:block;">
           <div class="field" style="display:grid; gap:6px; margin-bottom:10px;">
-            <div class="label" style="font-size:12px;color:rgba(0,0,0,0.65);font-weight:900;">�됰꽕��</div>
-            <input id="nickInput" placeholder="��: DearMiracle / �뉎뀋 / �됰꽕��" maxlength="30"
+            <div class="label" style="font-size:12px;color:rgba(0,0,0,0.65);font-weight:900;">닉네임</div>
+            <input id="nickInput" placeholder="예: DearMiracle / ㅇㅇ / 닉네임" maxlength="30"
               style="width:100%;border-radius:12px;border:1px solid rgba(0,0,0,0.18);background:rgba(255,255,255,0.90);padding:11px 12px;font-size:14px;outline:none;" />
           </div>
           <div class="dm-actions" style="display:flex; gap:8px; justify-content:flex-end;">
-            <button class="dm-pill ghost" id="nickCancel">痍⑥냼</button>
-            <button class="dm-pill" id="nickSave">�뺤씤</button>
+            <button class="dm-pill ghost" id="nickCancel">취소</button>
+            <button class="dm-pill" id="nickSave">확인</button>
           </div>
         </div>
         <div class="dm-hint" id="nickHint"></div>
@@ -975,7 +1021,7 @@ body {
   </div>
 
   <script>
-  // ===== 李� �쒕옒洹� + �욎쑝濡� 媛��몄삤湲� + (泥� 濡쒕뵫) �붾㈃蹂� �먮룞 諛곗튂 =====
+  // ===== 창 드래그 + 앞으로 가져오기 + (첫 로딩) 화면별 자동 배치 =====
   const wins = Array.from(document.querySelectorAll(".win"));
   let topZ = 100;
   let hasUserMoved = false;
@@ -1009,7 +1055,7 @@ body {
     let left = marginX + (usableW * x01);
     let top  = marginTop + (usableH * y01);
 
-    // �붾㈃ 諛뽰쑝濡� �덈Т �섍�吏� �딄쾶
+    // 화면 밖으로 너무 나가지 않게
     const maxX = vw - 60;
     const maxY = vh - 120;
     left = clamp(left, -40, maxX);
@@ -1027,7 +1073,7 @@ body {
 
     const vw = window.innerWidth;
 
-    // ===== PC (�먮옒 踰꾩쟾) =====
+    // ===== PC (원래 버전) =====
     if(vw >= 1100){
  if(byKey.notice) place(byKey.notice, 0.02, 0.03);
   if(byKey.yt) place(byKey.yt, 0.05, 0.50);
@@ -1042,13 +1088,13 @@ body {
       if(byKey.w7)     place(byKey.w7,     0.78, 0.10);
       if(byKey.w6)     place(byKey.w6,     0.70, 0.45);
       if(byKey.w8)     place(byKey.w8,     0.88, 0.77);
-      if(byKey.w9)    place(byKey.w9,    0.92, 0.66);
+      if(byKey.w10)    place(byKey.w10,    0.92, 0.66);
       if(byKey["dm-notice"]) place(byKey["dm-notice"], 0.92, 0.40);
 
       return;
     }
 
-    // ===== �쒕툝由� (�먮옒 踰꾩쟾) =====
+    // ===== 태블릿 (원래 버전) =====
     if(vw >= 700){
       if(byKey.notice) place(byKey.notice, 0.03, 0.03);
       if(byKey.yt)     place(byKey.yt,     0.03, 0.55);
@@ -1064,12 +1110,12 @@ body {
       if(byKey.w7)     place(byKey.w7,     0.70, 0.05);
       if(byKey.w8)     place(byKey.w8,     0.70, 0.70);
 
-      if(byKey.w9)    place(byKey.w9,    0.45, 0.60);
+      if(byKey.w10)    place(byKey.w10,    0.45, 0.60);
       return;
     }
 
-    // ===== 紐⑤컮�� (�먮옒 踰꾩쟾) =====
-    const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w9","dm-notice"];
+    // ===== 모바일 (원래 버전) =====
+    const order = ["notice","yt","w1","w2","w3","w4","w5","w6","w7","w8","w10","dm-notice"];
     let y = 0.03;
     order.forEach((k, i) => {
       const w = byKey[k];
@@ -1079,7 +1125,7 @@ body {
     });
   }
 
-  // ===== �쒕옒洹� 湲곕뒫(�먮윭 �놁씠 �뺤긽) =====
+  // ===== 드래그 기능(에러 없이 정상) =====
   wins.forEach((win) => {
     const bar = win.querySelector(".titlebar");
     if(!bar) return;
@@ -1124,25 +1170,34 @@ body {
     bar.addEventListener("pointerup", () => dragging = false);
     bar.addEventListener("pointercancel", () => dragging = false);
 
-    // �대┃留� �대룄 �욎쑝濡� �ㅺ쾶
+    // 클릭만 해도 앞으로 오게
     win.addEventListener("pointerdown", ()=> bringToFront(win));
   });
 
   window.addEventListener("load", () => {
     autoLayout();
-    // 泥� 諛⑸Ц�� UX: 援ъ씤 寃뚯떆�� 諛붾줈媛�湲곕� ��긽 留� �욎뿉
-    const noticeWin = document.querySelector('.win[data-key="notice"]');
+    // 첫 방문자 UX: 구인 게시판 바로가기를 항상 맨 앞에
+    const noticeWin = byKey.get("notice");
     if (noticeWin) bringToFront(noticeWin);
   });
-window.addEventListener("resize", () => autoLayout());
+  window.addEventListener("resize", () => autoLayout());
 
-  // ===== �쒓퀎 =====
-  // (taskbar removed)
-// ===== �좏뒠釉� �뚮━ 踰꾪듉(iframe src �좉�) =====
+  // ===== 시계 =====
+  const clock = document.getElementById("clock");
+  function tick(){
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2,"0");
+    const mm = String(d.getMinutes()).padStart(2,"0");
+    clock.textContent = `${hh}:${mm}`;
+  }
+  tick();
+  setInterval(tick, 1000 * 10);
+
+  // ===== 유튜브 소리 버튼(iframe src 토글) =====
   const ytFrame = document.getElementById("ytFrame");
   const soundBtn = document.getElementById("ytSoundBtn");
   let isMuted = true;
-  if (soundBtn) soundBtn.innerHTML = "�뵁 <span class=\"sound-label\">�뚯냼嫄� �댁젣</span>";
+  if (soundBtn) soundBtn.innerHTML = "🔇 <span class=\"sound-label\">음소거 해제</span>";
   const _hint0 = document.getElementById("ytMuteHint");
   if (_hint0) _hint0.style.display = "block";
 
@@ -1153,14 +1208,14 @@ window.addEventListener("resize", () => autoLayout());
     ytFrame.src = url.toString();
 
     isMuted = !isMuted;
-    soundBtn.innerHTML = isMuted ? "�뵁 <span class=\"sound-label\">�뚯냼嫄� �댁젣</span>" : "�뵄 <span class=\"sound-label\">�뚮━ �꾧린</span>";
+    soundBtn.innerHTML = isMuted ? "🔇 <span class=\"sound-label\">음소거 해제</span>" : "🔊 <span class=\"sound-label\">소리 끄기</span>";
     const hint = document.getElementById("ytMuteHint");
     if (hint) hint.style.display = isMuted ? "block" : "none";
   });
 </script>
 
   <!-- =========================================================
-       �� Firebase 移댄넚�� 履쎌� (�ㅼ떆媛� + read �꾨뱶 + �덉씫�뚮콇吏�)
+       ✅ Firebase 카톡식 쪽지 (실시간 + read 필드 + 안읽음뱃지)
        ========================================================= -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -1169,7 +1224,7 @@ window.addEventListener("resize", () => autoLayout());
       serverTimestamp, doc, updateDoc, onSnapshot
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // �� �숈씪�댁빞 ��
+    // ✅ 동일해야 함
     const firebaseConfig = {
       apiKey: "AIzaSyA1PxEOrwjVi4BOLA13UbFIncTYe6RdYIQ",
       authDomain: "dear-miracle.firebaseapp.com",
@@ -1184,7 +1239,7 @@ window.addEventListener("resize", () => autoLayout());
     const db = getFirestore(app);
     const $ = (id)=>document.getElementById(id);
 
-    // ===== �됰꽕�� =====
+    // ===== 닉네임 =====
     const NICK_KEY = "dm_nick";
     function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }
     function setNick(n){ localStorage.setItem(NICK_KEY, (n||"").trim()); }
@@ -1224,7 +1279,7 @@ window.addEventListener("resize", () => autoLayout());
     const chatSend = $("chatSend");
     const chatBackBtn = $("chatBackBtn");
 
-    // �� 紐⑤떖
+    // 닉 모달
     const nickBg = $("nickBg");
     const nickClose = $("nickClose");
     const nickInput = $("nickInput");
@@ -1278,21 +1333,21 @@ window.addEventListener("resize", () => autoLayout());
     nickSave.addEventListener("click", ()=>{
       const val = (nickInput.value || "").trim();
       if(!val){
-        nickHint.textContent = "�됰꽕�꾩쓣 �낅젰�댁＜�몄슂.";
+        nickHint.textContent = "닉네임을 입력해주세요.";
         return;
       }
       setNick(val);
       closeNickModal();
-      startBadge(); // �� �ㅼ젙 �� 諭껋� �쒖옉
+      startBadge(); // 닉 설정 후 뱃지 시작
     });
     nickCancel.addEventListener("click", ()=>{
       if(getNick()) closeNickModal();
-      else nickHint.textContent = "�됰꽕�꾩쓣 �낅젰�댁빞 吏꾪뻾�� �� �덉뒿�덈떎.";
+      else nickHint.textContent = "닉네임을 입력해야 진행할 수 있습니다.";
     });
     nickClose.addEventListener("click", closeNickModal);
     nickBg.addEventListener("click", (e)=>{ if(e.target===nickBg && getNick()) closeNickModal(); });
 
-    // ===== �덉씫�� 諭껋�(吏꾩쭨 read=false) =====
+    // ===== 안읽음 뱃지(진짜 read=false) =====
     function updateBadge(n){
       const num = Math.max(0, Number(n)||0);
       dmBadge.textContent = num > 99 ? "99+" : String(num);
@@ -1315,7 +1370,7 @@ window.addEventListener("resize", () => autoLayout());
       });
     }
 
-    // ===== 紐⑤떖 �닿린/�リ린 =====
+    // ===== 모달 열기/닫기 =====
     function openDM(){
       if(!ensureNick()) return;
       dmBg.style.display = "flex";
@@ -1348,7 +1403,7 @@ window.addEventListener("resize", () => autoLayout());
     function showRooms(){
       currentPeer = "";
       chatBackBtn.style.display = "none";
-      chatWith.textContent = "���붾� �좏깮�섏꽭��";
+      chatWith.textContent = "대화를 선택하세요";
       chatHintTop.textContent = "";
       chatList.innerHTML = "";
       chatInput.value = "";
@@ -1358,7 +1413,7 @@ window.addEventListener("resize", () => autoLayout());
     function showChat(peer){
       currentPeer = peer;
       chatBackBtn.style.display = "inline-flex";
-      chatWith.textContent = `�곷�: ${peer}`;
+      chatWith.textContent = `상대: ${peer}`;
       chatHintTop.textContent = "";
       chatList.innerHTML = "";
       chatInput.value = "";
@@ -1370,22 +1425,22 @@ window.addEventListener("resize", () => autoLayout());
       startRooms();
     });
 
-    // ===== ���붾갑 紐⑸줉 �ㅼ떆媛�(諛쏆�+蹂대궦 �⑹퀜�� 諛� 留뚮뱾湲�) =====
+    // ===== 대화방 목록 실시간(받은+보낸 합쳐서 방 만들기) =====
     function renderRoomsFromMixed(all, me){
       roomList.innerHTML = "";
       if(all.length === 0){
-        roomHint.textContent = "履쎌�媛� �놁뒿�덈떎.";
+        roomHint.textContent = "쪽지가 없습니다.";
         return;
       }
 
-      // 理쒖떊�� �뺣젹
+      // 최신순 정렬
       all.sort((a,b)=>{
         const at = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
         const bt = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
         return bt - at;
       });
 
-      // �곷�諛� 湲곗� 諛� 臾띔린 + �덉씫��(�곷�->�� read=false) 移댁슫��
+      // 상대방 기준 방 묶기 + 안읽음(상대->나 read=false) 카운트
       const rooms = new Map();
       const unreadCnt = new Map();
 
@@ -1393,10 +1448,10 @@ window.addEventListener("resize", () => autoLayout());
         const peer = (m.from === me) ? (m.to || "") : (m.from || "");
         if(!peer) continue;
 
-        // 理쒖떊 硫붿떆吏� 1媛�
+        // 최신 메시지 1개
         if(!rooms.has(peer)) rooms.set(peer, m);
 
-        // �덉씫�� 移댁슫��(�곷�媛� 蹂대궦 寃� 以� read=false留�)
+        // 안읽음 카운트(상대가 보낸 것 중 read=false만)
         if(m.to === me && m.from === peer && m.read === false){
           unreadCnt.set(peer, (unreadCnt.get(peer)||0) + 1);
         }
@@ -1454,7 +1509,7 @@ window.addEventListener("resize", () => autoLayout());
     function startRooms(){
       if(!ensureNick()) return;
       const me = getNick();
-      roomHint.textContent = "遺덈윭�ㅻ뒗 以묅��";
+      roomHint.textContent = "불러오는 중…";
       roomList.innerHTML = "";
 
       stopRooms();
@@ -1488,7 +1543,7 @@ window.addEventListener("resize", () => autoLayout());
       });
     }
 
-    // ===== �쎌쓬 泥섎━: �닿� ���붿갹 �대㈃ �곷�->�� read=false 瑜� read=true濡� =====
+    // ===== 읽음 처리: 내가 대화창 열면 상대->나 read=false 를 read=true로 =====
     async function markRead(peer){
       const me = getNick();
       const qy = query(
@@ -1506,13 +1561,13 @@ window.addEventListener("resize", () => autoLayout());
       if(jobs.length) await Promise.all(jobs);
     }
 
-    // ===== ���� �ㅼ떆媛�(�묒そ 荑쇰━ �⑹퀜�� �뚮뜑) =====
+    // ===== 대화 실시간(양쪽 쿼리 합쳐서 렌더) =====
     function startChat(peer){
       if(!ensureNick()) return;
       const me = getNick();
 
       stopChat();
-      chatHintTop.textContent = "遺덈윭�ㅻ뒗 以묅��";
+      chatHintTop.textContent = "불러오는 중…";
       chatList.innerHTML = "";
 
       const aQ = query(
@@ -1536,7 +1591,7 @@ window.addEventListener("resize", () => autoLayout());
       function render(){
         const all = [...aArr, ...bArr];
         if(all.length === 0){
-          chatHintTop.textContent = "���붽� �놁뒿�덈떎.";
+          chatHintTop.textContent = "대화가 없습니다.";
           chatList.innerHTML = "";
           return;
         }
@@ -1560,7 +1615,7 @@ window.addEventListener("resize", () => autoLayout());
 
           const t = document.createElement("div");
           t.className = "t";
-          t.textContent = `${m.from === me ? "��" : (m.from || "-")} 쨌 ${fmtTime(m.createdAt)}`;
+          t.textContent = `${m.from === me ? "나" : (m.from || "-")} · ${fmtTime(m.createdAt)}`;
 
           bubble.appendChild(t);
           row.appendChild(bubble);
@@ -1583,25 +1638,25 @@ window.addEventListener("resize", () => autoLayout());
         snap.forEach(d => bArr.push({ id:d.id, ...d.data() }));
         render();
 
-        // �곷�媛� 蹂대궦 嫄� �쎌쓬 泥섎━
+        // 상대가 보낸 걸 읽음 처리
         try{ await markRead(peer); }catch(e){}
       });
     }
 
-    // ===== 蹂대궡湲� =====
+    // ===== 보내기 =====
     chatSend.addEventListener("click", async ()=>{
       if(!ensureNick()) return;
       const me = getNick();
       const peer = currentPeer;
       const body = (chatInput.value || "").trim();
 
-      if(!peer){ showHint("���� �곷�瑜� 癒쇱� �좏깮�댁＜�몄슂."); return; }
-      if(!body){ showHint("�댁슜�� �낅젰�댁＜�몄슂."); return; }
-      if(peer === me){ showHint("�먭린 �먯떊�먭쾶�� 蹂대궪 �� �놁뒿�덈떎."); return; }
+      if(!peer){ showHint("대화 상대를 먼저 선택해주세요."); return; }
+      if(!body){ showHint("내용을 입력해주세요."); return; }
+      if(peer === me){ showHint("자기 자신에게는 보낼 수 없습니다."); return; }
 
       try{
         chatSend.disabled = true;
-        showHint("�꾩넚 以묅��");
+        showHint("전송 중…");
 
         await addDoc(collection(db, "messages"), {
           from: me,
@@ -1616,13 +1671,13 @@ window.addEventListener("resize", () => autoLayout());
         showHint("");
       }catch(err){
         console.error(err);
-        showHint("�꾩넚�� �ㅽ뙣�덉뒿�덈떎.");
+        showHint("전송에 실패했습니다.");
       }finally{
         chatSend.disabled = false;
       }
     });
 
-    // �뷀꽣濡� 蹂대궡湲�(Shift+Enter�� 以꾨컮轅�)
+    // 엔터로 보내기(Shift+Enter는 줄바꿈)
     chatInput.addEventListener("keydown", (e)=>{
       if(e.key === "Enter" && !e.shiftKey){
         e.preventDefault();
@@ -1630,8 +1685,8 @@ window.addEventListener("resize", () => autoLayout());
       }
     });
 
-    // ===== 珥덇린 援щ룞 =====
-    // �� �덉쑝硫� 諭껋� �ㅼ떆媛� �쒖옉
+    // ===== 초기 구동 =====
+    // 닉 있으면 뱃지 실시간 시작
     if(getNick()) startBadge();
   
 /* ---- Mobile window layout polish (random overlap + bring key buttons forward) ---- */
@@ -1728,10 +1783,10 @@ window.addEventListener("resize", () => autoLayout());
 
   function updateUI(){
     if(media.muted || media.volume === 0){
-      btn.innerHTML = "�뵁 �뚯냼嫄� �댁젣";
+      btn.innerHTML = "🔇 음소거 해제";
       btn.setAttribute("aria-pressed","true");
     }else{
-      btn.innerHTML = "�뵄 �뚯냼嫄�";
+      btn.innerHTML = "🔊 음소거";
       btn.setAttribute("aria-pressed","false");
     }
   }
@@ -1797,19 +1852,19 @@ window.addEventListener("resize", () => autoLayout());
 <!-- schedule ticket sticker (background only) -->
 <div class="schedule-ticket" aria-hidden="true">
   <div class="ticket-line w">January 15, 2026 (Thu)</div>
-  <div class="ticket-line w">08:00 PM �� Registration</div>
-  <div class="ticket-line w">10:00 PM �� Intro</div>
+  <div class="ticket-line w">08:00 PM — Registration</div>
+  <div class="ticket-line w">10:00 PM — Intro</div>
 
   <div class="ticket-gap"></div>
 
-  <div class="ticket-line b">January 16 �� January 19</div>
+  <div class="ticket-line b">January 16 — January 19</div>
   <div class="ticket-line b">Quiet days in between</div>
   <div class="ticket-line b">Winter nights, ongoing</div>
 
   <div class="ticket-gap"></div>
 
   <div class="ticket-line w">January 20, 2026 (Tue)</div>
-  <div class="ticket-line w">09:00 PM �� Outro &amp; Close</div>
+  <div class="ticket-line w">09:00 PM — Outro &amp; Close</div>
 </div>
 
 </body>

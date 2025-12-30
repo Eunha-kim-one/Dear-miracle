@@ -14,7 +14,14 @@
     font-display: swap;
     }
     
-    body {
+    
+
+    /* ✅ 폰트 강제 적용(다른 스타일이 덮어써도 유지) */
+    html, body, button, input, textarea {
+      font-family: 'RoundedFixedsys', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif !important;
+    }
+
+body {
     font-family: 'RoundedFixedsys', sans-serif;
     }
     
@@ -22,7 +29,7 @@
     html, body { height: 100%; }
     body {
       margin: 0;
-      font-family: Tahoma, Verdana, Arial, sans-serif;
+      font-family: 'RoundedFixedsys', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
       overflow: hidden;
       background: #000;
     }

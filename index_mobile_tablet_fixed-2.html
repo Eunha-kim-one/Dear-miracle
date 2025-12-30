@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dear Miracle</title>
+
+<style>
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: 'RoundedFixedsys', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+
+.win {
+  position: absolute;
+  background: rgba(255,255,255,0.85);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  backdrop-filter: blur(6px);
+}
+
+.notice-window { z-index: 300; }
+.win.photo { z-index: 50; }
+
+@media (max-width: 1024px) {
+  .notice-window { display: none !important; }
+
+  .notice-mini {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.9);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+
+  .win.photo {
+    transform: scale(0.6);
+    transform-origin: top left;
+  }
+}
+
+.floating-buttons {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  gap: 12px;
+  z-index: 9999;
+}
+
+.fab {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  text-decoration: none;
+  color: #000;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+</style>
+</head>
+
+<body>
+
+<div class="notice-mini">
+  가개장 기간 중 · 게시판은 우하단 버튼 이용
+</div>
+
+<div class="win notice-window" style="left:18px; top:18px; width:260px;">
+  <div style="padding:16px;">
+    <strong>Dear Miracle</strong><br><br>
+    가개장 기간 동안 운영합니다.<br><br>
+    • 구인게시판: 전체 공개<br>
+    • 완료 시 요약 기재
+  </div>
+</div>
+
+<div class="floating-buttons">
+  <a class="fab" href="board.html" title="게시판">📋</a>
+  <a class="fab" href="message.html" title="메신저">✉️</a>
+</div>
+
+</body>
+</html>

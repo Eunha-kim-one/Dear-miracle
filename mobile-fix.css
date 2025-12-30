@@ -1,53 +1,75 @@
 /* =========================
-   모바일 창 크기 / 여백 최종 조정
+   모바일 전용 보정 (정상판)
    ========================= */
+
 @media (max-width: 560px) {
 
-  /* 공통: 유튜브 제외 모든 창 */
-  .win:not([data-key^="yt"]) {
-    max-width: 78vw !important;   /* ← 기존보다 약 10~15% 감소 */
-    transform: none !important;   /* JS scale 무력화 */
+  /* -------------------------
+     공통 창 기본값
+     ------------------------- */
+  .win{
+    max-width: 92vw !important;
+    border-radius: 14px;
   }
 
-  /* =========================
-     1. 게시판 / 안내문 창
-     ========================= */
+  .titlebar{
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .content{
+    padding: 14px 16px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* -------------------------
+     글자 있는 창 (안내 / 컨택)
+     → 거의 원래 크기 유지
+     ------------------------- */
   .win[data-key="notice"],
-  .win[data-key="guide"] {
-    width: 72vw !important;
-    max-width: 72vw !important;
-    aspect-ratio: 1 / 1 !important;   /* 정사각형 유지 */
-    padding: 14px !important;
+  .win[data-key="contact"],
+  .win[data-key="guide"],
+  .win[data-key="links"]{
+    width: min(92vw, 360px) !important;
   }
 
-  /* =========================
-     2. 메신저 / 컨택 창
-     ========================= */
-  .win[data-key="contact"] {
-    width: 74vw !important;
-    max-width: 74vw !important;
-    padding: 12px !important;
-
-    /* 👉 문제의 오른쪽 여백 제거 */
-    margin-right: 0 !important;
-    right: auto !important;
+  /* -------------------------
+     사진 / 영상 창만 줄이기
+     ------------------------- */
+  .win[data-key^="07"],
+  .win[data-key^="img"],
+  .win[data-key^="video"],
+  .win[data-key="w"],
+  .win[data-key="p"]{
+    width: min(84vw, 300px) !important;
   }
 
-  /* 버튼 영역 정리 */
-  .win[data-key="contact"] .button-area,
-  .win[data-key="contact"] .buttons {
-    gap: 8px !important;
-    padding-right: 0 !important;
+  .win img,
+  .win video{
+    max-height: 180px;
+    object-fit: cover;
   }
 
-  /* =========================
-     3. 유튜브 음소거 버튼 정리
-     ========================= */
-  .yt-window .sound-btn {
-    top: 6px !important;
-    right: 6px !important;
-    padding: 4px 6px !important;
-    font-size: 11px !important;
-    border-radius: 6px !important;
+  /* -------------------------
+     유튜브 창은 건드리지 않음
+     ------------------------- */
+  .win[data-key="yt"]{
+    width: auto !important;
+    max-width: none !important;
   }
+
+  /* -------------------------
+     음소거 버튼 – 창 안으로
+     ------------------------- */
+  .yt-window .sound-btn{
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.9);
+  }
+
 }

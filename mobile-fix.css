@@ -1,76 +1,57 @@
-/* =========================
-   모바일 글자창 미세 조정 (롤백 기반)
-   ========================= */
-@media (max-width: 560px) {
 
-  /* 글자 있는 창 공통 (안내 / 메신저) */
+@media (max-width: 560px){
+
+  .win{
+    max-width: none !important;
+  }
+
+  /* 텍스트 창 */
   .win[data-key="notice"],
-  .win[data-key="contact"] {
-    width: min(82vw, 320px) !important; /* 기존보다 살짝만 축소 */
-    max-width: 320px !important;
-    padding: 14px 14px 12px 14px !important;
-    box-sizing: border-box;
+  .win[data-key="contact"],
+  .win[data-key="guide"],
+  .win[data-key="links"]{
+    width: 90% !important;
+    max-width: 340px !important;
+    transform: none !important;
   }
 
-  /* 안내(게시판 바로가기) 창 비율 정리 */
-  .win[data-key="notice"] {
-    aspect-ratio: 1 / 1.15; /* 정사각형~세로 긴 느낌 */
-  }
-
-  /* 메신저 창 오른쪽 여백 문제 해결 */
-  .win[data-key="contact"] {
-    padding-right: 12px !important;
-  }
-
-  /* 메신저 내부 버튼 영역 여백 축소 */
   .win[data-key="contact"] .content,
-  .win[data-key="contact"] .body {
-    padding-right: 0 !important;
+  .win[data-key="notice"] .content{
+    padding: 14px !important;
   }
 
-  /* 버튼 줄 정렬 안정화 */
-  .win[data-key="contact"] .actions,
-  .win[data-key="contact"] .buttons {
+  /* 버튼 정렬 */
+  .win[data-key="contact"] .actions{
+    display: flex !important;
     gap: 8px !important;
-    justify-content: space-between;
   }
 
-}
-/* =========================
-   모바일 글자창 미세 조정 (롤백 기반)
-   ========================= */
-@media (max-width: 560px) {
-
-  /* 글자 있는 창 공통 (안내 / 메신저) */
-  .win[data-key="notice"],
-  .win[data-key="contact"] {
-    width: min(82vw, 320px) !important; /* 기존보다 살짝만 축소 */
-    max-width: 320px !important;
-    padding: 14px 14px 12px 14px !important;
-    box-sizing: border-box;
+  /* 사진/영상 */
+  .win:not([data-key="notice"]):not([data-key="contact"]):not([data-key="guide"]):not([data-key="links"]){
+    width: 55% !important;
+    max-width: 220px !important;
   }
 
-  /* 안내(게시판 바로가기) 창 비율 정리 */
-  .win[data-key="notice"] {
-    aspect-ratio: 1 / 1.15; /* 정사각형~세로 긴 느낌 */
+  .win img,
+  .win video{
+    max-height: 160px !important;
+    object-fit: cover !important;
   }
 
-  /* 메신저 창 오른쪽 여백 문제 해결 */
-  .win[data-key="contact"] {
-    padding-right: 12px !important;
+  /* 유튜브 */
+  .yt-window,
+  .win[data-key="yt"]{
+    width: 100% !important;
+    max-width: none !important;
+    transform: none !important;
   }
 
-  /* 메신저 내부 버튼 영역 여백 축소 */
-  .win[data-key="contact"] .content,
-  .win[data-key="contact"] .body {
-    padding-right: 0 !important;
+  /* 음소거 버튼 */
+  .yt-window .sound-btn{
+    top: 6px !important;
+    right: 6px !important;
+    font-size: 12px !important;
+    padding: 4px 6px !important;
+    border-radius: 6px !important;
   }
-
-  /* 버튼 줄 정렬 안정화 */
-  .win[data-key="contact"] .actions,
-  .win[data-key="contact"] .buttons {
-    gap: 8px !important;
-    justify-content: space-between;
-  }
-
 }

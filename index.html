@@ -941,10 +941,7 @@
       </div>
     </div>
   </div>
-
-  <div class="taskbar">
-    <div class="start" onclick="alert('Dear Miracle')">Start</div>
-    <div class="brand">Dear Miracle</div>
+<div class="brand">Dear Miracle</div>
     <div class="spacer"></div>
     <div class="clock" id="clock">--:--</div>
   </div>
@@ -1647,63 +1644,88 @@
     // 닉 있으면 뱃지 실시간 시작
     if(getNick()) startBadge();
   
-/* ---- Mobile window layout polish (cascade + smaller) ---- */
-(function applyMobileLayoutOnce(){
-  const isMobile = window.matchMedia("(max-width: 600px)").matches;
-  if (!isMobile) return;
+/* ---- Mobile window layout polish (random overlap + bring key buttons forward) ---- */
+  (function applyMobileLayoutOnce() {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (!isMobile) return;
 
-  const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-  const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    const wins = Array.from(document.querySelectorAll('.win[data-key]'));
+    if (!wins.length) return;
 
-  // Notice/board shortcut: keep it on top-left, slightly compact.
-  const notice = document.querySelector('.win[data-key="notice"]');
-  if (notice) {
-    notice.style.left = "14px";
-    notice.style.top = "14px";
-    notice.style.width = "min(86vw, 320px)";
-    notice.style.zIndex = "9999";
-    notice.dataset.z = "9999";
-  }
+    // Deterministic-but-varied random (so it doesn't jump around on every reload)
+    // Seed from viewport + day.
+    const seedStr = String(window.innerWidth) + 'x' + String(window.innerHeight) + '|' + new Date().toDateString();
+    let seed = 0;
+    for (let i = 0; i < seedStr.length; i++) seed = (seed * 31 + seedStr.charCodeAt(i)) >>> 0;
+    const rand = () => {
+      // xorshift32
+      seed ^= seed << 13; seed >>>= 0;
+      seed ^= seed >> 17; seed >>>= 0;
+      seed ^= seed << 5;  seed >>>= 0;
+      return (seed >>> 0) / 4294967296;
+    };
 
-  // Media windows: smaller + pretty cascade like desktop "stack"
-  const mediaWins = Array.from(document.querySelectorAll(".win.media-win"));
-  const presets = [
-    { l: "10vw", t: "34vh", w: "min(78vw, 320px)", z: 120 },
-    { l: "54vw", t: "40vh", w: "min(66vw, 280px)", z: 121 },
-    { l: "18vw", t: "54vh", w: "min(80vw, 330px)", z: 122 },
-    { l: "6vw",  t: "66vh", w: "min(74vw, 300px)", z: 123 },
-    { l: "50vw", t: "62vh", w: "min(76vw, 310px)", z: 124 },
-    { l: "22vw", t: "76vh", w: "min(72vw, 290px)", z: 125 },
-    { l: "58vw", t: "74vh", w: "min(62vw, 260px)", z: 126 },
-    { l: "8vw",  t: "46vh", w: "min(64vw, 270px)", z: 127 },
-    { l: "40vw", t: "50vh", w: "min(70vw, 300px)", z: 128 },
-    { l: "26vw", t: "42vh", w: "min(68vw, 285px)", z: 129 },
-  ];
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-  mediaWins.forEach((w, i) => {
-    const p = presets[i % presets.length];
-    w.style.left = p.l;
-    w.style.top  = p.t;
-    w.style.width = p.w;
-    w.style.maxWidth = "92vw";
-    w.style.zIndex = String(p.z);
-    w.dataset.z = String(p.z);
+    // Make sure important windows are visible + in front
+    const keyOrder = ['notice', 'dm-notice']; // notice = board shortcut, dm-notice = contact/DM shortcut
 
-    // If it's too tall for the viewport, cap the body area.
-    const body = w.querySelector(".body");
-    if (body) body.style.maxHeight = "52vh";
-  });
+    // Base sizing (mobile)
+    const sizeByKey = {
+      'notice':     { w: 86, top: 6,  left: 6,  z: 120 },
+      'dm-notice':  { w: 74, top: 16, left: 12, z: 119 },
+    };
 
-  // Make sure the messenger button stays reachable (not hidden by browser UI).
-  const messenger = document.getElementById("messengerButton");
-  if (messenger) {
-    messenger.style.right = "18px";
-    messenger.style.bottom = "18px";
-  }
+    // Default size for media windows
+    const defaultMediaW = 78; // vw
 
-  // A tiny nudge so it feels intentional (subtle overlap)
-  document.documentElement.style.setProperty("--mobile-win-radius", "14px");
-})();
+    // Place key windows first (slightly overlapped, but readable)
+    const keyPlaced = new Set();
+    wins.forEach(win => {
+      const key = win.dataset.key || '';
+      if (!keyOrder.includes(key)) return;
+
+      const cfg = sizeByKey[key];
+      if (!cfg) return;
+
+      win.style.width = cfg.w + 'vw';
+      win.style.left  = cfg.left + 'vw';
+      win.style.top   = cfg.top + 'vh';
+      win.style.zIndex = String(cfg.z);
+      win.style.transform = 'scale(0.96)';
+      win.style.transformOrigin = 'top left';
+      keyPlaced.add(key);
+    });
+
+    // Place the rest with "desktop-like" scattered overlap (but keep on screen)
+    // We bias them to the right / lower area so they don't cover the shortcut windows too much.
+    let i = 0;
+    wins.forEach(win => {
+      const key = win.dataset.key || '';
+      if (keyPlaced.has(key)) return;
+
+      // Width: slightly smaller than full screen
+      const w = clamp(defaultMediaW - (rand() * 10), 62, 82); // vw
+      const left = clamp(18 + rand() * 22 + (i % 2) * 4, 4, 30); // vw
+      const top  = clamp(28 + rand() * 42 + (i % 3) * 3, 18, 78); // vh
+
+      const z = 60 + i; // keep behind shortcuts
+
+      win.style.width = w + 'vw';
+      win.style.left = left + 'vw';
+      win.style.top  = top + 'vh';
+      win.style.zIndex = String(z);
+      win.style.transform = 'scale(0.94)';
+      win.style.transformOrigin = 'top left';
+
+      i += 1;
+    });
+
+    // Prevent accidental overflow scroll caused by large absolute windows
+    document.body.style.overflowX = 'hidden';
+  })();
+  /* ---- end mobile layout polish ---- */
+;
 </script>
 </body>
 </html>

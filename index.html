@@ -648,7 +648,33 @@ body {
     }
     .mute-hint b{ font-weight:900; }
 
-    </style>
+    
+/* ===== floating sticker layer ===== */
+.floating-stickers {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.sticker {
+  position: absolute;
+  opacity: 0.35;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.18));
+  animation: floatY 6s ease-in-out infinite;
+}
+.sticker.vhs { width:120px; left:6%; bottom:18%; animation-duration:7s; }
+.sticker.headphone { width:140px; right:8%; top:12%; animation-duration:6.5s; }
+.sticker.camera { width:110px; left:12%; top:10%; animation-duration:5.8s; }
+.sticker.wings { width:160px; right:10%; bottom:14%; animation-duration:8s; }
+@keyframes floatY {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+@media (max-width:768px){ .sticker{ opacity:0.55; } }
+@media (min-width:769px){ .sticker{ opacity:0.25; } }
+
+</style>
   <link rel="stylesheet" href="mobile-fix.css">
 </head>
 
@@ -1797,6 +1823,15 @@ body {
   });
 })();
 </script>
+
+
+<!-- floating stickers (background only) -->
+<div class="floating-stickers">
+  <img src="assets/stickers/vedeo-tape.png" class="sticker vhs" alt="">
+  <img src="assets/stickers/headphone.png" class="sticker headphone" alt="">
+  <img src="assets/stickers/camera.png" class="sticker camera" alt="">
+  <img src="assets/stickers/wings.png" class="sticker wings" alt="">
+</div>
 
 </body>
 </html>

@@ -116,7 +116,7 @@
       white-space: nowrap;
       position: relative; /* ✅ 뱃지 얹기 */
     }
-  
+
     /* ✅ 쪽지 뱃지(보드용) */
     .inbox-badge{
       position:absolute;
@@ -352,88 +352,75 @@
       -webkit-backdrop-filter: blur(10px);
       border-top: 1px solid rgba(0,0,0,0.18);
       pointer-events: auto;
+      z-index: 2000;
     }
     .brand { font-size: 13px; color:#222; font-weight:900; letter-spacing:0.2px; }
     .spacer { flex:1; }
     .clock { font-size: 12px; color: rgba(0,0,0,0.65); font-variant-numeric: tabular-nums; }
-    
-    /* ===== Responsive ===== */
+
+    /* =========================
+       ✅ Responsive (가독성/버튼크기)
+       ========================= */
     @media (max-width: 560px){
-      #boardWin{ width: calc(100vw - 24px) !important; left: 12px !important; }
-      .list{ max-height: calc(100vh - 220px); }
+      #boardWin{
+        left: 10px !important;
+        top: 10px !important;
+        width: calc(100vw - 20px) !important;
+        height: calc(100vh - 74px) !important; /* taskbar 44px + 여유 */
+      }
+      .list{ max-height: calc(100vh - 240px); }
     }
+
     @media (max-width: 560px){
       .titlebar{ height: 36px; }
       .title{ font-size: 14px; max-width: 260px; }
+
       .pill{ height: 44px; font-size: 14px; }
       .mini{ height: 42px; font-size: 14px; }
+
       .whoami{ font-size: 13px; }
       .card h3{ font-size: 16px; }
       .text{ font-size: 15px; line-height: 1.6; }
+
       .field input, .field textarea{ font-size: 15px; }
       .modal{ width: 100%; }
-      .list{ max-height: calc(100vh - 240px); }
+      .list{ max-height: calc(100vh - 260px); }
     }
-    <style>
-@media (max-width: 768px){
-  #dmWin{
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    top: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    border-radius: 0 !important;
-  }
-  /* =========================
-   📱 Mobile layout fix
-   ========================= */
-@media (max-width: 560px){
 
-  /* 바탕 스크롤/줌 안정 */
-  html, body { overflow: hidden; }
+    /* =========================
+       ✅ 카톡형 메신저: 모바일 풀화면
+       ========================= */
+    @media (max-width: 768px){
+      #dmWin{
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        top: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        border-radius: 0 !important;
+      }
+      #dmFabBtn{
+        right: 14px !important;
+        bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+        width: 64px !important;
+        height: 64px !important;
+        border-radius: 22px !important;
+        font-size: 26px !important;
+      }
+    }
 
-  /* ✅ 보드 메인창: 거의 풀화면 */
-  #boardWin{
-    left: 10px !important;
-    top: 10px !important;
-    width: calc(100vw - 20px) !important;
-    height: calc(100vh - 74px) !important; /* 아래 taskbar(44px) + 여유 */
-  }
-
-  /* ✅ 보드 내부 리스트 스크롤 공간 확보 */
-  #boardWin .list{
-    max-height: calc(100vh - 260px) !important;
-  }
-
-  /* ✅ 메신저(쪽지) 모달/창이 너무 커지면 풀폭 */
-  .modal{
-    width: calc(100vw - 20px) !important;
-    max-height: calc(100vh - 40px) !important;
-  }
-  .modal .content{
-    max-height: calc(100vh - 120px) !important;
-    overflow: auto !important;
-  }
-
-  /* ✅ 유튜브 창(있다면) : 작게 + 한쪽 구석 */
-  #ytWin{
-    width: 220px !important;
-    height: 160px !important;
-    left: 12px !important;
-    top: auto !important;
-    bottom: 64px !important; /* taskbar 위 */
-    right: auto !important;
-  }
-
-  /* ✅ 영상/이미지 창들: 처음엔 숨겨버리기 (겹침 방지) */
-  .win[data-key^="0722_"],
-  .win.videoWin,
-  .win.photoWin{
-    display: none !important;
-  }
-}
-</style>
+    /* 모달이 너무 커지면 스크롤 */
+    @media (max-width: 560px){
+      .modal{
+        width: calc(100vw - 20px) !important;
+        max-height: calc(100vh - 40px) !important;
+      }
+      .modal .content{
+        max-height: calc(100vh - 120px) !important;
+        overflow: auto !important;
+      }
+    }
   </style>
 </head>
 
@@ -452,7 +439,7 @@
           <button class="iconbtn" id="btnNick" title="닉네임 변경">닉</button>
           <button class="iconbtn" id="btnAdmin" title="관리자">관리</button>
 
-          <!-- ✅ 쪽지 버튼 + 안읽음 뱃지 -->
+          <!-- ✅ 쪽지 버튼 + 안읽음 뱃지(보드 기본) -->
           <button class="iconbtn" id="btnInbox" title="쪽지함">
             쪽지
             <span class="inbox-badge" id="inboxBadge">0</span>
@@ -463,180 +450,6 @@
           <button class="iconbtn" id="btnReload" title="새로고침">↻</button>
         </div>
       </div>
-<!-- =========================
-     ✅ 카톡형 메신저 (INDEX와 동일)
-     ========================= -->
-
-<!-- 우하단 플로팅 버튼 -->
-<button id="dmFabBtn" title="메신저" aria-label="메신저"
-  style="
-    position:fixed; right:16px; bottom:58px;
-    width:56px; height:56px;
-    border-radius:18px;
-    border:1px solid rgba(0,0,0,0.22);
-    background:rgba(255,255,255,0.90);
-    box-shadow: 0 10px 26px rgba(0,0,0,0.25);
-    display:flex; align-items:center; justify-content:center;
-    font-size:22px; cursor:pointer; z-index:9998;">
-  💬
-</button>
-
-<!-- 메신저 창 -->
-<div id="dmWin"
-  style="
-    position:fixed;
-    right:16px;
-    bottom:120px;
-    width:min(360px, calc(100vw - 32px));
-    height:520px;
-    border-radius:14px;
-    overflow:hidden;
-    border:1px solid rgba(0,0,0,0.22);
-    background:rgba(255,255,255,0.72);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 18px 46px rgba(0,0,0,0.35);
-    z-index:9999;
-    display:none;">
-
-  <!-- 상단바 -->
-  <div id="dmTop"
-    style="
-      height:40px;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 10px;
-      background: linear-gradient(to bottom, rgba(247,247,247,0.96), rgba(233,233,233,0.96));
-      border-bottom:1px solid rgba(0,0,0,0.16);
-      cursor:grab;">
-    <div style="display:flex; align-items:center; gap:8px; min-width:0;">
-      <div style="width:10px; height:10px; border-radius:2px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.85);"></div>
-      <div style="font-size:13px; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-        메신저
-      </div>
-
-      <!-- 안읽음 뱃지 -->
-      <span id="dmBadge"
-        style="
-          margin-left:6px;
-          min-width:18px; height:18px; padding:0 6px;
-          border-radius:999px;
-          border:1px solid rgba(0,0,0,0.22);
-          background:rgba(255,255,255,0.95);
-          font-size:11px; font-weight:900;
-          display:none;
-          align-items:center; justify-content:center;">
-        0
-      </span>
-    </div>
-
-    <div style="display:flex; align-items:center; gap:8px;">
-      <button id="dmTabBtn"
-        style="
-          height:28px; padding:0 10px;
-          border-radius:10px;
-          border:1px solid rgba(0,0,0,0.22);
-          background:rgba(255,255,255,0.88);
-          font-size:12px; font-weight:900;
-          cursor:pointer;">
-        쪽지함
-      </button>
-
-      <button id="dmCloseBtn"
-        style="
-          width:28px; height:28px;
-          border-radius:10px;
-          border:1px solid rgba(0,0,0,0.22);
-          background:rgba(255,255,255,0.88);
-          cursor:pointer;">
-        ✕
-      </button>
-    </div>
-  </div>
-
-  <!-- 본문 -->
-  <div style="padding:10px; height:calc(100% - 40px); display:flex; flex-direction:column; gap:10px;">
-
-    <!-- 상단 안내 -->
-    <div id="dmInfo"
-      style="
-        font-size:12px; line-height:1.35;
-        color:rgba(0,0,0,0.65);
-        background:rgba(255,255,255,0.55);
-        border:1px solid rgba(0,0,0,0.12);
-        padding:8px 10px;
-        border-radius:12px;">
-      컨택/쪽지는 여기서 주고받습니다. <b>닉네임</b>만 있으면 끝.
-    </div>
-
-    <!-- 탭 -->
-    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-      <button id="dmModeCompose"
-        style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.92); font-weight:900; font-size:12px; cursor:pointer;">
-        보내기
-      </button>
-      <button id="dmModeInbox"
-        style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.75); font-weight:900; font-size:12px; cursor:pointer;">
-        받은함
-      </button>
-      <button id="dmModeSent"
-        style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.75); font-weight:900; font-size:12px; cursor:pointer;">
-        보낸함
-      </button>
-      <button id="dmRefresh"
-        style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.75); font-weight:900; font-size:12px; cursor:pointer;">
-        새로고침
-      </button>
-    </div>
-
-    <!-- 보내기 폼 -->
-    <div id="dmCompose"
-      style="display:grid; gap:8px;">
-      <div style="display:grid; gap:6px;">
-        <div style="font-size:12px; font-weight:900; color:rgba(0,0,0,0.65);">내 닉네임</div>
-        <input id="dmNick"
-          placeholder="예: DearMiracle / ㅇㅇ / 닉네임"
-          maxlength="30"
-          style="width:100%; border-radius:12px; border:1px solid rgba(0,0,0,0.18); background:rgba(255,255,255,0.90); padding:10px 12px; font-size:14px; outline:none;">
-      </div>
-
-      <div style="display:grid; gap:6px;">
-        <div style="font-size:12px; font-weight:900; color:rgba(0,0,0,0.65);">받는 사람</div>
-        <input id="dmTo"
-          placeholder="상대 닉네임(정확히)"
-          maxlength="30"
-          style="width:100%; border-radius:12px; border:1px solid rgba(0,0,0,0.18); background:rgba(255,255,255,0.90); padding:10px 12px; font-size:14px; outline:none;">
-      </div>
-
-      <div style="display:grid; gap:6px;">
-        <div style="font-size:12px; font-weight:900; color:rgba(0,0,0,0.65);">내용</div>
-        <textarea id="dmBody"
-          placeholder="컨택 내용을 적어주세요."
-          style="width:100%; min-height:140px; resize:vertical; border-radius:12px; border:1px solid rgba(0,0,0,0.18); background:rgba(255,255,255,0.90); padding:10px 12px; font-size:14px; outline:none; line-height:1.45;"></textarea>
-      </div>
-
-      <div style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
-        <button id="dmSaveNick"
-          style="height:34px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.88); font-weight:900; font-size:12px; cursor:pointer;">
-          닉 저장
-        </button>
-        <button id="dmSend"
-          style="height:34px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(0,0,0,0.78); color:#fff; font-weight:900; font-size:12px; cursor:pointer;">
-          보내기
-        </button>
-      </div>
-
-      <div id="dmHint" style="font-size:11px; color:rgba(0,0,0,0.65); line-height:1.35;"></div>
-    </div>
-
-    <!-- 리스트(받은/보낸) -->
-    <div id="dmListWrap"
-      style="display:none; flex:1; overflow:auto; padding-right:4px;">
-      <div id="dmList"></div>
-      <div id="dmListHint" style="margin-top:8px; font-size:11px; color:rgba(0,0,0,0.65);"></div>
-    </div>
-
-  </div>
-</div>
 
       <div class="content">
         <div class="board-top">
@@ -658,6 +471,184 @@
         <div class="list" id="list"></div>
         <div class="status" id="status"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- =========================
+       ✅ 카톡형 메신저 (보드 전용 1세트)
+       ※ 보드 기본 dmTo/dmBody/dmSend와 충돌 방지: dm2* 사용
+       ========================= -->
+
+  <!-- 우하단 플로팅 버튼 -->
+  <button id="dmFabBtn" title="메신저" aria-label="메신저"
+    style="
+      position:fixed;
+      right:18px;
+      bottom:calc(80px + env(safe-area-inset-bottom));
+      width:64px; height:64px;
+      border-radius:22px;
+      border:1px solid rgba(0,0,0,0.22);
+      background:rgba(255,255,255,0.92);
+      box-shadow:0 12px 30px rgba(0,0,0,0.28);
+      display:flex; align-items:center; justify-content:center;
+      font-size:26px;
+      cursor:pointer;
+      z-index:99998;">
+    💬
+  </button>
+
+  <!-- 메신저 창 -->
+  <div id="dmWin"
+    style="
+      position:fixed;
+      right:14px;
+      bottom:calc(160px + env(safe-area-inset-bottom));
+      width:min(380px, calc(100vw - 28px));
+      height:min(600px, calc(100vh - 220px));
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid rgba(0,0,0,0.22);
+      background:rgba(255,255,255,0.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 18px 46px rgba(0,0,0,0.35);
+      z-index:99999;
+      display:none;">
+
+    <!-- 상단바 -->
+    <div id="dmTop"
+      style="
+        height:40px;
+        display:flex; align-items:center; justify-content:space-between;
+        padding:0 10px;
+        background: linear-gradient(to bottom, rgba(247,247,247,0.96), rgba(233,233,233,0.96));
+        border-bottom:1px solid rgba(0,0,0,0.16);
+        cursor:grab;">
+      <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+        <div style="width:10px; height:10px; border-radius:2px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.85);"></div>
+        <div style="font-size:13px; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          메신저
+        </div>
+
+        <!-- 안읽음 뱃지 -->
+        <span id="dmBadge"
+          style="
+            margin-left:6px;
+            min-width:18px; height:18px; padding:0 6px;
+            border-radius:999px;
+            border:1px solid rgba(0,0,0,0.22);
+            background:rgba(255,255,255,0.95);
+            font-size:11px; font-weight:900;
+            display:none;
+            align-items:center; justify-content:center;">
+          0
+        </span>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button id="dmTabBtn"
+          style="
+            height:28px; padding:0 10px;
+            border-radius:10px;
+            border:1px solid rgba(0,0,0,0.22);
+            background:rgba(255,255,255,0.88);
+            font-size:12px; font-weight:900;
+            cursor:pointer;">
+          쪽지함
+        </button>
+
+        <button id="dmCloseBtn"
+          style="
+            width:28px; height:28px;
+            border-radius:10px;
+            border:1px solid rgba(0,0,0,0.22);
+            background:rgba(255,255,255,0.88);
+            cursor:pointer;">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- 본문 -->
+    <div style="padding:10px; height:calc(100% - 40px); display:flex; flex-direction:column; gap:10px;">
+
+      <!-- 안내 -->
+      <div id="dmInfo"
+        style="
+          font-size:12px; line-height:1.35;
+          color:rgba(0,0,0,0.65);
+          background:rgba(255,255,255,0.55);
+          border:1px solid rgba(0,0,0,0.12);
+          padding:8px 10px;
+          border-radius:12px;">
+        컨택/쪽지는 여기서 주고받습니다. <b>닉네임</b>만 있으면 끝.
+      </div>
+
+      <!-- 탭 -->
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="dmModeCompose"
+          style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.92); font-weight:900; font-size:12px; cursor:pointer;">
+          보내기
+        </button>
+        <button id="dmModeInbox"
+          style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.75); font-weight:900; font-size:12px; cursor:pointer;">
+          받은함
+        </button>
+        <button id="dmModeSent"
+          style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.75); font-weight:900; font-size:12px; cursor:pointer;">
+          보낸함
+        </button>
+        <button id="dmRefresh"
+          style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.75); font-weight:900; font-size:12px; cursor:pointer;">
+          새로고침
+        </button>
+      </div>
+
+      <!-- 보내기 폼 -->
+      <div id="dmCompose" style="display:grid; gap:8px;">
+        <div style="display:grid; gap:6px;">
+          <div style="font-size:12px; font-weight:900; color:rgba(0,0,0,0.65);">내 닉네임</div>
+          <input id="dm2Nick"
+            placeholder="예: DearMiracle / ㅇㅇ / 닉네임"
+            maxlength="30"
+            style="width:100%; border-radius:12px; border:1px solid rgba(0,0,0,0.18); background:rgba(255,255,255,0.90); padding:10px 12px; font-size:14px; outline:none;">
+        </div>
+
+        <div style="display:grid; gap:6px;">
+          <div style="font-size:12px; font-weight:900; color:rgba(0,0,0,0.65);">받는 사람</div>
+          <input id="dm2To"
+            placeholder="상대 닉네임(정확히)"
+            maxlength="30"
+            style="width:100%; border-radius:12px; border:1px solid rgba(0,0,0,0.18); background:rgba(255,255,255,0.90); padding:10px 12px; font-size:14px; outline:none;">
+        </div>
+
+        <div style="display:grid; gap:6px;">
+          <div style="font-size:12px; font-weight:900; color:rgba(0,0,0,0.65);">내용</div>
+          <textarea id="dm2Body"
+            placeholder="컨택 내용을 적어주세요."
+            style="width:100%; min-height:140px; resize:vertical; border-radius:12px; border:1px solid rgba(0,0,0,0.18); background:rgba(255,255,255,0.90); padding:10px 12px; font-size:14px; outline:none; line-height:1.45;"></textarea>
+        </div>
+
+        <div style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+          <button id="dmSaveNick"
+            style="height:34px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.88); font-weight:900; font-size:12px; cursor:pointer;">
+            닉 저장
+          </button>
+          <button id="dm2Send"
+            style="height:34px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(0,0,0,0.78); color:#fff; font-weight:900; font-size:12px; cursor:pointer;">
+            보내기
+          </button>
+        </div>
+
+        <div id="dm2Hint" style="font-size:11px; color:rgba(0,0,0,0.65); line-height:1.35;"></div>
+      </div>
+
+      <!-- 리스트(받은/보낸) -->
+      <div id="dmListWrap" style="display:none; flex:1; overflow:auto; padding-right:4px;">
+        <div id="dmList"></div>
+        <div id="dmListHint" style="margin-top:8px; font-size:11px; color:rgba(0,0,0,0.65);"></div>
+      </div>
+
     </div>
   </div>
 
@@ -757,7 +748,7 @@
     </div>
   </div>
 
-  <!-- ✅ 쪽지 보내기 모달 -->
+  <!-- ✅ 보드 기본: 쪽지 보내기 모달 (게시글에서 '쪽지 보내기' 누를 때) -->
   <div class="modal-backdrop" id="dmBg">
     <div class="modal">
       <div class="titlebar" style="cursor: default;">
@@ -793,7 +784,7 @@
     </div>
   </div>
 
-  <!-- ✅ 쪽지함 모달 -->
+  <!-- ✅ 보드 기본: 쪽지함 모달 -->
   <div class="modal-backdrop" id="inboxBg">
     <div class="modal">
       <div class="titlebar" style="cursor: default;">
@@ -847,10 +838,11 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-// ✅ 메신저(일반 script)에서도 Firestore 쓰게 전역으로 노출
-window.db = db;
-window.__fb = { collection, addDoc, getDocs, query, where, orderBy, limit, serverTimestamp };
-    
+
+    // ✅ 카톡형 메신저(일반 script)에서도 Firestore 쓰게 전역으로 노출
+    window.db = db;
+    window.__fb = { collection, addDoc, getDocs, query, where, orderBy, limit, serverTimestamp };
+
     const $ = (id)=>document.getElementById(id);
 
     function fmtTime(ts){
@@ -873,41 +865,40 @@ window.__fb = { collection, addDoc, getDocs, query, where, orderBy, limit, serve
     }
 
     // --- 보드 윈도우: 처음 로딩/리사이즈 시 중앙 배치(사용자가 드래그했으면 건드리지 않음)
-let boardUserMoved = false;
+    let boardUserMoved = false;
 
-function centerBoardWin(){
-  const win = document.getElementById("boardWin");
-  if(!win) return;
-  if(boardUserMoved) return;
+    function centerBoardWin(){
+      const win = document.getElementById("boardWin");
+      if(!win) return;
+      if(boardUserMoved) return;
 
-  const vw = window.innerWidth;
-  const taskH = document.querySelector(".taskbar")?.offsetHeight || 44;
+      const vw = window.innerWidth;
 
-  // 화면 폭에 맞춰 윈도우 폭을 적당히 제한
-  const targetW = Math.min(1180, vw - 24);
-  win.style.width = targetW + "px";
+      // 화면 폭에 맞춰 윈도우 폭을 적당히 제한
+      const targetW = Math.min(1180, vw - 24);
+      win.style.width = targetW + "px";
 
-  const left = Math.max(12, Math.round((vw - targetW) / 2));
-  const top  = 50;
+      const left = Math.max(12, Math.round((vw - targetW) / 2));
+      const top  = 50;
 
-  win.style.left = left + "px";
-  win.style.top  = top + "px";
-}
+      win.style.left = left + "px";
+      win.style.top  = top + "px";
+    }
 
-// 드래그로 움직였으면 이후 자동중앙정렬 끔
-(function hookBoardDragFlag(){
-  const win = document.getElementById("boardWin");
-  if(!win) return;
-  const bar = win.querySelector(".titlebar");
-  if(!bar) return;
+    // 드래그로 움직였으면 이후 자동중앙정렬 끔
+    (function hookBoardDragFlag(){
+      const win = document.getElementById("boardWin");
+      if(!win) return;
+      const bar = win.querySelector(".titlebar");
+      if(!bar) return;
 
-  bar.addEventListener("pointerdown", (e)=>{
-    const t = e.target;
-    if(t && (t.tagName === "BUTTON" || t.classList.contains("btn") || t.classList.contains("iconbtn"))) return;
-    boardUserMoved = true;
-  });
-})();
-    
+      bar.addEventListener("pointerdown", (e)=>{
+        const t = e.target;
+        if(t && (t.tagName === "BUTTON" || t.classList.contains("btn") || t.classList.contains("iconbtn"))) return;
+        boardUserMoved = true;
+      });
+    })();
+
     // =========================
     // ✅ 닉네임(인덱스와 공유)
     // =========================
@@ -1093,7 +1084,7 @@ function centerBoardWin(){
     };
 
     // =========================
-    // ✅ 쪽지 보내기 모달
+    // ✅ 보드 기본: 쪽지 보내기 모달
     // =========================
     const dmBg = $("dmBg");
     let dmTargetNick = "";
@@ -1139,7 +1130,6 @@ function centerBoardWin(){
         });
 
         closeDMModal();
-        // ✅ 보내고 나면 뱃지/쪽지함 상태도 갱신
         await refreshInboxBadge();
       }catch(err){
         console.error(err);
@@ -1150,7 +1140,7 @@ function centerBoardWin(){
     };
 
     // =========================
-    // ✅ 안읽음 뱃지 로직(인덱스와 동일 철학)
+    // ✅ 보드 상단 쪽지 뱃지
     // =========================
     function updateInboxBadge(n){
       const b = $("inboxBadge");
@@ -1191,12 +1181,11 @@ function centerBoardWin(){
         updateInboxBadge(cnt);
       }catch(err){
         console.error(err);
-        // 실패해도 조용히(뱃지 유지)
       }
     }
 
     // =========================
-    // ✅ 쪽지함 모달 (받은함: 답장 버튼 + 안읽음 표시)
+    // ✅ 쪽지함 모달
     // =========================
     const inboxBg = $("inboxBg");
     let inboxMode = "recv"; // recv | sent
@@ -1206,7 +1195,6 @@ function centerBoardWin(){
       inboxBg.style.display = "flex";
       setInboxTab("recv");
       loadInbox();
-      // ✅ 열었으면 "지금까지는 읽음"
       markReadNow();
     }
     function closeInbox(){ inboxBg.style.display = "none"; }
@@ -1290,7 +1278,7 @@ function centerBoardWin(){
           div.appendChild(top);
           div.appendChild(body);
 
-          // ✅ 받은함은 "답장" 버튼
+          // ✅ 받은함은 답장 버튼
           if(inboxMode === "recv"){
             const actions = document.createElement("div");
             actions.className = "actions";
@@ -1310,7 +1298,6 @@ function centerBoardWin(){
         $("inboxList").appendChild(frag);
         $("inboxHint").textContent = "";
 
-        // ✅ 목록 확인했으니 읽음 처리 + 뱃지 갱신
         markReadNow();
         await refreshInboxBadge();
       }catch(err){
@@ -1370,7 +1357,6 @@ function centerBoardWin(){
           btnDM.onclick = ()=> openDMModal(author, id);
           actions.appendChild(btnDM);
 
-          // ✅ 내 글이거나 관리자면 수정/삭제 가능
           const canManage = (me && author === me) || admin;
 
           if(canManage){
@@ -1488,518 +1474,348 @@ function centerBoardWin(){
     // =========================
     // ✅ 초기 실행
     // =========================
-   updateWhoAmI();
+    updateWhoAmI();
 
-centerBoardWin();
-window.addEventListener("resize", centerBoardWin);
+    centerBoardWin();
+    window.addEventListener("resize", centerBoardWin);
 
-if(!getNick()){
-  openNickModal(true);
-}else{
-  await loadPosts();
-}
+    if(!getNick()){
+      openNickModal(true);
+    }else{
+      await loadPosts();
+      await refreshInboxBadge();
+    }
 
     // ✅ 뱃지 15초마다 갱신(가벼운 폴링)
     setInterval(()=>{ refreshInboxBadge(); }, 15000);
   </script>
 
   <script>
-/* =========================
-   ✅ 카톡형 메신저 JS (INDEX와 동일)
-   - Firestore: messages 컬렉션 사용
-   - localStorage: dm_nick 공유
-   - 안읽음 뱃지: dm_read_cutoff_<nick>
-   ========================= */
+  /* =========================
+     ✅ 카톡형 메신저 JS (보드용 1세트)
+     - Firestore: messages 컬렉션 사용
+     - localStorage: dm_nick 공유
+     - 안읽음 뱃지: dm_read_cutoff_<nick>
+     - 보드 기본 dmTo/dmBody/dmSend와 충돌 방지: dm2*
+     ========================= */
 
-(function(){
-  const $ = (id)=>document.getElementById(id);
+  (function(){
+    const $ = (id)=>document.getElementById(id);
 
-  // ✅ 보드 파일이 type="module" 내부에서 db를 만들었으니,
-  // 여기서 db가 전역에 없으면 못 씀.
-  // (대부분은 window.db로 내리거나, 아래 한 줄을 module에서 추가하면 됨)
-  // window.db = db;
-  const db = window.db;
-  if(!db){
-    console.warn("❌ window.db가 없어서 메신저가 작동하지 않음. (module에서 window.db = db; 해줘)");
-    return;
-  }
-
-  // firebase firestore 함수도 module에서만 import되어있으니까
-  // window에 내려줘야 함.
-  const {
-    collection, addDoc, getDocs, query, where, orderBy, limit, serverTimestamp
-  } = window.__fb || {};
-
-  if(!collection){
-    console.warn("❌ Firestore 함수가 window.__fb에 없음. (module에서 window.__fb = {collection,...} 해줘)");
-    return;
-  }
-
-  const NICK_KEY = "dm_nick";
-  const READ_KEY_PREFIX = "dm_read_cutoff_"; // dm_read_cutoff_<nick>
-
-  function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }
-  function setNick(n){ localStorage.setItem(NICK_KEY, (n||"").trim()); }
-
-  function getReadCutoff(nick){
-    const raw = localStorage.getItem(READ_KEY_PREFIX + nick);
-    const ms = raw ? parseInt(raw, 10) : 0;
-    return Number.isFinite(ms) ? ms : 0;
-  }
-  function setReadCutoff(nick, ms){
-    localStorage.setItem(READ_KEY_PREFIX + nick, String(ms));
-  }
-
-  function fmtTime(ts){
-    if(!ts) return "";
-    try{
-      const d = ts.toDate ? ts.toDate() : new Date(ts);
-      const yy = String(d.getFullYear()).slice(2);
-      const mm = String(d.getMonth()+1).padStart(2,"0");
-      const dd = String(d.getDate()).padStart(2,"0");
-      const hh = String(d.getHours()).padStart(2,"0");
-      const mi = String(d.getMinutes()).padStart(2,"0");
-      return `${yy}.${mm}.${dd} ${hh}:${mi}`;
-    }catch{
-      return "";
-    }
-  }
-
-  // ===== UI refs
-  const fab = $("dmFabBtn");
-  const win = $("dmWin");
-  const closeBtn = $("dmCloseBtn");
-  const badge = $("dmBadge");
-
-  const modeCompose = $("dmModeCompose");
-  const modeInbox = $("dmModeInbox");
-  const modeSent = $("dmModeSent");
-  const refreshBtn = $("dmRefresh");
-
-  const compose = $("dmCompose");
-  const listWrap = $("dmListWrap");
-  const list = $("dmList");
-  const listHint = $("dmListHint");
-
-  const inpNick = $("dmNick");
-  const inpTo = $("dmTo");
-  const inpBody = $("dmBody");
-  const btnSaveNick = $("dmSaveNick");
-  const btnSend = $("dmSend");
-  const hint = $("dmHint");
-
-  let mode = "compose"; // compose | inbox | sent
-
-  function setMode(m){
-    mode = m;
-    const activeStyle = "rgba(255,255,255,0.92)";
-    const idleStyle = "rgba(255,255,255,0.75)";
-    modeCompose.style.background = (m==="compose") ? activeStyle : idleStyle;
-    modeInbox.style.background   = (m==="inbox") ? activeStyle : idleStyle;
-    modeSent.style.background    = (m==="sent") ? activeStyle : idleStyle;
-
-    compose.style.display = (m==="compose") ? "grid" : "none";
-    listWrap.style.display = (m==="compose") ? "none" : "block";
-  }
-
-  function openWin(){
-    win.style.display = "block";
-    // 열면 기본은 보내기
-    setMode("compose");
-    hint.textContent = "";
-    inpNick.value = getNick();
-    refreshBadge(); // 열 때도 갱신
-  }
-  function closeWin(){
-    win.style.display = "none";
-  }
-
-  fab?.addEventListener("click", ()=>{
-    if(win.style.display === "none" || !win.style.display) openWin();
-    else closeWin();
-  });
-  closeBtn?.addEventListener("click", closeWin);
-
-  $("dmTabBtn")?.addEventListener("click", ()=>{
-    // 쪽지함 버튼 누르면 받은함으로
-    setMode("inbox");
-    loadList();
-    markReadNow();
-  });
-
-  modeCompose?.addEventListener("click", ()=> setMode("compose"));
-  modeInbox?.addEventListener("click", ()=>{ setMode("inbox"); loadList(); markReadNow(); });
-  modeSent?.addEventListener("click", ()=>{ setMode("sent"); loadList(); });
-  refreshBtn?.addEventListener("click", ()=>{
-    if(mode==="compose") refreshBadge();
-    else loadList();
-  });
-
-  btnSaveNick?.addEventListener("click", ()=>{
-    const n = (inpNick.value||"").trim();
-    if(!n){ hint.textContent = "닉네임을 입력해줘."; return; }
-    setNick(n);
-    hint.textContent = "닉 저장 완료!";
-    refreshBadge();
-  });
-
-  async function sendDM(){
-    const from = (inpNick.value||"").trim();
-    const to = (inpTo.value||"").trim();
-    const body = (inpBody.value||"").trim();
-
-    if(!from){ hint.textContent = "내 닉네임부터 입력해줘."; return; }
-    if(!to){ hint.textContent = "받는 사람 닉네임을 입력해줘."; return; }
-    if(from === to){ hint.textContent = "자기 자신에게는 보낼 수 없어."; return; }
-    if(!body){ hint.textContent = "내용을 입력해줘."; return; }
-
-    try{
-      btnSend.disabled = true;
-      hint.textContent = "전송 중…";
-
-      setNick(from); // 공유 저장
-      await addDoc(collection(db, "messages"), {
-        from, to, body,
-        postId: "",              // 보드에서는 연결글 안 씀(원하면 넣어도 됨)
-        createdAt: serverTimestamp()
-      });
-
-      inpBody.value = "";
-      hint.textContent = "전송 완료!";
-      await refreshBadge();
-    }catch(e){
-      console.error(e);
-      hint.textContent = "전송 실패… (콘솔 확인)";
-    }finally{
-      btnSend.disabled = false;
-    }
-  }
-
-  btnSend?.addEventListener("click", sendDM);
-
-  function updateBadge(n){
-    const num = Math.max(0, Number(n)||0);
-    badge.textContent = String(num);
-    badge.style.display = num > 0 ? "inline-flex" : "none";
-  }
-
-  function markReadNow(){
-    const me = getNick();
-    if(!me) return;
-    setReadCutoff(me, Date.now());
-    updateBadge(0);
-  }
-
-  async function refreshBadge(){
-    const me = getNick();
-    if(!me){ updateBadge(0); return; }
-    const cutoff = getReadCutoff(me);
-
-    try{
-      const qy = query(
-        collection(db, "messages"),
-        where("to", "==", me),
-        orderBy("createdAt", "desc"),
-        limit(50)
-      );
-      const snap = await getDocs(qy);
-
-      let cnt = 0;
-      snap.forEach(d=>{
-        const m = d.data();
-        const t = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
-        if(t && t > cutoff) cnt += 1;
-      });
-
-      updateBadge(cnt);
-    }catch(e){
-      console.error(e);
-    }
-  }
-
-  async function loadList(){
-    const me = getNick();
-    if(!me){
-      listHint.textContent = "닉네임을 먼저 저장해줘.";
-      list.innerHTML = "";
+    const db = window.db;
+    if(!db){
+      console.warn("❌ window.db가 없어서 메신저가 작동하지 않음. (module에서 window.db = db 필요)");
       return;
     }
 
-    listHint.textContent = "불러오는 중…";
-    list.innerHTML = "";
+    const {
+      collection, addDoc, getDocs, query, where, orderBy, limit, serverTimestamp
+    } = window.__fb || {};
 
-    try{
-      let qy;
-      if(mode === "inbox"){
-        qy = query(
+    if(!collection){
+      console.warn("❌ Firestore 함수가 window.__fb에 없음. (module에서 window.__fb = {collection,...} 필요)");
+      return;
+    }
+
+    const NICK_KEY = "dm_nick";
+    const READ_KEY_PREFIX = "dm_read_cutoff_";
+
+    function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }
+    function setNick(n){ localStorage.setItem(NICK_KEY, (n||"").trim()); }
+
+    function getReadCutoff(nick){
+      const raw = localStorage.getItem(READ_KEY_PREFIX + nick);
+      const ms = raw ? parseInt(raw, 10) : 0;
+      return Number.isFinite(ms) ? ms : 0;
+    }
+    function setReadCutoff(nick, ms){
+      localStorage.setItem(READ_KEY_PREFIX + nick, String(ms));
+    }
+
+    function fmtTime(ts){
+      if(!ts) return "";
+      try{
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        const yy = String(d.getFullYear()).slice(2);
+        const mm = String(d.getMonth()+1).padStart(2,"0");
+        const dd = String(d.getDate()).padStart(2,"0");
+        const hh = String(d.getHours()).padStart(2,"0");
+        const mi = String(d.getMinutes()).padStart(2,"0");
+        return `${yy}.${mm}.${dd} ${hh}:${mi}`;
+      }catch{
+        return "";
+      }
+    }
+
+    // UI refs
+    const fab = $("dmFabBtn");
+    const win = $("dmWin");
+    const closeBtn = $("dmCloseBtn");
+    const badge = $("dmBadge");
+
+    const modeCompose = $("dmModeCompose");
+    const modeInbox = $("dmModeInbox");
+    const modeSent = $("dmModeSent");
+    const refreshBtn = $("dmRefresh");
+
+    const compose = $("dmCompose");
+    const listWrap = $("dmListWrap");
+    const list = $("dmList");
+    const listHint = $("dmListHint");
+
+    // ✅ dm2* (충돌 방지)
+    const inpNick = $("dm2Nick");
+    const inpTo = $("dm2To");
+    const inpBody = $("dm2Body");
+    const btnSend = $("dm2Send");
+    const hint = $("dm2Hint");
+    const btnSaveNick = $("dmSaveNick");
+
+    let mode = "compose"; // compose | inbox | sent
+
+    function setMode(m){
+      mode = m;
+      const activeStyle = "rgba(255,255,255,0.92)";
+      const idleStyle = "rgba(255,255,255,0.75)";
+      modeCompose.style.background = (m==="compose") ? activeStyle : idleStyle;
+      modeInbox.style.background   = (m==="inbox") ? activeStyle : idleStyle;
+      modeSent.style.background    = (m==="sent") ? activeStyle : idleStyle;
+
+      compose.style.display = (m==="compose") ? "grid" : "none";
+      listWrap.style.display = (m==="compose") ? "none" : "block";
+    }
+
+    function openWin(){
+      win.style.display = "block";
+      setMode("compose");
+      hint.textContent = "";
+      inpNick.value = getNick();
+      refreshBadge();
+    }
+    function closeWin(){
+      win.style.display = "none";
+    }
+
+    fab?.addEventListener("click", ()=>{
+      if(win.style.display === "none" || !win.style.display) openWin();
+      else closeWin();
+    });
+    closeBtn?.addEventListener("click", closeWin);
+
+    $("dmTabBtn")?.addEventListener("click", ()=>{
+      setMode("inbox");
+      loadList();
+      markReadNow();
+    });
+
+    modeCompose?.addEventListener("click", ()=> setMode("compose"));
+    modeInbox?.addEventListener("click", ()=>{ setMode("inbox"); loadList(); markReadNow(); });
+    modeSent?.addEventListener("click", ()=>{ setMode("sent"); loadList(); });
+    refreshBtn?.addEventListener("click", ()=>{
+      if(mode==="compose") refreshBadge();
+      else loadList();
+    });
+
+    btnSaveNick?.addEventListener("click", ()=>{
+      const n = (inpNick.value||"").trim();
+      if(!n){ hint.textContent = "닉네임을 입력해줘."; return; }
+      setNick(n);
+      hint.textContent = "닉 저장 완료!";
+      refreshBadge();
+    });
+
+    async function sendDM(){
+      const from = (inpNick.value||"").trim();
+      const to = (inpTo.value||"").trim();
+      const body = (inpBody.value||"").trim();
+
+      if(!from){ hint.textContent = "내 닉네임부터 입력해줘."; return; }
+      if(!to){ hint.textContent = "받는 사람 닉네임을 입력해줘."; return; }
+      if(from === to){ hint.textContent = "자기 자신에게는 보낼 수 없어."; return; }
+      if(!body){ hint.textContent = "내용을 입력해줘."; return; }
+
+      try{
+        btnSend.disabled = true;
+        hint.textContent = "전송 중…";
+
+        setNick(from);
+        await addDoc(collection(db, "messages"), {
+          from, to, body,
+          postId: "",
+          createdAt: serverTimestamp()
+        });
+
+        inpBody.value = "";
+        hint.textContent = "전송 완료!";
+        await refreshBadge();
+      }catch(e){
+        console.error(e);
+        hint.textContent = "전송 실패… (콘솔 확인)";
+      }finally{
+        btnSend.disabled = false;
+      }
+    }
+
+    btnSend?.addEventListener("click", sendDM);
+
+    function updateBadge(n){
+      const num = Math.max(0, Number(n)||0);
+      badge.textContent = String(num);
+      badge.style.display = num > 0 ? "inline-flex" : "none";
+    }
+
+    function markReadNow(){
+      const me = getNick();
+      if(!me) return;
+      setReadCutoff(me, Date.now());
+      updateBadge(0);
+    }
+
+    async function refreshBadge(){
+      const me = getNick();
+      if(!me){ updateBadge(0); return; }
+      const cutoff = getReadCutoff(me);
+
+      try{
+        const qy = query(
           collection(db, "messages"),
           where("to", "==", me),
           orderBy("createdAt", "desc"),
           limit(50)
         );
-      }else{
-        qy = query(
-          collection(db, "messages"),
-          where("from", "==", me),
-          orderBy("createdAt", "desc"),
-          limit(50)
-        );
+        const snap = await getDocs(qy);
+
+        let cnt = 0;
+        snap.forEach(d=>{
+          const m = d.data();
+          const t = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          if(t && t > cutoff) cnt += 1;
+        });
+
+        updateBadge(cnt);
+      }catch(e){
+        console.error(e);
       }
+    }
 
-      const cutoff = getReadCutoff(me);
-      const snap = await getDocs(qy);
-
-      if(snap.empty){
-        listHint.textContent = (mode==="inbox") ? "받은 쪽지가 없습니다." : "보낸 쪽지가 없습니다.";
+    async function loadList(){
+      const me = getNick();
+      if(!me){
+        listHint.textContent = "닉네임을 먼저 저장해줘.";
+        list.innerHTML = "";
         return;
       }
 
-      const frag = document.createDocumentFragment();
+      listHint.textContent = "불러오는 중…";
+      list.innerHTML = "";
 
-      snap.forEach(docu=>{
-        const m = docu.data();
-        const box = document.createElement("div");
-        box.style.cssText = `
-          background: rgba(255,255,255,0.62);
-          border: 1px solid rgba(0,0,0,0.14);
-          border-radius: 12px;
-          padding: 12px;
-          margin-bottom: 10px;
-        `;
-
-        const top = document.createElement("div");
-        top.style.cssText = `
-          display:flex; gap:10px; flex-wrap:wrap;
-          font-size:11px; color: rgba(0,0,0,0.60);
-          margin-bottom: 8px;
-        `;
-
-        const who = (mode==="inbox") ? `보낸 사람: ${m.from||"-"}` : `받는 사람: ${m.to||"-"}`;
-        const when = fmtTime(m.createdAt);
-        const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
-        const unread = (mode==="inbox") && whenMs && whenMs > cutoff;
-
-        top.textContent = `${who} · ${when}${unread ? " · 안읽음" : ""}`;
-
-        const body = document.createElement("div");
-        body.style.cssText = `font-size:13px; line-height:1.45; white-space:pre-wrap; color:#222;`;
-        body.textContent = m.body || "";
-
-        box.appendChild(top);
-        box.appendChild(body);
-
-        // 받은함이면 답장 버튼
-        if(mode==="inbox"){
-          const actions = document.createElement("div");
-          actions.style.cssText = `margin-top:10px; display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;`;
-
-          const reply = document.createElement("button");
-          reply.textContent = "답장";
-          reply.style.cssText = `
-            height:30px; padding:0 10px;
-            border-radius:10px;
-            border:1px solid rgba(0,0,0,0.22);
-            background: rgba(255,255,255,0.90);
-            font-weight:900;
-            font-size:12px;
-            cursor:pointer;
-          `;
-          reply.onclick = ()=>{
-            setMode("compose");
-            inpTo.value = (m.from||"").trim();
-            inpBody.focus();
-          };
-
-          actions.appendChild(reply);
-          box.appendChild(actions);
+      try{
+        let qy;
+        if(mode === "inbox"){
+          qy = query(
+            collection(db, "messages"),
+            where("to", "==", me),
+            orderBy("createdAt", "desc"),
+            limit(50)
+          );
+        }else{
+          qy = query(
+            collection(db, "messages"),
+            where("from", "==", me),
+            orderBy("createdAt", "desc"),
+            limit(50)
+          );
         }
 
-        frag.appendChild(box);
-      });
+        const cutoff = getReadCutoff(me);
+        const snap = await getDocs(qy);
 
-      list.appendChild(frag);
-      listHint.textContent = "";
+        if(snap.empty){
+          listHint.textContent = (mode==="inbox") ? "받은 쪽지가 없습니다." : "보낸 쪽지가 없습니다.";
+          return;
+        }
 
-      // 목록 봤으면 읽음 처리 + 뱃지 갱신
-      if(mode==="inbox"){
-        markReadNow();
-        await refreshBadge();
+        const frag = document.createDocumentFragment();
+
+        snap.forEach(docu=>{
+          const m = docu.data();
+          const box = document.createElement("div");
+          box.style.cssText = `
+            background: rgba(255,255,255,0.62);
+            border: 1px solid rgba(0,0,0,0.14);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+          `;
+
+          const top = document.createElement("div");
+          top.style.cssText = `
+            display:flex; gap:10px; flex-wrap:wrap;
+            font-size:11px; color: rgba(0,0,0,0.60);
+            margin-bottom: 8px;
+          `;
+
+          const who = (mode==="inbox") ? `보낸 사람: ${m.from||"-"}` : `받는 사람: ${m.to||"-"}`;
+          const when = fmtTime(m.createdAt);
+          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          const unread = (mode==="inbox") && whenMs && whenMs > cutoff;
+
+          top.textContent = `${who} · ${when}${unread ? " · 안읽음" : ""}`;
+
+          const body = document.createElement("div");
+          body.style.cssText = `font-size:13px; line-height:1.45; white-space:pre-wrap; color:#222;`;
+          body.textContent = m.body || "";
+
+          box.appendChild(top);
+          box.appendChild(body);
+
+          if(mode==="inbox"){
+            const actions = document.createElement("div");
+            actions.style.cssText = `margin-top:10px; display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;`;
+
+            const reply = document.createElement("button");
+            reply.textContent = "답장";
+            reply.style.cssText = `
+              height:30px; padding:0 10px;
+              border-radius:10px;
+              border:1px solid rgba(0,0,0,0.22);
+              background: rgba(255,255,255,0.90);
+              font-weight:900;
+              font-size:12px;
+              cursor:pointer;
+            `;
+            reply.onclick = ()=>{
+              setMode("compose");
+              inpTo.value = (m.from||"").trim();
+              inpBody.focus();
+            };
+
+            actions.appendChild(reply);
+            box.appendChild(actions);
+          }
+
+          frag.appendChild(box);
+        });
+
+        list.appendChild(frag);
+        listHint.textContent = "";
+
+        if(mode==="inbox"){
+          markReadNow();
+          await refreshBadge();
+        }
+      }catch(e){
+        console.error(e);
+        listHint.textContent = "불러오기 실패…";
       }
-    }catch(e){
-      console.error(e);
-      listHint.textContent = "불러오기 실패…";
-    }
-  }
-
-  // 초기
-  inpNick.value = getNick();
-  refreshBadge();
-  setInterval(refreshBadge, 15000);
-
-})();
-</script>
-  
-  <!-- =========================
-     💬 Messenger (Index와 동일)
-     ========================= -->
-
-<!-- 메신저 플로팅 버튼 -->
-<button id="dmFabBtn" title="메신저"
-  style="
-    position:fixed;
-    right:18px;
-    bottom:calc(80px + env(safe-area-inset-bottom));
-    width:64px; height:64px;
-    border-radius:22px;
-    border:1px solid rgba(0,0,0,0.22);
-    background:rgba(255,255,255,0.92);
-    box-shadow:0 12px 30px rgba(0,0,0,0.28);
-    display:flex; align-items:center; justify-content:center;
-    font-size:26px;
-    cursor:pointer;
-    z-index:99998;">
-  💬
-</button>
-
-<!-- 메신저 창 -->
-<div id="dmWin"
-  style="
-    position:fixed;
-    right:14px;
-    bottom:calc(160px + env(safe-area-inset-bottom));
-    width:min(380px, calc(100vw - 28px));
-    height:min(600px, calc(100vh - 220px));
-    background:rgba(255,255,255,0.88);
-    border:1px solid rgba(0,0,0,0.25);
-    border-radius:14px;
-    box-shadow:0 18px 46px rgba(0,0,0,0.35);
-    backdrop-filter:blur(10px);
-    display:none;
-    flex-direction:column;
-    z-index:99999;
-  ">
-
-  <div style="
-    height:42px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 12px;
-    border-bottom:1px solid rgba(0,0,0,0.15);
-    font-weight:800;">
-    <span>메신저</span>
-    <button id="dmCloseBtn"
-      style="border:none;background:none;font-size:20px;cursor:pointer;">×</button>
-  </div>
-
-  <div id="dmBodyArea"
-    style="flex:1; overflow:auto; padding:12px; font-size:14px; line-height:1.5;">
-    <div style="opacity:.6;">쪽지함을 불러오는 중…</div>
-  </div>
-</div>
-
-  <script>
-const dmFabBtn = document.getElementById("dmFabBtn");
-const dmWin = document.getElementById("dmWin");
-const dmCloseBtn = document.getElementById("dmCloseBtn");
-const dmBodyArea = document.getElementById("dmBodyArea");
-
-dmFabBtn.onclick = () => {
-  dmWin.style.display = "flex";
-  loadDMInbox();
-};
-
-dmCloseBtn.onclick = () => {
-  dmWin.style.display = "none";
-};
-
-async function loadDMInbox(){
-  const nick = localStorage.getItem("dm_nick");
-  if(!nick){
-    dmBodyArea.innerHTML = "<b>닉네임을 먼저 설정해주세요.</b>";
-    return;
-  }
-
-  dmBodyArea.innerHTML = "불러오는 중…";
-
-  try{
-    const qy = window.__fb.query(
-      window.__fb.collection(window.db, "messages"),
-      window.__fb.where("to", "==", nick),
-      window.__fb.orderBy("createdAt", "desc"),
-      window.__fb.limit(30)
-    );
-
-    const snap = await window.__fb.getDocs(qy);
-
-    if(snap.empty){
-      dmBodyArea.innerHTML = "<div style='opacity:.6'>받은 쪽지가 없습니다.</div>";
-      return;
     }
 
-    dmBodyArea.innerHTML = "";
-    snap.forEach(d=>{
-      const m = d.data();
-      const div = document.createElement("div");
-      div.style.marginBottom = "10px";
-      div.style.paddingBottom = "10px";
-      div.style.borderBottom = "1px solid rgba(0,0,0,0.1)";
-      div.innerHTML = `
-        <div style="font-size:12px;opacity:.6;">
-          ${m.from} · ${m.createdAt?.toDate().toLocaleString()}
-        </div>
-        <div>${m.body}</div>
-      `;
-      dmBodyArea.appendChild(div);
-    });
+    // 초기
+    inpNick.value = getNick();
+    refreshBadge();
+    setInterval(refreshBadge, 15000);
 
-  }catch(e){
-    dmBodyArea.innerHTML = "쪽지 불러오기 실패";
-    console.error(e);
-  }
-}
+  })();
   </script>
-  
 </body>
-  <!-- 컨택 / 바로가기 -->
-<div style="
-  margin:40px auto 20px;
-  max-width:420px;
-  display:flex;
-  gap:10px;
-  justify-content:center;
-">
-  <button
-    onclick="document.getElementById('dmFabBtn')?.click()"
-    style="
-      flex:1;
-      padding:12px 0;
-      border-radius:10px;
-      border:1px solid rgba(0,0,0,0.25);
-      background:rgba(0,0,0,0.78);
-      color:#fff;
-      font-weight:800;
-      cursor:pointer;
-      font-size:14px;
-    ">
-    컨택 확인하기
-  </button>
-
-  <button
-    onclick="location.href='index.html'"
-    style="
-      width:120px;
-      padding:12px 0;
-      border-radius:10px;
-      border:1px solid rgba(0,0,0,0.18);
-      background:rgba(255,255,255,0.9);
-      color:#111;
-      font-weight:800;
-      cursor:pointer;
-      font-size:14px;
-    ">
-    메인으로
-  </button>
-</div>
-
-</html>
+  </html>

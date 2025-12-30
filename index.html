@@ -648,12 +648,109 @@ body {
     }
     .mute-hint b{ font-weight:900; }
 
-    </style>
+/* =========================================================
+   🎀 Floating stickers (behind windows) — mobile strong / PC subtle
+   - Put PNGs in: /assets/stickers/
+   - Click-through (pointer-events: none)
+   ========================================================= */
+.sticker-layer{
+  position: fixed;
+  inset: 0;
+  z-index: 5;            /* above wallpaper, below windows */
+  pointer-events: none;
+  overflow: hidden;
+}
+.sticker{
+  position: absolute;
+  width: 118px;
+  height: auto;
+  image-rendering: -webkit-optimize-contrast;
+  filter:
+    drop-shadow(0 10px 18px rgba(0,0,0,0.18))
+    drop-shadow(0 2px 0 rgba(255,255,255,0.85));
+  /* "white outline" look */
+  -webkit-filter:
+    drop-shadow(0 10px 18px rgba(0,0,0,0.18))
+    drop-shadow(0 2px 0 rgba(255,255,255,0.85));
+  transform: translate3d(0,0,0);
+  will-change: transform;
+  opacity: 0; /* default hidden, enabled via media queries */
+}
+
+/* Desktop: very subtle */
+@media (min-width: 561px){
+  .sticker{ opacity: 0.18; }
+}
+
+/* Mobile: visible + slightly bigger */
+@media (max-width: 560px){
+  .sticker{ opacity: 0.88; width: 122px; }
+}
+
+@keyframes floatA {
+  0%   { transform: translate3d(0, 0, 0) rotate(-1deg); }
+  50%  { transform: translate3d(0, -10px, 0) rotate(1deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(-1deg); }
+}
+@keyframes floatB {
+  0%   { transform: translate3d(0, 0, 0) rotate(1.2deg); }
+  50%  { transform: translate3d(0, -14px, 0) rotate(-1.2deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(1.2deg); }
+}
+@keyframes floatC {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%  { transform: translate3d(0, -8px, 0) rotate(0.8deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+
+/* Per-sticker placement (tuned to your current home layout) */
+.sticker.vhs{
+  left: 10px;
+  bottom: 92px;          /* sits above taskbar */
+  animation: floatA 5.6s ease-in-out infinite;
+}
+.sticker.headphone{
+  right: 18px;
+  top: 96px;
+  animation: floatB 6.4s ease-in-out infinite;
+}
+.sticker.camera{
+  left: 18px;
+  top: 44%;
+  animation: floatC 6.0s ease-in-out infinite;
+}
+.sticker.wings{
+  right: 16%;
+  bottom: 22%;
+  width: 134px;
+  animation: floatA 7.2s ease-in-out infinite;
+  opacity: 0; /* start hidden, then follow media rules below */
+}
+@media (min-width: 561px){
+  .sticker.wings{ opacity: 0.12; }
+}
+@media (max-width: 560px){
+  .sticker.wings{ opacity: 0.72; }
+}
+
+/* Keep windows above stickers */
+.desk{ z-index: 10; }
+
+  </style>
   <link rel="stylesheet" href="mobile-fix.css">
 </head>
 
 <body>
   <div class="wallpaper"></div>
+
+
+<!-- 🎀 Floating stickers (behind windows) -->
+<div class="sticker-layer" aria-hidden="true">
+  <img class="sticker vhs" src="assets/stickers/vedeo-tape.png" alt="">
+  <img class="sticker headphone" src="assets/stickers/headphone.png" alt="">
+  <img class="sticker camera" src="assets/stickers/camera.png" alt="">
+  <img class="sticker wings" src="assets/stickers/wings.png" alt="">
+</div>
 
   <div class="desk" id="desk">
 
@@ -885,7 +982,7 @@ body {
 
   <!-- ✅ 쪽지 아이콘 -->
   <div class="dm-fab">
-    <button id="dmFabBtn" title="쪽지함">✉️</button>
+    <button id="dmFabBtn" title="쪽지함"✉️</button>
     <div class="dm-badge" id="dmBadge">0</div>
   </div>
 

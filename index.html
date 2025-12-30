@@ -92,7 +92,9 @@ body {
 
       pointer-events: auto;
       user-select: none;
+      z-index: 10;
     }
+
     .win.is-front { box-shadow: var(--shadow-strong); }
 
     .titlebar {
@@ -671,8 +673,16 @@ body {
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0); }
 }
-@media (max-width:768px){ .sticker{ opacity:0.55; } }
+@media (max-width:768px){ .sticker{ opacity:0.18; } }
 @media (min-width:769px){ .sticker{ opacity:0.25; } }
+
+
+/* mobile: keep stickers in the background edges (no UI blocking) */
+@media (max-width:768px){
+  .sticker.vhs{ width:84px; left:6%; bottom:6%; }
+  .sticker.headphone{ width:96px; right:4%; top:4%; }
+  .sticker.camera{ width:74px; right:6%; top:54%; left:auto; }
+}
 
 </style>
   <link rel="stylesheet" href="mobile-fix.css">
@@ -1830,7 +1840,6 @@ body {
   <img src="assets/stickers/vedeo-tape.png" class="sticker vhs" alt="">
   <img src="assets/stickers/headphone.png" class="sticker headphone" alt="">
   <img src="assets/stickers/camera.png" class="sticker camera" alt="">
-  <img src="assets/stickers/wings.png" class="sticker wings" alt="">
 </div>
 
 </body>

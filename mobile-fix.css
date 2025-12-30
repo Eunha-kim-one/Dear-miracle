@@ -1,75 +1,75 @@
-/* mobile-fix.css : 모바일 전용 보정 (index.html과 같은 폴더에 업로드) */
+/* =========================
+   모바일 전용 최종 보정
+========================= */
+@media (max-width: 560px){
 
-@media (max-width: 560px) {
-
-  /* 창 전체: 너무 커 보이는 문제 해결 */
-  .win{
-    width: min(78vw, 290px) !important;
-    max-width: min(78vw, 290px) !important;
-    border-radius: 14px !important;
+  /* 🔹 모든 창 기본 축소 (유튜브 제외) */
+  .win:not([data-key="yt"]){
+    transform: scale(0.5) !important;
+    transform-origin: top left !important;
   }
 
-  /* 제목바 높이/여백 줄여서 ‘창이 비대해 보이는’ 느낌 줄이기 */
-  .titlebar{
-    padding: 6px 10px !important;
-    font-size: 13px !important;
-    border-top-left-radius: 14px !important;
-    border-top-right-radius: 14px !important;
+  /* 🔹 유튜브 창은 크기 유지 */
+  .win[data-key="yt"]{
+    transform: scale(1) !important;
   }
 
-  /* 내용 여백(패딩) 줄이기 */
-  .content{
-    padding: 12px 14px !important;
-    font-size: 15px !important;
-    line-height: 1.55 !important;
-  }
-
-  /* 카드/박스들도 살짝 컴팩트하게 */
-  .content .card,
-  .content .box,
-  .content .panel{
-    padding: 10px 12px !important;
-    border-radius: 12px !important;
-  }
-
-  /* 이미지/영상 창: 세로로 너무 커지는 것 방지 */
-  .win img,
-  .win video{
-    max-height: 170px !important;
-    object-fit: cover !important;
-  }
-
-  /* 음소거 버튼: 잘 보이게 */
-  #muteBtn,
-  .sound-btn{
-    padding: 10px 14px !important;
-    font-size: 15px !important;
-    border-radius: 12px !important;
-  }
-
-  /* ‘구인/게시판 안내’ 창은 최전방 고정 */
+  /* 🔹 공지(구인) 창 최전방 */
   .win[data-key="notice"]{
     left: 10px !important;
     top: 10px !important;
     z-index: 9999 !important;
-    transform: scale(0.98) !important;
-    transform-origin: top left !important;
   }
 
-  /* ‘컨택/게시판 버튼 있는 창’도 앞쪽에(너무 겹치지 않게) */
-  .win[data-key="guide"], 
-  .win[data-key="links"], 
-  .win[data-key="contact"]{
-    left: 16px !important;
-    top: 240px !important;
+  /* 🔹 컨택/쪽지 창 – 공지 아래 */
+  .win[data-key="contact"],
+  .win[data-key="guide"],
+  .win[data-key="links"]{
+    left: 14px !important;
+    top: 200px !important;
     z-index: 9000 !important;
-    transform: scale(0.96) !important;
-    transform-origin: top left !important;
   }
 
-  /* 배경 위에 창들이 떠보이게 (가볍게) */
-  .win{
-    box-shadow: 0 18px 40px rgba(0,0,0,.18) !important;
-    backdrop-filter: blur(2px);
+  /* 🔹 창 내부 여백 줄이기 */
+  .content{
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
   }
+
+  /* 🔹 제목바 컴팩트 */
+  .titlebar{
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+  }
+
+  /* 🔹 이미지/영상 세로 폭주 방지 */
+  .win img,
+  .win video{
+    max-height: 160px !important;
+    object-fit: cover !important;
+  }
+
+  /* =========================
+     🎵 유튜브 음소거 버튼 정리
+  ========================= */
+
+  .yt-window{
+    position: relative;
+  }
+
+  .yt-window .sound-btn{
+    position: absolute !important;
+    right: 8px !important;
+    top: 6px !important;
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+    border-radius: 6px !important;
+    background: rgba(255,255,255,0.85) !important;
+  }
+
+  .yt-window .sound-label{
+    font-size: 11px !important;
+  }
+
 }

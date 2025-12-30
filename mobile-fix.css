@@ -1,107 +1,75 @@
-/* mobile-fix.css : 모바일 전용 보정 */
-@media (max-width: 560px){
+/* mobile-fix.css : 모바일 전용 보정 (index.html과 같은 폴더에 업로드) */
 
-  /* 전체 창 기본 크기/여백 다이어트 */
+@media (max-width: 560px) {
+
+  /* 창 전체: 너무 커 보이는 문제 해결 */
   .win{
-    max-width: calc(100vw - 18px) !important;
+    width: min(78vw, 290px) !important;
+    max-width: min(78vw, 290px) !important;
     border-radius: 14px !important;
   }
 
-  /* 창 내부 여백(너무 넓어서 답답한 느낌) 줄이기 */
-  .win .content,
-  .win .body,
-  .win .inner{
+  /* 제목바 높이/여백 줄여서 ‘창이 비대해 보이는’ 느낌 줄이기 */
+  .titlebar{
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    border-top-left-radius: 14px !important;
+    border-top-right-radius: 14px !important;
+  }
+
+  /* 내용 여백(패딩) 줄이기 */
+  .content{
     padding: 12px 14px !important;
+    font-size: 15px !important;
+    line-height: 1.55 !important;
   }
 
-  /* 제목/본문 줄간격도 살짝 조여서 “꽉 찬” 느낌 */
-  .win p, .win li{
-    line-height: 1.35 !important;
-  }
-
-  /* =========================
-     1) 위 ‘구인 게시판’ 공지 창 (data-key="notice")
-     ========================= */
-  .win[data-key="notice"]{
-    width: min(86vw, 360px) !important;
-    left: 10px !important;
-    top: 10px !important;
-    z-index: 9999 !important;
-    transform: rotate(-0.6deg) !important; /* 살짝 컴감성 */
-  }
-
-  /* 공지창 안의 박스(컨택/쪽지 안내 박스)도 덜 커 보이게 */
-  .win[data-key="notice"] .mute-hint,
-  .win[data-key="notice"] .hint,
-  .win[data-key="notice"] .box{
+  /* 카드/박스들도 살짝 컴팩트하게 */
+  .content .card,
+  .content .box,
+  .content .panel{
     padding: 10px 12px !important;
     border-radius: 12px !important;
   }
 
-  /* =========================
-     2) “컨택/게시판 버튼 있는 창”을 앞으로 + 오른쪽 배치
-     (data-key 값이 다를 수 있어서 아래 2개 중 하나가 먹을 거야)
-     ========================= */
-
-  /* (A) 만약 data-key="messenger" 라면 */
-  .win[data-key="messenger"]{
-    width: min(78vw, 320px) !important;
-    right: 10px !important;
-    left: auto !important;
-    top: 58vh !important;     /* 화면 중하단 */
-    z-index: 9998 !important; /* 공지 다음 */
-    transform: rotate(0.5deg) !important;
-  }
-
-  /* (B) 혹시 data-key="helper" 같은 이름이면 이것도 같이 대응 */
-  .win[data-key="helper"]{
-    width: min(78vw, 320px) !important;
-    right: 10px !important;
-    left: auto !important;
-    top: 58vh !important;
-    z-index: 9998 !important;
-    transform: rotate(0.5deg) !important;
-  }
-
-  /* 버튼 줄(컨택 확인하기 / 게시판) 높이/여백 다듬기 */
-  .win[data-key="messenger"] button,
-  .win[data-key="helper"] button{
-    padding: 10px 12px !important;
-    border-radius: 12px !important;
-  }
-
-  /* =========================
-     3) 사진/영상 창들: 모바일에서 너무 커 보이던 거 줄이기 + 겹침 미감
-     ========================= */
-  .win[data-key^="v-"],
-  .win[data-key^="p-"],
-  .win[data-key="yt"],
-  .win[data-key="w"],
-  .win[data-key="p"]{
-    width: min(76vw, 300px) !important;
-    z-index: 40 !important;
-  }
-
-  /* 미디어 높이 제한 */
+  /* 이미지/영상 창: 세로로 너무 커지는 것 방지 */
   .win img,
   .win video{
-    max-height: 180px !important;
+    max-height: 170px !important;
     object-fit: cover !important;
   }
 
-  /* 겹쳐 보이게 살짝씩 위치 오프셋(‘랜덤 느낌’의 고정 배치) */
-  .win[data-key^="v-"]:nth-of-type(1){ transform: translate(10px, 120px) rotate(-1.2deg) !important; }
-  .win[data-key^="v-"]:nth-of-type(2){ transform: translate(40px, 210px) rotate(0.8deg)  !important; }
-  .win[data-key^="v-"]:nth-of-type(3){ transform: translate(20px, 300px) rotate(-0.4deg) !important; }
-  .win[data-key^="p-"]:nth-of-type(1){ transform: translate(60px, 160px) rotate(1.0deg)  !important; }
-  .win[data-key^="p-"]:nth-of-type(2){ transform: translate(25px, 260px) rotate(-0.8deg) !important; }
-
-  /* =========================
-     4) 음소거 버튼: 모바일은 이미 잘 됨 → 보기만 더 또렷하게
-     ========================= */
-  #muteBtn{
-    font-size: 14px !important;
-    padding: 10px 12px !important;
+  /* 음소거 버튼: 잘 보이게 */
+  #muteBtn,
+  .sound-btn{
+    padding: 10px 14px !important;
+    font-size: 15px !important;
     border-radius: 12px !important;
+  }
+
+  /* ‘구인/게시판 안내’ 창은 최전방 고정 */
+  .win[data-key="notice"]{
+    left: 10px !important;
+    top: 10px !important;
+    z-index: 9999 !important;
+    transform: scale(0.98) !important;
+    transform-origin: top left !important;
+  }
+
+  /* ‘컨택/게시판 버튼 있는 창’도 앞쪽에(너무 겹치지 않게) */
+  .win[data-key="guide"], 
+  .win[data-key="links"], 
+  .win[data-key="contact"]{
+    left: 16px !important;
+    top: 240px !important;
+    z-index: 9000 !important;
+    transform: scale(0.96) !important;
+    transform-origin: top left !important;
+  }
+
+  /* 배경 위에 창들이 떠보이게 (가볍게) */
+  .win{
+    box-shadow: 0 18px 40px rgba(0,0,0,.18) !important;
+    backdrop-filter: blur(2px);
   }
 }

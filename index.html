@@ -669,7 +669,7 @@ body {
 .sticker.camera { width:110px; left:12%; top:10%; animation-duration:5.8s; }
 .sticker.wings { width:160px; right:10%; bottom:14%; animation-duration:8s; }
 @keyframes floatY {
-  0% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  0% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0); }
 }
@@ -683,12 +683,6 @@ body {
   .sticker.headphone{ width:96px; right:4%; top:4%; }
   .sticker.camera{ width:74px; right:6%; top:54%; left:auto; }
 }
-
-
-/* sticker: slight rotation for "real sticker" vibe */
-.sticker.vhs{ --rot: -6deg; }
-.sticker.headphone{ --rot: 5deg; }
-.sticker.camera{ --rot: -4deg; }
 
 </style>
   <link rel="stylesheet" href="mobile-fix.css">

@@ -1,75 +1,51 @@
 /* =========================
-   모바일 전용 최종 보정
-========================= */
+   모바일 전용 보정
+   ========================= */
 @media (max-width: 560px){
 
-  /* 🔹 모든 창 기본 축소 (유튜브 제외) */
-  .win:not([data-key="yt"]){
-    transform: scale(0.5) !important;
-    transform-origin: top left !important;
-  }
-
-  /* 🔹 유튜브 창은 크기 유지 */
-  .win[data-key="yt"]{
-    transform: scale(1) !important;
-  }
-
-  /* 🔹 공지(구인) 창 최전방 */
-  .win[data-key="notice"]{
-    left: 10px !important;
-    top: 10px !important;
-    z-index: 9999 !important;
-  }
-
-  /* 🔹 컨택/쪽지 창 – 공지 아래 */
+  /* -------------------------
+     1️⃣ 글자 있는 창들만 살짝 축소
+     (공지 / 컨택 / 안내)
+     ------------------------- */
+  .win[data-key="notice"],
   .win[data-key="contact"],
   .win[data-key="guide"],
   .win[data-key="links"]{
-    left: 14px !important;
-    top: 200px !important;
-    z-index: 9000 !important;
+    transform: scale(0.92);           /* ← 핵심 */
+    transform-origin: top left;
   }
 
-  /* 🔹 창 내부 여백 줄이기 */
-  .content{
-    padding: 10px 12px !important;
-    font-size: 14px !important;
-    line-height: 1.5 !important;
+  /* 여백/가독성 유지 */
+  .win[data-key="notice"] .content,
+  .win[data-key="contact"] .content,
+  .win[data-key="guide"] .content,
+  .win[data-key="links"] .content{
+    padding: 16px 18px;               /* 기존 느낌 유지 */
+    font-size: 15px;
+    line-height: 1.6;
   }
 
-  /* 🔹 제목바 컴팩트 */
-  .titlebar{
-    padding: 6px 10px !important;
-    font-size: 13px !important;
+  /* -------------------------
+     2️⃣ 사진/영상 창은 그대로 둠
+     ------------------------- */
+  .win[data-key="w"],
+  .win[data-key="p"],
+  .win[data-key="yt"]{
+    transform: none !important;
   }
 
-  /* 🔹 이미지/영상 세로 폭주 방지 */
-  .win img,
-  .win video{
-    max-height: 160px !important;
-    object-fit: cover !important;
-  }
-
-  /* =========================
-     🎵 유튜브 음소거 버튼 정리
-  ========================= */
-
-  .yt-window{
-    position: relative;
-  }
-
+  /* -------------------------
+     3️⃣ 유튜브 음소거 버튼
+     (틀 안으로 넣기)
+     ------------------------- */
   .yt-window .sound-btn{
-    position: absolute !important;
-    right: 8px !important;
-    top: 6px !important;
-    padding: 4px 8px !important;
-    font-size: 11px !important;
-    border-radius: 6px !important;
-    background: rgba(255,255,255,0.85) !important;
-  }
-
-  .yt-window .sound-label{
-    font-size: 11px !important;
+    position: absolute;
+    right: 8px;
+    top: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.85);
   }
 
 }

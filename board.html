@@ -402,6 +402,43 @@
       }
     }
   </style>
+
+<!-- >>> Added by ChatGPT: font split for UI vs content >>> -->
+<style>
+@font-face{
+  font-family:'RoundedFixedsys';
+  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+:root{
+  --ui-font:'RoundedFixedsys', 'DungGeunMo', system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+  --text-font:'Noto Sans KR', 'Noto Sans', Apple SD Gothic Neo, system-ui, sans-serif;
+}
+/* Window chrome / top controls use pixel UI font */
+.titlebar, .titlebar *,
+.title, .title *,
+.tabs, .tabs *,
+.title-btns, .title-btns *,
+.iconbtn, .btn, .pill,
+.board-top, .board-top *,
+.subline, .subline *,
+.hint, .hint * {
+  font-family: var(--ui-font) !important;
+  letter-spacing: .1px;
+}
+/* Main article/content area keeps Noto Sans for readability */
+.content, .content *,
+.list, .list *,
+.desc, .desc *,
+.field, .field *,
+.label, .label * {
+  font-family: var(--text-font) !important;
+}
+</style>
+<!-- <<< Added by ChatGPT -->
+
 </head>
 
 <body>

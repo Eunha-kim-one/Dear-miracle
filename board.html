@@ -1156,6 +1156,7 @@
       updateInboxBadge(0);
     }
 
+
     async function refreshInboxBadge(){
       const me = getNick();
       if(!me){ updateInboxBadge(0); return; }
@@ -1163,11 +1164,11 @@
       const cutoffMs = getReadCutoff(me);
 
       try{
+        // ✅ orderBy 제거: Firestore 복합 인덱스 없이도 동작 (정렬은 클라이언트에서)
         const qy = query(
           collection(db, "messages"),
           where("to", "==", me),
-          orderBy("createdAt", "desc"),
-          limit(50)
+          limit(200)
         );
         const snap = await getDocs(qy);
 
@@ -1183,6 +1184,7 @@
         console.error(err);
       }
     }
+
 
     // =========================
     // ✅ 쪽지함 모달
@@ -1214,6 +1216,7 @@
     $("tabSent").onclick = ()=>{ setInboxTab("sent"); loadInbox(); };
     $("inboxRefresh").onclick = ()=> loadInbox();
 
+
     async function loadInbox(){
       if(!ensureNick()) return;
 
@@ -1224,22 +1227,18 @@
       $("inboxList").innerHTML = "";
 
       try{
-        let qy;
-        if(inboxMode === "recv"){
-          qy = query(
-            collection(db, "messages"),
-            where("to", "==", me),
-            orderBy("createdAt", "desc"),
-            limit(50)
-          );
-        }else{
-          qy = query(
-            collection(db, "messages"),
-            where("from", "==", me),
-            orderBy("createdAt", "desc"),
-            limit(50)
-          );
-        }
+        // ✅ orderBy 제거: 복합 인덱스 없이도 동작 (정렬은 클라이언트에서)
+        const qy = (inboxMode === "recv")
+          ? query(
+              collection(db, "messages"),
+              where("to", "==", me),
+              limit(200)
+            )
+          : query(
+              collection(db, "messages"),
+              where("from", "==", me),
+              limit(200)
+            );
 
         const snap = await getDocs(qy);
 
@@ -1248,11 +1247,18 @@
           return;
         }
 
-        const frag = document.createDocumentFragment();
-
+        // ✅ createdAt 기준으로 최신순 정렬
+        const items = [];
         snap.forEach(docu=>{
           const m = docu.data();
+          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          items.push({ ...m, __whenMs: whenMs });
+        });
+        items.sort((a,b)=> (b.__whenMs||0) - (a.__whenMs||0));
 
+        const frag = document.createDocumentFragment();
+
+        items.forEach(m=>{
           const div = document.createElement("div");
           div.className = "msg";
 
@@ -1265,8 +1271,7 @@
 
           const t = fmtTime(m.createdAt);
 
-          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
-          const isUnread = inboxMode==="recv" && whenMs && whenMs > cutoffMs;
+          const isUnread = inboxMode==="recv" && m.__whenMs && m.__whenMs > cutoffMs;
 
           const ref = m.postId ? `연결글: ${m.postId}` : "";
           top.textContent = `${who} · ${t}${isUnread ? " · 안읽음" : ""}${ref ? " · " + ref : ""}`;
@@ -1305,6 +1310,7 @@
         $("inboxHint").textContent = "쪽지함을 불러오지 못했습니다.";
       }
     }
+
 
     // =========================
     // ✅ 게시글 목록 로드/렌더
@@ -1671,17 +1677,18 @@
       updateBadge(0);
     }
 
+
     async function refreshBadge(){
       const me = getNick();
       if(!me){ updateBadge(0); return; }
       const cutoff = getReadCutoff(me);
 
       try{
+        // ✅ orderBy 제거: 복합 인덱스 없이도 동작 (정렬은 클라이언트에서)
         const qy = query(
           collection(db, "messages"),
           where("to", "==", me),
-          orderBy("createdAt", "desc"),
-          limit(50)
+          limit(200)
         );
         const snap = await getDocs(qy);
 
@@ -1698,6 +1705,8 @@
       }
     }
 
+
+
     async function loadList(){
       const me = getNick();
       if(!me){
@@ -1710,22 +1719,18 @@
       list.innerHTML = "";
 
       try{
-        let qy;
-        if(mode === "inbox"){
-          qy = query(
-            collection(db, "messages"),
-            where("to", "==", me),
-            orderBy("createdAt", "desc"),
-            limit(50)
-          );
-        }else{
-          qy = query(
-            collection(db, "messages"),
-            where("from", "==", me),
-            orderBy("createdAt", "desc"),
-            limit(50)
-          );
-        }
+        // ✅ orderBy 제거: 복합 인덱스 없이도 동작 (정렬은 클라이언트에서)
+        const qy = (mode === "inbox")
+          ? query(
+              collection(db, "messages"),
+              where("to", "==", me),
+              limit(200)
+            )
+          : query(
+              collection(db, "messages"),
+              where("from", "==", me),
+              limit(200)
+            );
 
         const cutoff = getReadCutoff(me);
         const snap = await getDocs(qy);
@@ -1735,10 +1740,18 @@
           return;
         }
 
-        const frag = document.createDocumentFragment();
-
+        // ✅ createdAt 기준 최신순 정렬
+        const items = [];
         snap.forEach(docu=>{
           const m = docu.data();
+          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          items.push({ ...m, __whenMs: whenMs });
+        });
+        items.sort((a,b)=> (b.__whenMs||0) - (a.__whenMs||0));
+
+        const frag = document.createDocumentFragment();
+
+        items.forEach(m=>{
           const box = document.createElement("div");
           box.style.cssText = `
             background: rgba(255,255,255,0.62);
@@ -1757,8 +1770,7 @@
 
           const who = (mode==="inbox") ? `보낸 사람: ${m.from||"-"}` : `받는 사람: ${m.to||"-"}`;
           const when = fmtTime(m.createdAt);
-          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
-          const unread = (mode==="inbox") && whenMs && whenMs > cutoff;
+          const unread = (mode==="inbox") && m.__whenMs && m.__whenMs > cutoff;
 
           top.textContent = `${who} · ${when}${unread ? " · 안읽음" : ""}`;
 
@@ -1810,6 +1822,7 @@
       }
     }
 
+
     // 초기
     inpNick.value = getNick();
     refreshBadge();
@@ -1818,4 +1831,4 @@
   })();
   </script>
 </body>
-        </html>
+                                                                                               </html>

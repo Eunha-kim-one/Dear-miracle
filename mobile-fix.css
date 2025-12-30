@@ -1,44 +1,53 @@
-/* ===============================
-   모바일: 글자 있는 창 크기 / 여백 조정
-   =============================== */
-@media (max-width: 560px){
+/* =========================
+   모바일 창 크기 / 여백 최종 조정
+   ========================= */
+@media (max-width: 560px) {
 
-  /* 공통: 글자 있는 창 전체 크기 ↓ (약 2/3) */
+  /* 공통: 유튜브 제외 모든 창 */
+  .win:not([data-key^="yt"]) {
+    max-width: 78vw !important;   /* ← 기존보다 약 10~15% 감소 */
+    transform: none !important;   /* JS scale 무력화 */
+  }
+
+  /* =========================
+     1. 게시판 / 안내문 창
+     ========================= */
   .win[data-key="notice"],
-  .win[data-key="contact"],
-  .win[data-key="guide"],
-  .win[data-key="links"]{
-    width: 260px !important;      /* 가로 줄이기 */
-    max-width: 260px !important;
-    transform: scale(0.92) !important;
-    transform-origin: top left;
+  .win[data-key="guide"] {
+    width: 72vw !important;
+    max-width: 72vw !important;
+    aspect-ratio: 1 / 1 !important;   /* 정사각형 유지 */
+    padding: 14px !important;
   }
 
-  /* 내부 여백 줄이기 (오른쪽 여백 제거 체감 핵심) */
-  .win[data-key="notice"] .content,
-  .win[data-key="contact"] .content,
-  .win[data-key="guide"] .content,
-  .win[data-key="links"] .content{
-    padding: 12px 14px !important;
+  /* =========================
+     2. 메신저 / 컨택 창
+     ========================= */
+  .win[data-key="contact"] {
+    width: 74vw !important;
+    max-width: 74vw !important;
+    padding: 12px !important;
+
+    /* 👉 문제의 오른쪽 여백 제거 */
+    margin-right: 0 !important;
+    right: auto !important;
   }
 
-  /* 안내문 창: 가로로 퍼지지 않게 */
-  .win[data-key="notice"]{
-    width: 250px !important;
-    max-width: 250px !important;
+  /* 버튼 영역 정리 */
+  .win[data-key="contact"] .button-area,
+  .win[data-key="contact"] .buttons {
+    gap: 8px !important;
+    padding-right: 0 !important;
   }
 
-  /* 컨택/쪽지 버튼 창: 우측 여백 과한 문제 해결 */
-  .win[data-key="contact"]{
-    width: 240px !important;
-    max-width: 240px !important;
+  /* =========================
+     3. 유튜브 음소거 버튼 정리
+     ========================= */
+  .yt-window .sound-btn {
+    top: 6px !important;
+    right: 6px !important;
+    padding: 4px 6px !important;
+    font-size: 11px !important;
+    border-radius: 6px !important;
   }
-
-  /* 버튼 줄도 정리 (버튼 때문에 커 보이던 문제 해결) */
-  .win[data-key="contact"] .content button{
-    padding: 10px 14px !important;
-    font-size: 14px !important;
-    border-radius: 12px !important;
-  }
-
 }

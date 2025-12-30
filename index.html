@@ -1748,5 +1748,36 @@
 })();
 </script>
 
+
+<script>
+/* === Mobile auto-layout PATCH (safe) === */
+(function(){
+  const isMobile = window.matchMedia("(max-width: 560px)").matches;
+  if(!isMobile) return;
+
+  const PROTECT = ["notice","contact","guide","links"];
+
+  function placeOnce(win){
+    if(win.dataset.placed) return;
+    const maxX = Math.max(8, window.innerWidth - win.offsetWidth - 8);
+    const maxY = Math.max(8, window.innerHeight - win.offsetHeight - 8);
+    win.style.left = Math.floor(Math.random()*maxX) + "px";
+    win.style.top  = Math.floor(Math.random()*maxY) + "px";
+    win.dataset.placed = "1";
+  }
+
+  document.querySelectorAll(".win").forEach(win=>{
+    const key = win.dataset.key || "";
+    placeOnce(win);
+
+    if(PROTECT.includes(key)){
+      win.style.width = "";
+      win.style.maxWidth = "";
+      win.style.transform = "";
+    }
+  });
+})();
+</script>
+
 </body>
 </html>

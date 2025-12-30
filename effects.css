@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+/* ===== subtle background shimmer (behind everything) ===== */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(255,255,255,0.18), transparent 60%),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.12), transparent 65%);
+  animation: dm_shimmer 9s ease-in-out infinite;
+}
+
+@keyframes dm_shimmer{
+  0%,100% { opacity: 0.15; }
+  50%     { opacity: 0.32; }
+}

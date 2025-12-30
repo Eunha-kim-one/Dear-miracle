@@ -1467,22 +1467,26 @@
   (function(){
     const $ = (id)=>document.getElementById(id);
 
-    const db = window.db;
-    if(!db){
-      console.warn("❌ window.db가 없어서 메신저가 작동하지 않음. (module에서 window.db = db 필요)");
-      return;
-    }
+    // Firebase 로딩(모듈 스크립트)보다 이 스크립트가 먼저 실행될 수 있음.
+// 그래서 window.db / window.__fb가 준비될 때까지 기다렸다가 메신저를 초기화한다.
+function waitForFirebase(tries=0){
+  const db = window.db;
+  const fb = window.__fb;
+  if(db && fb && fb.collection){
+    initMessenger(db, fb);
+    return;
+  }
+  if(tries > 200){ // ~10초(50ms * 200)
+    console.warn("❌ Firebase 준비 실패: 메신저 초기화 중단");
+    return;
+  }
+  setTimeout(()=>waitForFirebase(tries+1), 50);
+}
 
-    const {
-      collection, addDoc, getDocs, query, where, orderBy, limit, serverTimestamp
-    } = window.__fb || {};
+function initMessenger(db, fb){
+  const { collection, addDoc, getDocs, query, where, orderBy, limit, serverTimestamp } = fb;
 
-    if(!collection){
-      console.warn("❌ Firestore 함수가 window.__fb에 없음. (module에서 window.__fb = {collection,...} 필요)");
-      return;
-    }
-
-    const NICK_KEY = "dm_nick";
+const NICK_KEY = "dm_nick";
     const READ_KEY_PREFIX = "dm_read_cutoff_";
 
     function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }
@@ -1777,13 +1781,17 @@
         listHint.textContent = "불러오기 실패…";
       }
     }
+  // 초기
+  inpNick.value = getNick();
+  refreshBadge();
+  setInterval(refreshBadge, 15000);
 
-    // 초기
-    inpNick.value = getNick();
-    refreshBadge();
-    setInterval(refreshBadge, 15000);
+  }
 
-  })();
+  // 모듈 Firebase 준비될 때까지 대기 후 시작
+  waitForFirebase();
+
+})();
   </script>
 </body>
   </html>

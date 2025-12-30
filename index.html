@@ -669,7 +669,7 @@ body {
 .sticker.camera { width:110px; left:12%; top:10%; animation-duration:5.8s; }
 .sticker.wings { width:160px; right:10%; bottom:14%; animation-duration:8s; }
 @keyframes floatY {
-  0% { transform: translateY(0); }
+  0% { transform: translateY(0) rotate(var(--rot, 0deg)); }
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0); }
 }
@@ -683,6 +683,12 @@ body {
   .sticker.headphone{ width:96px; right:4%; top:4%; }
   .sticker.camera{ width:74px; right:6%; top:54%; left:auto; }
 }
+
+
+/* sticker: slight rotation for "real sticker" vibe */
+.sticker.vhs{ --rot: -6deg; }
+.sticker.headphone{ --rot: 5deg; }
+.sticker.camera{ --rot: -4deg; }
 
 </style>
   <link rel="stylesheet" href="mobile-fix.css">
@@ -1840,6 +1846,25 @@ body {
   <img src="assets/stickers/vedeo-tape.png" class="sticker vhs" alt="">
   <img src="assets/stickers/headphone.png" class="sticker headphone" alt="">
   <img src="assets/stickers/camera.png" class="sticker camera" alt="">
+</div>
+
+
+<!-- schedule ticket sticker (background only) -->
+<div class="schedule-ticket" aria-hidden="true">
+  <div class="ticket-line w">January 15, 2026 (Thu)</div>
+  <div class="ticket-line w">08:00 PM — Registration</div>
+  <div class="ticket-line w">10:00 PM — Intro</div>
+
+  <div class="ticket-gap"></div>
+
+  <div class="ticket-line b">January 16 — January 19</div>
+  <div class="ticket-line b">Quiet days in between</div>
+  <div class="ticket-line b">Winter nights, ongoing</div>
+
+  <div class="ticket-gap"></div>
+
+  <div class="ticket-line w">January 20, 2026 (Tue)</div>
+  <div class="ticket-line w">09:00 PM — Outro &amp; Close</div>
 </div>
 
 </body>

@@ -1,0 +1,83 @@
+
+@media (max-width: 560px){
+
+  .win{
+    max-width: none !important;
+  }
+
+  /* 텍스트 창 */
+  .win[data-key="notice"],
+  .win[data-key="contact"],
+  .win[data-key="guide"],
+  .win[data-key="links"]{
+    width: 90% !important;
+    max-width: 340px !important;
+    transform: none !important;
+  }
+
+  .win[data-key="contact"] .content,
+  .win[data-key="notice"] .content{
+    padding: 14px !important;
+  }
+
+  /* 버튼 정렬 */
+  .win[data-key="contact"] .actions{
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  /* 사진/영상 */
+  .win:not([data-key="notice"]):not([data-key="contact"]):not([data-key="guide"]):not([data-key="links"]){
+    width: 55% !important;
+    max-width: 220px !important;
+  }
+
+  .win img,
+  .win video{
+    max-height: 160px !important;
+    object-fit: cover !important;
+  }
+
+  /* 유튜브 */
+  .yt-window,
+  .win[data-key="yt"]{
+    width: 100% !important;
+    max-width: none !important;
+    transform: none !important;
+  }
+
+  /* 음소거 버튼 */
+  .yt-window .sound-btn{
+    top: 6px !important;
+    right: 6px !important;
+    font-size: 12px !important;
+    padding: 4px 6px !important;
+    border-radius: 6px !important;
+  }
+}
+/* ✅ 모바일에서 유튜브 창 무조건 최상단 */
+@media (max-width: 560px) {
+  .win[data-key="yt"] {
+    z-index: 99999 !important;
+  }
+}
+
+
+/* === Mobile photo wallpaper mode === */
+@media (max-width: 560px){
+  .wallpaper.mobile-photo-wallpaper{
+    background-size: cover !important;
+    background-position: center !important;
+    transform: scale(1.03) !important;
+    filter: saturate(0.95) contrast(0.98) brightness(0.9) !important;
+  }
+  /* hide photo windows on mobile (photos live in wallpaper) */
+  .win.media-win{ display: none !important; }
+  /* keep important non-photo windows visible */
+  .win[data-key="notice"],
+  .win[data-key="dm-notice"]{
+    display: block !important;
+  }
+  /* keep YouTube window optional */
+  #ytWin{ display: block !important; }
+}

@@ -1,36 +1,28 @@
-/* 모바일 전용 보정 */
-@media (max-width: 560px){
+/* 모바일 전용 미감 & 배치 조정 */
 
-  .win{
-    max-width: calc(100vw - 18px) !important;
+@media (max-width: 560px) {
+
+  /* 모든 창 기본 크기 축소 */
+  .win {
+    width: min(86vw, 320px) !important;
   }
 
-  .win[data-key="w"],
-  .win[data-key="p"],
-  .win[data-key="yt"]{
-    width: min(84vw, 320px) !important;
-  }
-
+  /* 이미지/영상 창 높이 제한 */
   .win img,
-  .win video{
+  .win video {
     max-height: 180px;
     object-fit: cover;
   }
 
-  /* 음소거 버튼 */
-  .sound-btn{
-    padding: 8px 12px;
-  }
-
-  .sound-label{
-    font-size: 14px;
-  }
-
-  /* 구인/컨택 창 최상단 */
-  .win[data-key="notice"]{
-    left: 10px !important;
-    top: 10px !important;
+  /* 구인게시판 / 컨택 창은 최전면 */
+  .win[data-key="notice"],
+  .win[data-key="contact"] {
     z-index: 9999 !important;
   }
-}
 
+  /* 소리 버튼 크게 */
+  .sound-btn {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}

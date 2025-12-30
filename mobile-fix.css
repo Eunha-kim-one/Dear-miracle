@@ -1,51 +1,44 @@
-/* =========================
-   모바일 전용 보정
-   ========================= */
+/* ===============================
+   모바일: 글자 있는 창 크기 / 여백 조정
+   =============================== */
 @media (max-width: 560px){
 
-  /* -------------------------
-     1️⃣ 글자 있는 창들만 살짝 축소
-     (공지 / 컨택 / 안내)
-     ------------------------- */
+  /* 공통: 글자 있는 창 전체 크기 ↓ (약 2/3) */
   .win[data-key="notice"],
   .win[data-key="contact"],
   .win[data-key="guide"],
   .win[data-key="links"]{
-    transform: scale(0.92);           /* ← 핵심 */
+    width: 260px !important;      /* 가로 줄이기 */
+    max-width: 260px !important;
+    transform: scale(0.92) !important;
     transform-origin: top left;
   }
 
-  /* 여백/가독성 유지 */
+  /* 내부 여백 줄이기 (오른쪽 여백 제거 체감 핵심) */
   .win[data-key="notice"] .content,
   .win[data-key="contact"] .content,
   .win[data-key="guide"] .content,
   .win[data-key="links"] .content{
-    padding: 16px 18px;               /* 기존 느낌 유지 */
-    font-size: 15px;
-    line-height: 1.6;
+    padding: 12px 14px !important;
   }
 
-  /* -------------------------
-     2️⃣ 사진/영상 창은 그대로 둠
-     ------------------------- */
-  .win[data-key="w"],
-  .win[data-key="p"],
-  .win[data-key="yt"]{
-    transform: none !important;
+  /* 안내문 창: 가로로 퍼지지 않게 */
+  .win[data-key="notice"]{
+    width: 250px !important;
+    max-width: 250px !important;
   }
 
-  /* -------------------------
-     3️⃣ 유튜브 음소거 버튼
-     (틀 안으로 넣기)
-     ------------------------- */
-  .yt-window .sound-btn{
-    position: absolute;
-    right: 8px;
-    top: 6px;
-    padding: 6px 10px;
-    font-size: 12px;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.85);
+  /* 컨택/쪽지 버튼 창: 우측 여백 과한 문제 해결 */
+  .win[data-key="contact"]{
+    width: 240px !important;
+    max-width: 240px !important;
+  }
+
+  /* 버튼 줄도 정리 (버튼 때문에 커 보이던 문제 해결) */
+  .win[data-key="contact"] .content button{
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    border-radius: 12px !important;
   }
 
 }

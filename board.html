@@ -784,38 +784,6 @@
     </div>
   </div>
 
-  <!-- ✅ 보드 기본: 쪽지함 모달 -->
-  <div class="modal-backdrop" id="inboxBg">
-    <div class="modal">
-      <div class="titlebar" style="cursor: default;">
-        <div class="title-left">
-          <div class="dot"></div>
-          <div class="title">내 쪽지함</div>
-        </div>
-        <div class="title-btns">
-          <button class="btn" id="closeInbox" title="닫기"></button>
-        </div>
-      </div>
-
-      <div class="content">
-        <div class="tabs">
-          <button class="tab active" id="tabRecv">받은 쪽지</button>
-          <button class="tab" id="tabSent">보낸 쪽지</button>
-          <button class="pill" id="inboxRefresh">새로고침</button>
-        </div>
-
-        <div id="inboxList" style="max-height: 520px; overflow:auto; padding-right:4px;"></div>
-        <div class="hint" id="inboxHint"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="taskbar">
-    <div class="brand">DEAR MIRACLE</div>
-    <div class="spacer"></div>
-    <div class="clock" id="clock">--:--</div>
-  </div>
-
   <!-- =========================
        ✅ Firebase + Board Script
        ========================= -->
@@ -1084,62 +1052,6 @@
     };
 
     // =========================
-    // ✅ 보드 기본: 쪽지 보내기 모달
-    // =========================
-    const dmBg = $("dmBg");
-    let dmTargetNick = "";
-    let dmTargetPostId = "";
-
-    function openDMModal(toNick, postId=""){
-      if(!ensureNick()) return;
-      dmTargetNick = (toNick || "").trim();
-      dmTargetPostId = (postId || "").trim();
-
-      $("dmHint").textContent = "";
-      $("dmTo").value = dmTargetNick;
-      $("dmFrom").value = getNick();
-      $("dmBody").value = "";
-      dmBg.style.display = "flex";
-      setTimeout(()=> $("dmBody").focus(), 50);
-    }
-    function closeDMModal(){ dmBg.style.display = "none"; }
-
-    $("closeDM").onclick = closeDMModal;
-    $("dmCancel").onclick = closeDMModal;
-    dmBg.addEventListener("click", (e)=>{ if(e.target===dmBg) closeDMModal(); });
-
-    $("dmSend").onclick = async ()=>{
-      if(!ensureNick()) return;
-
-      const from = getNick();
-      const to = (dmTargetNick || "").trim();
-      const body = ($("dmBody").value || "").trim();
-
-      if(!to){ $("dmHint").textContent = "받는 사람이 없습니다."; return; }
-      if(to === from){ $("dmHint").textContent = "자기 자신에게는 보낼 수 없습니다."; return; }
-      if(!body){ $("dmHint").textContent = "내용을 입력해주세요."; return; }
-
-      try{
-        $("dmSend").disabled = true;
-        $("dmHint").textContent = "전송 중…";
-
-        await addDoc(collection(db, "messages"), {
-          from, to, body,
-          postId: dmTargetPostId || "",
-          createdAt: serverTimestamp()
-        });
-
-        closeDMModal();
-        await refreshInboxBadge();
-      }catch(err){
-        console.error(err);
-        $("dmHint").textContent = "전송에 실패했습니다.";
-      }finally{
-        $("dmSend").disabled = false;
-      }
-    };
-
-    // =========================
     // ✅ 보드 상단 쪽지 뱃지
     // =========================
     function updateInboxBadge(n){
@@ -1254,57 +1166,6 @@
           const m = docu.data();
 
           const div = document.createElement("div");
-          div.className = "msg";
-
-          const top = document.createElement("div");
-          top.className = "top";
-
-          const who = inboxMode==="recv"
-            ? `보낸 사람: ${m.from || "-"}`
-            : `받는 사람: ${m.to || "-"}`;
-
-          const t = fmtTime(m.createdAt);
-
-          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
-          const isUnread = inboxMode==="recv" && whenMs && whenMs > cutoffMs;
-
-          const ref = m.postId ? `연결글: ${m.postId}` : "";
-          top.textContent = `${who} · ${t}${isUnread ? " · 안읽음" : ""}${ref ? " · " + ref : ""}`;
-
-          const body = document.createElement("div");
-          body.className = "body";
-          body.textContent = m.body || "";
-
-          div.appendChild(top);
-          div.appendChild(body);
-
-          // ✅ 받은함은 답장 버튼
-          if(inboxMode === "recv"){
-            const actions = document.createElement("div");
-            actions.className = "actions";
-
-            const reply = document.createElement("button");
-            reply.className = "mini";
-            reply.textContent = "답장";
-            reply.onclick = ()=> openDMModal(m.from || "", m.postId || "");
-
-            actions.appendChild(reply);
-            div.appendChild(actions);
-          }
-
-          frag.appendChild(div);
-        });
-
-        $("inboxList").appendChild(frag);
-        $("inboxHint").textContent = "";
-
-        markReadNow();
-        await refreshInboxBadge();
-      }catch(err){
-        console.error(err);
-        $("inboxHint").textContent = "쪽지함을 불러오지 못했습니다.";
-      }
-    }
 
     // =========================
     // ✅ 게시글 목록 로드/렌더

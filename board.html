@@ -1,253 +1,1821 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dear Miracle · Board</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dear Miracle · Board</title>
 
-<style>
-/* ===== 기본 ===== */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family:Tahoma,Verdana,Arial,sans-serif;
-  background:#000;
-  overflow:hidden;
-}
-:root{
-  --frame:rgba(255,255,255,.6);
-  --glass:rgba(255,255,255,.4);
-  --border:rgba(0,0,0,.3);
-  --shadow:0 12px 30px rgba(0,0,0,.22);
-  --shadow-strong:0 18px 46px rgba(0,0,0,.3);
-}
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Tahoma, Verdana, Arial, sans-serif;
+      overflow: hidden;
+      background: #000;
+    }
 
-/* ===== 배경 ===== */
-.wallpaper{
-  position:fixed; inset:0;
-  background:url("bg.png") center/cover no-repeat;
-}
+    :root{
+      --titlebar-top: #f7f7f7;
+      --titlebar-bot: #e9e9e9;
+      --frame: rgba(255,255,255,0.60);
+      --glass: rgba(255,255,255,0.40);
+      --border: rgba(0,0,0,0.30);
+      --shadow: 0 12px 30px rgba(0,0,0,0.22);
+      --shadow-strong: 0 18px 46px rgba(0,0,0,0.30);
+      --muted: rgba(0,0,0,0.55);
+      --danger: rgba(180, 40, 40, 0.95);
+      --ok: rgba(0, 120, 80, 0.95);
+    }
 
-/* ===== 윈도우 ===== */
-.desk{position:fixed; inset:0; pointer-events:none}
-.win{
-  position:absolute;
-  border-radius:10px;
-  background:var(--frame);
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  backdrop-filter:blur(10px);
-  pointer-events:auto;
-}
-.win.is-front{box-shadow:var(--shadow-strong)}
+    .wallpaper {
+      position: fixed;
+      inset: 0;
+      background-image: url("bg.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: saturate(0.95) contrast(0.98);
+      transform: scale(1.02);
+    }
+    .wallpaper::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(1200px 600px at 20% 15%, rgba(255,255,255,0.30), transparent 60%),
+        radial-gradient(900px 500px at 80% 25%, rgba(255,255,255,0.22), transparent 55%),
+        radial-gradient(900px 700px at 55% 80%, rgba(255,255,255,0.18), transparent 60%),
+        linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      pointer-events:none;
+    }
 
-.titlebar{
-  height:30px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 10px;
-  background:linear-gradient(#f7f7f7,#e9e9e9);
-  border-bottom:1px solid rgba(0,0,0,.18);
-  cursor:grab;
-}
-.title-left{display:flex;gap:8px;align-items:center}
-.dot{width:10px;height:10px;border:1px solid #888;background:#fff}
-.title{font-size:12px;font-weight:700}
-.title-btns{display:flex;gap:6px}
-.iconbtn{
-  height:26px;
-  padding:0 10px;
-  border-radius:8px;
-  border:1px solid rgba(0,0,0,.3);
-  background:#fff;
-  font-size:12px;
-  font-weight:800;
-  cursor:pointer;
-  position:relative;
-}
+    .desk { position: fixed; inset: 0; pointer-events: none; }
 
-/* 뱃지 */
-.inbox-badge{
-  position:absolute;
-  top:-6px; right:-6px;
-  min-width:18px; height:18px;
-  padding:0 6px;
-  border-radius:999px;
-  background:#fff;
-  border:1px solid rgba(0,0,0,.3);
-  font-size:11px;
-  font-weight:900;
-  display:none;
-  align-items:center;
-  justify-content:center;
-}
+    .win {
+      position: absolute;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      background: var(--frame);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      pointer-events: auto;
+      user-select: none;
+    }
+    .win.is-front { box-shadow: var(--shadow-strong); }
 
-/* ===== 게시판 ===== */
-.content{padding:10px;background:var(--glass)}
-.board-top{display:flex;gap:10px;margin-bottom:10px}
-.desc{flex:1;font-size:13px}
-.actions{display:flex;gap:8px}
-.pill{
-  height:32px;padding:0 12px;
-  border-radius:10px;
-  border:1px solid rgba(0,0,0,.3);
-  background:#fff;
-  font-weight:800;
-  cursor:pointer;
-}
-.list{max-height:520px;overflow:auto;display:grid;gap:10px}
-.card{
-  background:rgba(255,255,255,.7);
-  border:1px solid rgba(0,0,0,.15);
-  border-radius:12px;
-  padding:12px;
-}
-.card h3{margin:0 0 6px;font-size:16px}
-.meta{font-size:12px;color:#555;margin-bottom:8px}
-.text{font-size:14px;line-height:1.55;white-space:pre-wrap}
-.card-actions{margin-top:10px;display:flex;gap:8px}
-.mini{
-  height:30px;padding:0 10px;
-  border-radius:10px;
-  border:1px solid rgba(0,0,0,.3);
-  background:#fff;
-  font-weight:800;
-  font-size:12px;
-  cursor:pointer;
-}
+    .titlebar {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px 0 10px;
+      background: linear-gradient(to bottom, var(--titlebar-top), var(--titlebar-bot));
+      border-bottom: 1px solid rgba(0,0,0,0.18);
+      color: #222;
+      cursor: grab;
+    }
+    .titlebar:active { cursor: grabbing; }
 
-/* ===== 모바일 ===== */
-@media(max-width:560px){
-  #boardWin{
-    left:10px!important;
-    top:10px!important;
-    width:calc(100vw - 20px)!important;
-    height:calc(100vh - 20px)!important;
-  }
-}
+    .title-left { display:flex; align-items:center; gap:8px; min-width:0; }
+    .dot {
+      width: 10px; height: 10px; border-radius: 2px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.75);
+      flex: 0 0 auto;
+    }
+    .title {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 520px;
+    }
+    .title-btns { display:flex; gap:6px; flex:0 0 auto; align-items:center; }
 
-/* ===== 메신저 ===== */
-#dmFabBtn{
-  position:fixed;
-  right:18px;
-  bottom:80px;
-  width:64px;height:64px;
-  border-radius:22px;
-  border:1px solid rgba(0,0,0,.3);
-  background:#fff;
-  font-size:26px;
-  cursor:pointer;
-  z-index:9999;
-}
-#dmWin{
-  position:fixed;
-  right:14px;
-  bottom:160px;
-  width:min(380px,calc(100vw - 28px));
-  height:min(600px,calc(100vh - 220px));
-  background:rgba(255,255,255,.75);
-  border:1px solid rgba(0,0,0,.3);
-  border-radius:14px;
-  display:none;
-  z-index:10000;
-}
+    .btn, .iconbtn {
+      width: 16px; height: 16px; border-radius: 2px;
+      border: 1px solid rgba(0,0,0,0.35);
+      background: rgba(255,255,255,0.85);
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
+      cursor: pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 0;
+    }
+    .iconbtn{
+      width: auto;
+      height: 26px;
+      padding: 0 8px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      position: relative; /* ✅ 뱃지 얹기 */
+    }
 
-@media(max-width:768px){
-  #dmWin{
-    inset:0;
-    width:100vw;height:100vh;
-    border-radius:0;
-  }
-}
-</style>
+    /* ✅ 쪽지 뱃지(보드용) */
+    .inbox-badge{
+      position:absolute;
+      top:-6px;
+      right:-6px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.92);
+      font-weight: 900;
+      font-size: 11px;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      line-height: 1;
+    }
+
+    .content {
+      background: var(--glass);
+      padding: 10px;
+      user-select: text;
+    }
+
+    /* ===== Board UI ===== */
+    .board-top {
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .board-top .desc {
+      font-size: 13px;
+      color: rgba(0,0,0,0.55);
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.12);
+      padding: 6px 8px;
+      border-radius: 8px;
+      flex: 1;
+      line-height: 1.35;
+    }
+    .board-top .actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .pill {
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.88);
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .pill:active{ transform: translateY(1px); }
+    .pill.danger{
+      border-color: rgba(180,40,40,0.35);
+      background: rgba(255,255,255,0.88);
+      color: #7b0e0e;
+    }
+
+    .subline{
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .whoami{
+      font-size: 12px;
+      color: rgba(0,0,0,0.65);
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.12);
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      max-height: 520px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(0,0,0,0.14);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .card h3 { margin: 0 0 8px; font-size: 17px; }
+    .meta {
+      display:flex; gap:10px; flex-wrap:wrap;
+      font-size: 12px; color: rgba(0,0,0,0.58);
+      margin-bottom: 10px;
+    }
+    .text { font-size: 14px; line-height: 1.55; white-space: pre-wrap; color:#222; }
+
+    .card-actions{
+      margin-top: 10px;
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items:center;
+    }
+    .mini {
+      height: 30px;
+      padding: 0 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.90);
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .mini.ghost{
+      background: rgba(255,255,255,0.65);
+      font-weight: 700;
+    }
+    .mini.danger{
+      border-color: rgba(180,40,40,0.35);
+      color: #7b0e0e;
+    }
+
+    .status{
+      margin-top:10px;
+      font-size: 11px;
+      color: rgba(0,0,0,0.60);
+    }
+
+    /* ===== Modal Backdrop ===== */
+    .modal-backdrop{
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.35);
+      display:none;
+      align-items:center; justify-content:center;
+      padding: 14px;
+      z-index: 9999;
+      pointer-events: auto;
+    }
+    .modal{
+      width: min(760px, 100%);
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 12px;
+      overflow:hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .modal .content{ background: transparent; }
+
+    .field{ display:grid; gap:6px; margin-bottom: 10px; }
+    .label{ font-size: 12px; color: rgba(0,0,0,0.65); font-weight: 800; }
+    .field input, .field textarea{
+      width:100%;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.90);
+      padding: 11px 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    .field textarea{ min-height: 170px; resize: vertical; line-height: 1.45; }
+    .field input[readonly]{
+      background: rgba(255,255,255,0.70);
+      color: rgba(0,0,0,0.65);
+    }
+    .modal-actions{
+      display:flex; justify-content:flex-end; gap:8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .hint{
+      margin-top:8px;
+      font-size: 11px;
+      color: rgba(0,0,0,0.60);
+      line-height: 1.35;
+    }
+
+    /* ===== Inbox list ===== */
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .tab{
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.75);
+      font-weight: 900;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .tab.active{
+      background: rgba(255,255,255,0.92);
+    }
+    .msg{
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(0,0,0,0.14);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .msg .top{
+      display:flex; gap:10px; flex-wrap:wrap;
+      font-size: 11px;
+      color: rgba(0,0,0,0.60);
+      margin-bottom: 8px;
+    }
+    .msg .body{
+      font-size: 13px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      color:#222;
+    }
+    .msg .actions{
+      margin-top: 10px;
+      display:flex;
+      gap: 8px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+
+    /* taskbar */
+    .taskbar {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(0,0,0,0.18);
+      pointer-events: auto;
+      z-index: 2000;
+    }
+    .brand { font-size: 13px; color:#222; font-weight:900; letter-spacing:0.2px; }
+    .spacer { flex:1; }
+    .clock { font-size: 12px; color: rgba(0,0,0,0.65); font-variant-numeric: tabular-nums; }
+
+    /* =========================
+       ✅ Responsive (가독성/버튼크기)
+       ========================= */
+    @media (max-width: 560px){
+      #boardWin{
+        left: 10px !important;
+        top: 10px !important;
+        width: calc(100vw - 20px) !important;
+        height: calc(100vh - 74px) !important; /* taskbar 44px + 여유 */
+      }
+      .list{ max-height: calc(100vh - 240px); }
+    }
+
+    @media (max-width: 560px){
+      .titlebar{ height: 36px; }
+      .title{ font-size: 14px; max-width: 260px; }
+
+      .pill{ height: 44px; font-size: 14px; }
+      .mini{ height: 42px; font-size: 14px; }
+
+      .whoami{ font-size: 13px; }
+      .card h3{ font-size: 16px; }
+      .text{ font-size: 15px; line-height: 1.6; }
+
+      .field input, .field textarea{ font-size: 15px; }
+      .modal{ width: 100%; }
+      .list{ max-height: calc(100vh - 260px); }
+    }
+
+    /* =========================
+       ✅ 카톡형 메신저: 모바일 풀화면
+       ========================= */
+    @media (max-width: 768px){
+      #dmWin{
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        top: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        border-radius: 0 !important;
+      }
+      #dmFabBtn{
+        right: 14px !important;
+        bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+        width: 64px !important;
+        height: 64px !important;
+        border-radius: 22px !important;
+        font-size: 26px !important;
+      }
+    }
+
+    /* 모달이 너무 커지면 스크롤 */
+    @media (max-width: 560px){
+      .modal{
+        width: calc(100vw - 20px) !important;
+        max-height: calc(100vh - 40px) !important;
+      }
+      .modal .content{
+        max-height: calc(100vh - 120px) !important;
+        overflow: auto !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div class="wallpaper"></div>
+  <div class="wallpaper"></div>
 
-<div class="desk">
-  <div class="win is-front" id="boardWin" style="left:60px;top:50px;width:1100px">
-    <div class="titlebar">
-      <div class="title-left">
-        <div class="dot"></div>
-        <div class="title">구인 게시판</div>
-      </div>
-      <div class="title-btns">
-        <button class="iconbtn" id="btnInbox">
-          쪽지
-          <span class="inbox-badge" id="inboxBadge">0</span>
-        </button>
-        <button class="iconbtn" id="btnHome">홈</button>
-      </div>
-    </div>
+  <div class="desk" id="desk">
+    <!-- ✅ 게시판 윈도우 -->
+    <div class="win is-front" id="boardWin" style="left:60px; top:50px; width: 1100px;" data-z="50">
+      <div class="titlebar">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">구인 게시판</div>
+        </div>
+        <div class="title-btns">
+          <button class="iconbtn" id="btnNick" title="닉네임 변경">닉</button>
+          <button class="iconbtn" id="btnAdmin" title="관리자">관리</button>
 
-    <div class="content">
-      <div class="board-top">
-        <div class="desc">컨택은 쪽지로 진행합니다.</div>
-        <div class="actions">
-          <button class="pill" id="writeBtn">글쓰기</button>
+          <!-- ✅ 쪽지 버튼 + 안읽음 뱃지(보드 기본) -->
+          <button class="iconbtn" id="btnInbox" title="쪽지함">
+            쪽지
+            <span class="inbox-badge" id="inboxBadge">0</span>
+          </button>
+
+          <button class="iconbtn" id="btnWrite" title="글쓰기">글</button>
+          <button class="iconbtn" id="btnHome" title="홈으로">홈</button>
+          <button class="iconbtn" id="btnReload" title="새로고침">↻</button>
         </div>
       </div>
-      <div class="list" id="list"></div>
+
+      <div class="content">
+        <div class="board-top">
+          <div class="desc">
+            전체 공개 · 컨택은 <b>쪽지</b>로 진행합니다. (비밀댓글 대신 DM)
+          </div>
+          <div class="actions">
+            <button class="pill" id="homeBtn">← 홈으로</button>
+            <button class="pill" id="inboxBtn">내 쪽지함</button>
+            <button class="pill" id="writeBtn">글쓰기</button>
+          </div>
+        </div>
+
+        <div class="subline">
+          <div class="whoami" id="whoami">닉네임: (불러오는 중...)</div>
+          <button class="pill" id="changeNickBtn">닉네임 바꾸기</button>
+        </div>
+
+        <div class="list" id="list"></div>
+        <div class="status" id="status"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<button id="dmFabBtn">💬</button>
+  <!-- =========================
+       ✅ 카톡형 메신저 (보드 전용 1세트)
+       ※ 보드 기본 dmTo/dmBody/dmSend와 충돌 방지: dm2* 사용
+       ========================= -->
 
-<div id="dmWin">
-  <div class="titlebar">
-    <div class="title">메신저</div>
-    <button id="dmCloseBtn">✕</button>
+  <!-- 우하단 플로팅 버튼 -->
+  <button id="dmFabBtn" title="메신저" aria-label="메신저"
+    style="
+      position:fixed;
+      right:18px;
+      bottom:calc(80px + env(safe-area-inset-bottom));
+      width:64px; height:64px;
+      border-radius:22px;
+      border:1px solid rgba(0,0,0,0.22);
+      background:rgba(255,255,255,0.92);
+      box-shadow:0 12px 30px rgba(0,0,0,0.28);
+      display:flex; align-items:center; justify-content:center;
+      font-size:26px;
+      cursor:pointer;
+      z-index:99998;">
+    💬
+  </button>
+
+  <!-- 메신저 창 -->
+  <div id="dmWin"
+    style="
+      position:fixed;
+      right:14px;
+      bottom:calc(160px + env(safe-area-inset-bottom));
+      width:min(380px, calc(100vw - 28px));
+      height:min(600px, calc(100vh - 220px));
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid rgba(0,0,0,0.22);
+      background:rgba(255,255,255,0.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 18px 46px rgba(0,0,0,0.35);
+      z-index:99999;
+      display:none;">
+
+    <!-- 상단바 -->
+    <div id="dmTop"
+      style="
+        height:40px;
+        display:flex; align-items:center; justify-content:space-between;
+        padding:0 10px;
+        background: linear-gradient(to bottom, rgba(247,247,247,0.96), rgba(233,233,233,0.96));
+        border-bottom:1px solid rgba(0,0,0,0.16);
+        cursor:grab;">
+      <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+        <div style="width:10px; height:10px; border-radius:2px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.85);"></div>
+        <div style="font-size:13px; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          메신저
+        </div>
+
+        <!-- 안읽음 뱃지 -->
+        <span id="dmBadge"
+          style="
+            margin-left:6px;
+            min-width:18px; height:18px; padding:0 6px;
+            border-radius:999px;
+            border:1px solid rgba(0,0,0,0.22);
+            background:rgba(255,255,255,0.95);
+            font-size:11px; font-weight:900;
+            display:none;
+            align-items:center; justify-content:center;">
+          0
+        </span>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button id="dmTabBtn"
+          style="
+            height:28px; padding:0 10px;
+            border-radius:10px;
+            border:1px solid rgba(0,0,0,0.22);
+            background:rgba(255,255,255,0.88);
+            font-size:12px; font-weight:900;
+            cursor:pointer;">
+          쪽지함
+        </button>
+
+        <button id="dmCloseBtn"
+          style="
+            width:28px; height:28px;
+            border-radius:10px;
+            border:1px solid rgba(0,0,0,0.22);
+            background:rgba(255,255,255,0.88);
+            cursor:pointer;">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- 본문 -->
+    <div style="padding:10px; height:calc(100% - 40px); display:flex; flex-direction:column; gap:10px;">
+
+      <!-- 안내 -->
+      <div id="dmInfo"
+        style="
+          font-size:12px; line-height:1.35;
+          color:rgba(0,0,0,0.65);
+          background:rgba(255,255,255,0.55);
+          border:1px solid rgba(0,0,0,0.12);
+          padding:8px 10px;
+          border-radius:12px;">
+        컨택/쪽지는 여기서 주고받습니다. <b>닉네임</b>만 있으면 끝.
+      </div>
+
+      <!-- 탭 -->
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="dmModeCompose"
+          style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.92); font-weight:900; font-size:12px; cursor:pointer;">
+          보내기
+        </button>
+        <button id="dmModeInbox"
+          style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.75); font-weight:900; font-size:12px; cursor:pointer;">
+          받은함
+        </button>
+        <button id="dmModeSent"
+          style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.75); font-weight:900; font-size:12px; cursor:pointer;">
+          보낸함
+        </button>
+        <button id="dmRefresh"
+          style="height:32px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.75); font-weight:900; font-size:12px; cursor:pointer;">
+          새로고침
+        </button>
+      </div>
+
+      <!-- 보내기 폼 -->
+      <div id="dmCompose" style="display:grid; gap:8px;">
+        <div style="display:grid; gap:6px;">
+          <div style="font-size:12px; font-weight:900; color:rgba(0,0,0,0.65);">내 닉네임</div>
+          <input id="dm2Nick"
+            placeholder="예: DearMiracle / ㅇㅇ / 닉네임"
+            maxlength="30"
+            style="width:100%; border-radius:12px; border:1px solid rgba(0,0,0,0.18); background:rgba(255,255,255,0.90); padding:10px 12px; font-size:14px; outline:none;">
+        </div>
+
+        <div style="display:grid; gap:6px;">
+          <div style="font-size:12px; font-weight:900; color:rgba(0,0,0,0.65);">받는 사람</div>
+          <input id="dm2To"
+            placeholder="상대 닉네임(정확히)"
+            maxlength="30"
+            style="width:100%; border-radius:12px; border:1px solid rgba(0,0,0,0.18); background:rgba(255,255,255,0.90); padding:10px 12px; font-size:14px; outline:none;">
+        </div>
+
+        <div style="display:grid; gap:6px;">
+          <div style="font-size:12px; font-weight:900; color:rgba(0,0,0,0.65);">내용</div>
+          <textarea id="dm2Body"
+            placeholder="컨택 내용을 적어주세요."
+            style="width:100%; min-height:140px; resize:vertical; border-radius:12px; border:1px solid rgba(0,0,0,0.18); background:rgba(255,255,255,0.90); padding:10px 12px; font-size:14px; outline:none; line-height:1.45;"></textarea>
+        </div>
+
+        <div style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+          <button id="dmSaveNick"
+            style="height:34px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(255,255,255,0.88); font-weight:900; font-size:12px; cursor:pointer;">
+            닉 저장
+          </button>
+          <button id="dm2Send"
+            style="height:34px; padding:0 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.22); background:rgba(0,0,0,0.78); color:#fff; font-weight:900; font-size:12px; cursor:pointer;">
+            보내기
+          </button>
+        </div>
+
+        <div id="dm2Hint" style="font-size:11px; color:rgba(0,0,0,0.65); line-height:1.35;"></div>
+      </div>
+
+      <!-- 리스트(받은/보낸) -->
+      <div id="dmListWrap" style="display:none; flex:1; overflow:auto; padding-right:4px;">
+        <div id="dmList"></div>
+        <div id="dmListHint" style="margin-top:8px; font-size:11px; color:rgba(0,0,0,0.65);"></div>
+      </div>
+
+    </div>
   </div>
-  <div style="padding:10px;font-size:14px">
-    👉 이 창은 **인덱스와 동일한 메신저**입니다.
+
+  <!-- ✅ 닉네임 로그인 모달 -->
+  <div class="modal-backdrop" id="nickBg">
+    <div class="modal">
+      <div class="titlebar" style="cursor: default;">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">닉네임 입력</div>
+        </div>
+        <div class="title-btns">
+          <button class="btn" id="closeNick" title="닫기"></button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="field">
+          <div class="label">닉네임</div>
+          <input id="nickInput" placeholder="예: DearMiracle / ㅇㅇ / 닉네임" maxlength="30" />
+        </div>
+        <div class="modal-actions">
+          <button class="pill" id="nickCancel">취소</button>
+          <button class="pill" id="nickSave">확인</button>
+        </div>
+        <div class="hint">
+          비밀번호 없이 <b>닉네임만</b> 사용합니다.<br/>
+          (가개장용 · 간편 모드)
+        </div>
+        <div class="hint" id="nickHint"></div>
+      </div>
+    </div>
   </div>
-</div>
 
-<script>
-/* ===== 메신저 제어 ===== */
-const dmFabBtn = document.getElementById("dmFabBtn");
-const dmWin = document.getElementById("dmWin");
-const dmCloseBtn = document.getElementById("dmCloseBtn");
+  <!-- ✅ 관리자 모달 -->
+  <div class="modal-backdrop" id="adminBg">
+    <div class="modal">
+      <div class="titlebar" style="cursor: default;">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">관리자 코드</div>
+        </div>
+        <div class="title-btns">
+          <button class="btn" id="closeAdmin" title="닫기"></button>
+        </div>
+      </div>
 
-function openMessenger(){
-  dmWin.style.display="block";
-}
-function closeMessenger(){
-  dmWin.style.display="none";
-}
-window.openMessenger=openMessenger;
-window.openMessengerInbox=openMessenger;
-window.openMessengerTo=(nick)=>{
-  openMessenger();
-  console.log("받는 사람:",nick);
-};
+      <div class="content">
+        <div class="field">
+          <div class="label">코드</div>
+          <input id="adminInput" placeholder="관리자 코드 입력" />
+        </div>
+        <div class="modal-actions">
+          <button class="pill" id="adminOff">관리 해제</button>
+          <button class="pill" id="adminOn">확인</button>
+        </div>
+        <div class="hint" id="adminHint"></div>
+      </div>
+    </div>
+  </div>
 
-dmFabBtn.onclick=()=> dmWin.style.display==="block"?closeMessenger():openMessenger();
-dmCloseBtn.onclick=closeMessenger;
+  <!-- ✅ 글쓰기/수정 모달 -->
+  <div class="modal-backdrop" id="postBg">
+    <div class="modal">
+      <div class="titlebar" style="cursor: default;">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title" id="postModalTitle">새 글</div>
+        </div>
+        <div class="title-btns">
+          <button class="btn" id="closePost" title="닫기"></button>
+        </div>
+      </div>
 
-/* ===== 보드 버튼 연결 ===== */
-document.getElementById("btnInbox").onclick=()=>openMessengerInbox();
-document.getElementById("btnHome").onclick=()=>location.href="index.html";
+      <div class="content">
+        <div class="field">
+          <div class="label">제목</div>
+          <input id="inpTitle" placeholder="예: 관계 구합니다 / 선관계 구인 / 00페어" maxlength="80" />
+        </div>
 
-/* ===== 게시글 더미 ===== */
-const list=document.getElementById("list");
-["A구인","B구인"].forEach(name=>{
-  const c=document.createElement("div");
-  c.className="card";
-  c.innerHTML=`
-    <h3>${name}</h3>
-    <div class="meta">작성자: ${name}</div>
-    <div class="text">내용 예시</div>
-    <div class="card-actions">
-      <button class="mini">쪽지 보내기</button>
-    </div>`;
-  c.querySelector("button").onclick=()=>openMessengerTo(name);
-  list.appendChild(c);
-});
-</script>
+        <div class="field">
+          <div class="label">작성자(자동)</div>
+          <input id="inpAuthor" readonly />
+        </div>
+
+        <div class="field">
+          <div class="label">내용</div>
+          <textarea id="inpContent" placeholder="구인 내용 / 조건 / 기간 / 연락 방식 등을 적어주세요."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button class="pill" id="postCancel">취소</button>
+          <button class="pill" id="postSubmit">등록</button>
+        </div>
+        <div class="hint" id="postHint"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 보드 기본: 쪽지 보내기 모달 (게시글에서 '쪽지 보내기' 누를 때) -->
+  <div class="modal-backdrop" id="dmBg">
+    <div class="modal">
+      <div class="titlebar" style="cursor: default;">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">쪽지 보내기</div>
+        </div>
+        <div class="title-btns">
+          <button class="btn" id="closeDM" title="닫기"></button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="field">
+          <div class="label">받는 사람</div>
+          <input id="dmTo" readonly />
+        </div>
+        <div class="field">
+          <div class="label">보내는 사람</div>
+          <input id="dmFrom" readonly />
+        </div>
+        <div class="field">
+          <div class="label">내용</div>
+          <textarea id="dmBody" placeholder="컨택 내용을 적어주세요."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button class="pill" id="dmCancel">취소</button>
+          <button class="pill" id="dmSend">보내기</button>
+        </div>
+        <div class="hint" id="dmHint"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 보드 기본: 쪽지함 모달 -->
+  <div class="modal-backdrop" id="inboxBg">
+    <div class="modal">
+      <div class="titlebar" style="cursor: default;">
+        <div class="title-left">
+          <div class="dot"></div>
+          <div class="title">내 쪽지함</div>
+        </div>
+        <div class="title-btns">
+          <button class="btn" id="closeInbox" title="닫기"></button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="tabs">
+          <button class="tab active" id="tabRecv">받은 쪽지</button>
+          <button class="tab" id="tabSent">보낸 쪽지</button>
+          <button class="pill" id="inboxRefresh">새로고침</button>
+        </div>
+
+        <div id="inboxList" style="max-height: 520px; overflow:auto; padding-right:4px;"></div>
+        <div class="hint" id="inboxHint"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="taskbar">
+    <div class="brand">DEAR MIRACLE</div>
+    <div class="spacer"></div>
+    <div class="clock" id="clock">--:--</div>
+  </div>
+
+  <!-- =========================
+       ✅ Firebase + Board Script
+       ========================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore, collection, addDoc, getDocs, query, orderBy, limit,
+      serverTimestamp, doc, updateDoc, deleteDoc, where
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA1PxEOrwjVi4BOLA13UbFIncTYe6RdYIQ",
+      authDomain: "dear-miracle.firebaseapp.com",
+      projectId: "dear-miracle",
+      storageBucket: "dear-miracle.firebasestorage.app",
+      messagingSenderId: "793139917614",
+      appId: "1:793139917614:web:dec74f65af6a0df1c740bf",
+      measurementId: "G-VF22L8ZR6D"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ✅ 카톡형 메신저(일반 script)에서도 Firestore 쓰게 전역으로 노출
+    window.db = db;
+    window.__fb = { collection, addDoc, getDocs, query, where, orderBy, limit, serverTimestamp };
+
+    const $ = (id)=>document.getElementById(id);
+
+    function fmtTime(ts){
+      if(!ts) return "";
+      try{
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        const yy = String(d.getFullYear()).slice(2);
+        const mm = String(d.getMonth()+1).padStart(2,"0");
+        const dd = String(d.getDate()).padStart(2,"0");
+        const hh = String(d.getHours()).padStart(2,"0");
+        const mi = String(d.getMinutes()).padStart(2,"0");
+        return `${yy}.${mm}.${dd} ${hh}:${mi}`;
+      }catch{
+        return "";
+      }
+    }
+
+    function setStatus(msg){
+      $("status").textContent = msg || "";
+    }
+
+    // --- 보드 윈도우: 처음 로딩/리사이즈 시 중앙 배치(사용자가 드래그했으면 건드리지 않음)
+    let boardUserMoved = false;
+
+    function centerBoardWin(){
+      const win = document.getElementById("boardWin");
+      if(!win) return;
+      if(boardUserMoved) return;
+
+      const vw = window.innerWidth;
+
+      // 화면 폭에 맞춰 윈도우 폭을 적당히 제한
+      const targetW = Math.min(1180, vw - 24);
+      win.style.width = targetW + "px";
+
+      const left = Math.max(12, Math.round((vw - targetW) / 2));
+      const top  = 50;
+
+      win.style.left = left + "px";
+      win.style.top  = top + "px";
+    }
+
+    // 드래그로 움직였으면 이후 자동중앙정렬 끔
+    (function hookBoardDragFlag(){
+      const win = document.getElementById("boardWin");
+      if(!win) return;
+      const bar = win.querySelector(".titlebar");
+      if(!bar) return;
+
+      bar.addEventListener("pointerdown", (e)=>{
+        const t = e.target;
+        if(t && (t.tagName === "BUTTON" || t.classList.contains("btn") || t.classList.contains("iconbtn"))) return;
+        boardUserMoved = true;
+      });
+    })();
+
+    // =========================
+    // ✅ 닉네임(인덱스와 공유)
+    // =========================
+    const NICK_KEY = "dm_nick";
+    const READ_KEY_PREFIX = "dm_read_cutoff_"; // dm_read_cutoff_<nick>
+
+    function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }
+    function setNick(n){ localStorage.setItem(NICK_KEY, (n||"").trim()); }
+
+    function getReadCutoff(nick){
+      const raw = localStorage.getItem(READ_KEY_PREFIX + nick);
+      const ms = raw ? parseInt(raw, 10) : 0;
+      return Number.isFinite(ms) ? ms : 0;
+    }
+    function setReadCutoff(nick, ms){
+      localStorage.setItem(READ_KEY_PREFIX + nick, String(ms));
+    }
+
+    // =========================
+    // ✅ 관리자(마스터키) 모드
+    // =========================
+    const ADMIN_KEY = "dm_is_admin";
+    const ADMIN_MASTER_CODE = "xhltk";
+
+    function isAdmin(){ return localStorage.getItem(ADMIN_KEY) === "1"; }
+    function setAdmin(on){
+      localStorage.setItem(ADMIN_KEY, on ? "1" : "0");
+      updateWhoAmI();
+    }
+    function adminBadge(){ return isAdmin() ? " · 관리자" : ""; }
+
+    function updateWhoAmI(){
+      const n = getNick();
+      $("whoami").textContent = n ? `닉네임: ${n}${adminBadge()}` : `닉네임: (없음)${adminBadge()}`;
+      $("inpAuthor").value = n || "";
+      $("dmFrom").value = n || "";
+    }
+
+    // =========================
+    // ✅ 닉 모달
+    // =========================
+    const nickBg = $("nickBg");
+    function openNickModal(force=false){
+      $("nickHint").textContent = "";
+      $("nickInput").value = getNick();
+      nickBg.style.display = "flex";
+      $("closeNick").style.display = force ? "none" : "inline-flex";
+      setTimeout(()=> $("nickInput").focus(), 50);
+    }
+    function closeNickModal(){ nickBg.style.display = "none"; }
+    function ensureNick(){
+      const n = getNick();
+      if(!n){ openNickModal(true); return false; }
+      return true;
+    }
+
+    $("nickSave").onclick = async ()=>{
+      const val = ($("nickInput").value || "").trim();
+      if(!val){ $("nickHint").textContent = "닉네임을 입력해주세요."; return; }
+      setNick(val);
+      updateWhoAmI();
+      closeNickModal();
+      await loadPosts();
+      await refreshInboxBadge();
+    };
+    $("nickCancel").onclick = ()=>{
+      if(getNick()) closeNickModal();
+      else $("nickHint").textContent = "닉네임을 입력해야 진행할 수 있습니다.";
+    };
+    $("closeNick").onclick = closeNickModal;
+    nickBg.addEventListener("click", (e)=>{ if(e.target===nickBg && getNick()) closeNickModal(); });
+
+    // =========================
+    // ✅ 관리자 모달
+    // =========================
+    const adminBg = $("adminBg");
+    function openAdminModal(){
+      $("adminHint").textContent = "";
+      $("adminInput").value = "";
+      adminBg.style.display = "flex";
+      setTimeout(()=> $("adminInput").focus(), 50);
+    }
+    function closeAdminModal(){ adminBg.style.display = "none"; }
+
+    $("btnAdmin").onclick = openAdminModal;
+    $("closeAdmin").onclick = closeAdminModal;
+    adminBg.addEventListener("click", (e)=>{ if(e.target===adminBg) closeAdminModal(); });
+
+    $("adminOn").onclick = ()=>{
+      const code = ($("adminInput").value || "").trim();
+      if(code === ADMIN_MASTER_CODE){
+        setAdmin(true);
+        closeAdminModal();
+        loadPosts();
+      }else{
+        $("adminHint").textContent = "관리자 코드가 올바르지 않습니다.";
+      }
+    };
+    $("adminOff").onclick = ()=>{
+      setAdmin(false);
+      closeAdminModal();
+      loadPosts();
+    };
+
+    // =========================
+    // ✅ 네비
+    // =========================
+    const goHome = ()=> location.href = "index.html";
+    $("homeBtn").onclick = goHome;
+    $("btnHome").onclick = goHome;
+    $("btnReload").onclick = ()=> location.reload();
+    $("btnNick").onclick = ()=> openNickModal(false);
+    $("changeNickBtn").onclick = ()=> openNickModal(false);
+
+    // =========================
+    // ✅ 글쓰기/수정 모달
+    // =========================
+    const postBg = $("postBg");
+    let editingPostId = null;
+
+    function openPostModal(mode="new", post=null){
+      if(!ensureNick()) return;
+
+      $("postHint").textContent = "";
+      if(mode==="edit" && post){
+        editingPostId = post.id;
+        $("postModalTitle").textContent = "글 수정";
+        $("postSubmit").textContent = "수정";
+        $("inpTitle").value = post.title || "";
+        $("inpContent").value = post.content || "";
+      }else{
+        editingPostId = null;
+        $("postModalTitle").textContent = "새 글";
+        $("postSubmit").textContent = "등록";
+        $("inpTitle").value = "";
+        $("inpContent").value = "";
+      }
+      $("inpAuthor").value = getNick();
+      postBg.style.display = "flex";
+      setTimeout(()=> $("inpTitle").focus(), 50);
+    }
+    function closePostModal(){ postBg.style.display = "none"; }
+
+    $("writeBtn").onclick = ()=> openPostModal("new");
+    $("btnWrite").onclick = ()=> openPostModal("new");
+    $("postCancel").onclick = closePostModal;
+    $("closePost").onclick = closePostModal;
+    postBg.addEventListener("click", (e)=>{ if(e.target===postBg) closePostModal(); });
+
+    $("postSubmit").onclick = async ()=>{
+      if(!ensureNick()) return;
+
+      const title = ($("inpTitle").value || "").trim();
+      const content = ($("inpContent").value || "").trim();
+      const author = getNick();
+
+      if(!title){ $("postHint").textContent = "제목을 입력해주세요."; return; }
+      if(!content){ $("postHint").textContent = "내용을 입력해주세요."; return; }
+
+      try{
+        $("postSubmit").disabled = true;
+        $("postHint").textContent = "저장 중…";
+
+        if(editingPostId){
+          const ref = doc(db, "posts", editingPostId);
+          await updateDoc(ref, { title, content, updatedAt: serverTimestamp() });
+        }else{
+          await addDoc(collection(db, "posts"), {
+            title, content, author,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+        }
+
+        closePostModal();
+        await loadPosts();
+      }catch(err){
+        console.error(err);
+        $("postHint").textContent = "저장에 실패했습니다.";
+      }finally{
+        $("postSubmit").disabled = false;
+      }
+    };
+
+    // =========================
+    // ✅ 보드 기본: 쪽지 보내기 모달
+    // =========================
+    const dmBg = $("dmBg");
+    let dmTargetNick = "";
+    let dmTargetPostId = "";
+
+    function openDMModal(toNick, postId=""){
+      if(!ensureNick()) return;
+      dmTargetNick = (toNick || "").trim();
+      dmTargetPostId = (postId || "").trim();
+
+      $("dmHint").textContent = "";
+      $("dmTo").value = dmTargetNick;
+      $("dmFrom").value = getNick();
+      $("dmBody").value = "";
+      dmBg.style.display = "flex";
+      setTimeout(()=> $("dmBody").focus(), 50);
+    }
+    function closeDMModal(){ dmBg.style.display = "none"; }
+
+    $("closeDM").onclick = closeDMModal;
+    $("dmCancel").onclick = closeDMModal;
+    dmBg.addEventListener("click", (e)=>{ if(e.target===dmBg) closeDMModal(); });
+
+    $("dmSend").onclick = async ()=>{
+      if(!ensureNick()) return;
+
+      const from = getNick();
+      const to = (dmTargetNick || "").trim();
+      const body = ($("dmBody").value || "").trim();
+
+      if(!to){ $("dmHint").textContent = "받는 사람이 없습니다."; return; }
+      if(to === from){ $("dmHint").textContent = "자기 자신에게는 보낼 수 없습니다."; return; }
+      if(!body){ $("dmHint").textContent = "내용을 입력해주세요."; return; }
+
+      try{
+        $("dmSend").disabled = true;
+        $("dmHint").textContent = "전송 중…";
+
+        await addDoc(collection(db, "messages"), {
+          from, to, body,
+          postId: dmTargetPostId || "",
+          createdAt: serverTimestamp()
+        });
+
+        closeDMModal();
+        await refreshInboxBadge();
+      }catch(err){
+        console.error(err);
+        $("dmHint").textContent = "전송에 실패했습니다.";
+      }finally{
+        $("dmSend").disabled = false;
+      }
+    };
+
+    // =========================
+    // ✅ 보드 상단 쪽지 뱃지
+    // =========================
+    function updateInboxBadge(n){
+      const b = $("inboxBadge");
+      const num = Math.max(0, Number(n)||0);
+      b.textContent = String(num);
+      b.style.display = num > 0 ? "inline-flex" : "none";
+    }
+
+    function markReadNow(){
+      const me = getNick();
+      if(!me) return;
+      setReadCutoff(me, Date.now());
+      updateInboxBadge(0);
+    }
+
+    async function refreshInboxBadge(){
+      const me = getNick();
+      if(!me){ updateInboxBadge(0); return; }
+
+      const cutoffMs = getReadCutoff(me);
+
+      try{
+        const qy = query(
+          collection(db, "messages"),
+          where("to", "==", me),
+          orderBy("createdAt", "desc"),
+          limit(50)
+        );
+        const snap = await getDocs(qy);
+
+        let cnt = 0;
+        snap.forEach(docu=>{
+          const m = docu.data();
+          const t = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          if(t && t > cutoffMs) cnt += 1;
+        });
+
+        updateInboxBadge(cnt);
+      }catch(err){
+        console.error(err);
+      }
+    }
+
+    // =========================
+    // ✅ 쪽지함 모달
+    // =========================
+    const inboxBg = $("inboxBg");
+    let inboxMode = "recv"; // recv | sent
+
+    function openInbox(){
+      if(!ensureNick()) return;
+      inboxBg.style.display = "flex";
+      setInboxTab("recv");
+      loadInbox();
+      markReadNow();
+    }
+    function closeInbox(){ inboxBg.style.display = "none"; }
+
+    function setInboxTab(mode){
+      inboxMode = mode;
+      $("tabRecv").classList.toggle("active", mode==="recv");
+      $("tabSent").classList.toggle("active", mode==="sent");
+    }
+
+    $("inboxBtn").onclick = openInbox;
+    $("btnInbox").onclick = openInbox;
+    $("closeInbox").onclick = closeInbox;
+    inboxBg.addEventListener("click", (e)=>{ if(e.target===inboxBg) closeInbox(); });
+
+    $("tabRecv").onclick = ()=>{ setInboxTab("recv"); loadInbox(); };
+    $("tabSent").onclick = ()=>{ setInboxTab("sent"); loadInbox(); };
+    $("inboxRefresh").onclick = ()=> loadInbox();
+
+    async function loadInbox(){
+      if(!ensureNick()) return;
+
+      const me = getNick();
+      const cutoffMs = getReadCutoff(me);
+
+      $("inboxHint").textContent = "불러오는 중…";
+      $("inboxList").innerHTML = "";
+
+      try{
+        let qy;
+        if(inboxMode === "recv"){
+          qy = query(
+            collection(db, "messages"),
+            where("to", "==", me),
+            orderBy("createdAt", "desc"),
+            limit(50)
+          );
+        }else{
+          qy = query(
+            collection(db, "messages"),
+            where("from", "==", me),
+            orderBy("createdAt", "desc"),
+            limit(50)
+          );
+        }
+
+        const snap = await getDocs(qy);
+
+        if(snap.empty){
+          $("inboxHint").textContent = inboxMode==="recv" ? "받은 쪽지가 없습니다." : "보낸 쪽지가 없습니다.";
+          return;
+        }
+
+        const frag = document.createDocumentFragment();
+
+        snap.forEach(docu=>{
+          const m = docu.data();
+
+          const div = document.createElement("div");
+          div.className = "msg";
+
+          const top = document.createElement("div");
+          top.className = "top";
+
+          const who = inboxMode==="recv"
+            ? `보낸 사람: ${m.from || "-"}`
+            : `받는 사람: ${m.to || "-"}`;
+
+          const t = fmtTime(m.createdAt);
+
+          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          const isUnread = inboxMode==="recv" && whenMs && whenMs > cutoffMs;
+
+          const ref = m.postId ? `연결글: ${m.postId}` : "";
+          top.textContent = `${who} · ${t}${isUnread ? " · 안읽음" : ""}${ref ? " · " + ref : ""}`;
+
+          const body = document.createElement("div");
+          body.className = "body";
+          body.textContent = m.body || "";
+
+          div.appendChild(top);
+          div.appendChild(body);
+
+          // ✅ 받은함은 답장 버튼
+          if(inboxMode === "recv"){
+            const actions = document.createElement("div");
+            actions.className = "actions";
+
+            const reply = document.createElement("button");
+            reply.className = "mini";
+            reply.textContent = "답장";
+            reply.onclick = ()=> openDMModal(m.from || "", m.postId || "");
+
+            actions.appendChild(reply);
+            div.appendChild(actions);
+          }
+
+          frag.appendChild(div);
+        });
+
+        $("inboxList").appendChild(frag);
+        $("inboxHint").textContent = "";
+
+        markReadNow();
+        await refreshInboxBadge();
+      }catch(err){
+        console.error(err);
+        $("inboxHint").textContent = "쪽지함을 불러오지 못했습니다.";
+      }
+    }
+
+    // =========================
+    // ✅ 게시글 목록 로드/렌더
+    // =========================
+    async function loadPosts(){
+      setStatus("불러오는 중…");
+      $("list").innerHTML = "";
+
+      try{
+        const qy = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50));
+        const snap = await getDocs(qy);
+
+        if(snap.empty){
+          setStatus("아직 글이 없습니다. 첫 글을 작성해보세요.");
+          return;
+        }
+
+        const me = getNick();
+        const admin = isAdmin();
+
+        const frag = document.createDocumentFragment();
+
+        snap.forEach(docu=>{
+          const p = docu.data();
+          const id = docu.id;
+
+          const card = document.createElement("div");
+          card.className = "card";
+
+          const h = document.createElement("h3");
+          h.textContent = p.title || "(제목 없음)";
+
+          const meta = document.createElement("div");
+          meta.className = "meta";
+          const author = p.author || "-";
+          const created = fmtTime(p.createdAt);
+          const updated = fmtTime(p.updatedAt);
+          meta.textContent = `작성자: ${author} · 작성: ${created}${updated ? " · 수정: " + updated : ""}`;
+
+          const text = document.createElement("div");
+          text.className = "text";
+          text.textContent = p.content || "";
+
+          const actions = document.createElement("div");
+          actions.className = "card-actions";
+
+          const btnDM = document.createElement("button");
+          btnDM.className = "mini";
+          btnDM.textContent = "쪽지 보내기";
+          btnDM.onclick = ()=> openDMModal(author, id);
+          actions.appendChild(btnDM);
+
+          const canManage = (me && author === me) || admin;
+
+          if(canManage){
+            const btnEdit = document.createElement("button");
+            btnEdit.className = "mini ghost";
+            btnEdit.textContent = "수정";
+            btnEdit.onclick = ()=> openPostModal("edit", { id, title: p.title, content: p.content });
+
+            const btnDel = document.createElement("button");
+            btnDel.className = "mini danger";
+            btnDel.textContent = "삭제";
+            btnDel.onclick = async ()=>{
+              const ok = confirm("정말 삭제하시겠습니까?");
+              if(!ok) return;
+              try{
+                await deleteDoc(doc(db, "posts", id));
+                await loadPosts();
+              }catch(err){
+                console.error(err);
+                alert("삭제에 실패했습니다.");
+              }
+            };
+
+            actions.appendChild(btnEdit);
+            actions.appendChild(btnDel);
+          }
+
+          card.appendChild(h);
+          card.appendChild(meta);
+          card.appendChild(text);
+          card.appendChild(actions);
+
+          frag.appendChild(card);
+        });
+
+        $("list").appendChild(frag);
+        setStatus("");
+      }catch(err){
+        console.error(err);
+        setStatus("게시글을 불러오지 못했습니다.");
+      }
+    }
+
+    // =========================
+    // ✅ 창 드래그 + 앞으로
+    // =========================
+    const wins = Array.from(document.querySelectorAll(".win"));
+    let topZ = 100;
+
+    function bringToFront(win){
+      topZ += 1;
+      win.style.zIndex = topZ;
+      wins.forEach(w => w.classList.remove("is-front"));
+      win.classList.add("is-front");
+    }
+
+    wins.forEach(win => {
+      const initZ = parseInt(win.getAttribute("data-z") || "0", 10);
+      win.style.zIndex = 50 + initZ;
+
+      win.addEventListener("pointerdown", () => bringToFront(win));
+
+      const bar = win.querySelector(".titlebar");
+      if(!bar) return;
+
+      let dragging = false;
+      let startX = 0, startY = 0, winX = 0, winY = 0;
+
+      bar.addEventListener("pointerdown", (e) => {
+        const t = e.target;
+        if(t && (t.tagName === "BUTTON" || t.classList.contains("btn") || t.classList.contains("iconbtn"))) return;
+
+        bringToFront(win);
+        dragging = true;
+        bar.setPointerCapture(e.pointerId);
+
+        const rect = win.getBoundingClientRect();
+        startX = e.clientX; startY = e.clientY;
+        winX = rect.left;  winY = rect.top;
+        e.preventDefault();
+      });
+
+      bar.addEventListener("pointermove", (e) => {
+        if(!dragging) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        let nx = winX + dx;
+        let ny = winY + dy;
+
+        const maxX = window.innerWidth - 60;
+        const maxY = window.innerHeight - 120;
+        nx = Math.min(Math.max(nx, -40), maxX);
+        ny = Math.min(Math.max(ny, -20), maxY);
+
+        win.style.left = nx + "px";
+        win.style.top  = ny + "px";
+      });
+
+      bar.addEventListener("pointerup", () => dragging = false);
+      bar.addEventListener("pointercancel", () => dragging = false);
+    });
+
+    // =========================
+    // ✅ 시계
+    // =========================
+    const clock = $("clock");
+    function tick(){
+      const d = new Date();
+      clock.textContent = String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+    }
+    tick(); setInterval(tick, 10000);
+
+    // =========================
+    // ✅ 초기 실행
+    // =========================
+    updateWhoAmI();
+
+    centerBoardWin();
+    window.addEventListener("resize", centerBoardWin);
+
+    if(!getNick()){
+      openNickModal(true);
+    }else{
+      await loadPosts();
+      await refreshInboxBadge();
+    }
+
+    // ✅ 뱃지 15초마다 갱신(가벼운 폴링)
+    setInterval(()=>{ refreshInboxBadge(); }, 15000);
+  </script>
+
+  <script>
+  /* =========================
+     ✅ 카톡형 메신저 JS (보드용 1세트)
+     - Firestore: messages 컬렉션 사용
+     - localStorage: dm_nick 공유
+     - 안읽음 뱃지: dm_read_cutoff_<nick>
+     - 보드 기본 dmTo/dmBody/dmSend와 충돌 방지: dm2*
+     ========================= */
+
+  (function(){
+    const $ = (id)=>document.getElementById(id);
+
+    const db = window.db;
+    if(!db){
+      console.warn("❌ window.db가 없어서 메신저가 작동하지 않음. (module에서 window.db = db 필요)");
+      return;
+    }
+
+    const {
+      collection, addDoc, getDocs, query, where, orderBy, limit, serverTimestamp
+    } = window.__fb || {};
+
+    if(!collection){
+      console.warn("❌ Firestore 함수가 window.__fb에 없음. (module에서 window.__fb = {collection,...} 필요)");
+      return;
+    }
+
+    const NICK_KEY = "dm_nick";
+    const READ_KEY_PREFIX = "dm_read_cutoff_";
+
+    function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }
+    function setNick(n){ localStorage.setItem(NICK_KEY, (n||"").trim()); }
+
+    function getReadCutoff(nick){
+      const raw = localStorage.getItem(READ_KEY_PREFIX + nick);
+      const ms = raw ? parseInt(raw, 10) : 0;
+      return Number.isFinite(ms) ? ms : 0;
+    }
+    function setReadCutoff(nick, ms){
+      localStorage.setItem(READ_KEY_PREFIX + nick, String(ms));
+    }
+
+    function fmtTime(ts){
+      if(!ts) return "";
+      try{
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        const yy = String(d.getFullYear()).slice(2);
+        const mm = String(d.getMonth()+1).padStart(2,"0");
+        const dd = String(d.getDate()).padStart(2,"0");
+        const hh = String(d.getHours()).padStart(2,"0");
+        const mi = String(d.getMinutes()).padStart(2,"0");
+        return `${yy}.${mm}.${dd} ${hh}:${mi}`;
+      }catch{
+        return "";
+      }
+    }
+
+    // UI refs
+    const fab = $("dmFabBtn");
+    const win = $("dmWin");
+    const closeBtn = $("dmCloseBtn");
+    const badge = $("dmBadge");
+
+    const modeCompose = $("dmModeCompose");
+    const modeInbox = $("dmModeInbox");
+    const modeSent = $("dmModeSent");
+    const refreshBtn = $("dmRefresh");
+
+    const compose = $("dmCompose");
+    const listWrap = $("dmListWrap");
+    const list = $("dmList");
+    const listHint = $("dmListHint");
+
+    // ✅ dm2* (충돌 방지)
+    const inpNick = $("dm2Nick");
+    const inpTo = $("dm2To");
+    const inpBody = $("dm2Body");
+    const btnSend = $("dm2Send");
+    const hint = $("dm2Hint");
+    const btnSaveNick = $("dmSaveNick");
+
+    let mode = "compose"; // compose | inbox | sent
+
+    function setMode(m){
+      mode = m;
+      const activeStyle = "rgba(255,255,255,0.92)";
+      const idleStyle = "rgba(255,255,255,0.75)";
+      modeCompose.style.background = (m==="compose") ? activeStyle : idleStyle;
+      modeInbox.style.background   = (m==="inbox") ? activeStyle : idleStyle;
+      modeSent.style.background    = (m==="sent") ? activeStyle : idleStyle;
+
+      compose.style.display = (m==="compose") ? "grid" : "none";
+      listWrap.style.display = (m==="compose") ? "none" : "block";
+    }
+
+    function openWin(){
+      win.style.display = "block";
+      setMode("compose");
+      hint.textContent = "";
+      inpNick.value = getNick();
+      refreshBadge();
+    }
+    function closeWin(){
+      win.style.display = "none";
+    }
+
+    fab?.addEventListener("click", ()=>{
+      if(win.style.display === "none" || !win.style.display) openWin();
+      else closeWin();
+    });
+    closeBtn?.addEventListener("click", closeWin);
+
+    $("dmTabBtn")?.addEventListener("click", ()=>{
+      setMode("inbox");
+      loadList();
+      markReadNow();
+    });
+
+    modeCompose?.addEventListener("click", ()=> setMode("compose"));
+    modeInbox?.addEventListener("click", ()=>{ setMode("inbox"); loadList(); markReadNow(); });
+    modeSent?.addEventListener("click", ()=>{ setMode("sent"); loadList(); });
+    refreshBtn?.addEventListener("click", ()=>{
+      if(mode==="compose") refreshBadge();
+      else loadList();
+    });
+
+    btnSaveNick?.addEventListener("click", ()=>{
+      const n = (inpNick.value||"").trim();
+      if(!n){ hint.textContent = "닉네임을 입력해줘."; return; }
+      setNick(n);
+      hint.textContent = "닉 저장 완료!";
+      refreshBadge();
+    });
+
+    async function sendDM(){
+      const from = (inpNick.value||"").trim();
+      const to = (inpTo.value||"").trim();
+      const body = (inpBody.value||"").trim();
+
+      if(!from){ hint.textContent = "내 닉네임부터 입력해줘."; return; }
+      if(!to){ hint.textContent = "받는 사람 닉네임을 입력해줘."; return; }
+      if(from === to){ hint.textContent = "자기 자신에게는 보낼 수 없어."; return; }
+      if(!body){ hint.textContent = "내용을 입력해줘."; return; }
+
+      try{
+        btnSend.disabled = true;
+        hint.textContent = "전송 중…";
+
+        setNick(from);
+        await addDoc(collection(db, "messages"), {
+          from, to, body,
+          postId: "",
+          createdAt: serverTimestamp()
+        });
+
+        inpBody.value = "";
+        hint.textContent = "전송 완료!";
+        await refreshBadge();
+      }catch(e){
+        console.error(e);
+        hint.textContent = "전송 실패… (콘솔 확인)";
+      }finally{
+        btnSend.disabled = false;
+      }
+    }
+
+    btnSend?.addEventListener("click", sendDM);
+
+    function updateBadge(n){
+      const num = Math.max(0, Number(n)||0);
+      badge.textContent = String(num);
+      badge.style.display = num > 0 ? "inline-flex" : "none";
+    }
+
+    function markReadNow(){
+      const me = getNick();
+      if(!me) return;
+      setReadCutoff(me, Date.now());
+      updateBadge(0);
+    }
+
+    async function refreshBadge(){
+      const me = getNick();
+      if(!me){ updateBadge(0); return; }
+      const cutoff = getReadCutoff(me);
+
+      try{
+        const qy = query(
+          collection(db, "messages"),
+          where("to", "==", me),
+          orderBy("createdAt", "desc"),
+          limit(50)
+        );
+        const snap = await getDocs(qy);
+
+        let cnt = 0;
+        snap.forEach(d=>{
+          const m = d.data();
+          const t = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          if(t && t > cutoff) cnt += 1;
+        });
+
+        updateBadge(cnt);
+      }catch(e){
+        console.error(e);
+      }
+    }
+
+    async function loadList(){
+      const me = getNick();
+      if(!me){
+        listHint.textContent = "닉네임을 먼저 저장해줘.";
+        list.innerHTML = "";
+        return;
+      }
+
+      listHint.textContent = "불러오는 중…";
+      list.innerHTML = "";
+
+      try{
+        let qy;
+        if(mode === "inbox"){
+          qy = query(
+            collection(db, "messages"),
+            where("to", "==", me),
+            orderBy("createdAt", "desc"),
+            limit(50)
+          );
+        }else{
+          qy = query(
+            collection(db, "messages"),
+            where("from", "==", me),
+            orderBy("createdAt", "desc"),
+            limit(50)
+          );
+        }
+
+        const cutoff = getReadCutoff(me);
+        const snap = await getDocs(qy);
+
+        if(snap.empty){
+          listHint.textContent = (mode==="inbox") ? "받은 쪽지가 없습니다." : "보낸 쪽지가 없습니다.";
+          return;
+        }
+
+        const frag = document.createDocumentFragment();
+
+        snap.forEach(docu=>{
+          const m = docu.data();
+          const box = document.createElement("div");
+          box.style.cssText = `
+            background: rgba(255,255,255,0.62);
+            border: 1px solid rgba(0,0,0,0.14);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+          `;
+
+          const top = document.createElement("div");
+          top.style.cssText = `
+            display:flex; gap:10px; flex-wrap:wrap;
+            font-size:11px; color: rgba(0,0,0,0.60);
+            margin-bottom: 8px;
+          `;
+
+          const who = (mode==="inbox") ? `보낸 사람: ${m.from||"-"}` : `받는 사람: ${m.to||"-"}`;
+          const when = fmtTime(m.createdAt);
+          const whenMs = m.createdAt?.toDate ? m.createdAt.toDate().getTime() : 0;
+          const unread = (mode==="inbox") && whenMs && whenMs > cutoff;
+
+          top.textContent = `${who} · ${when}${unread ? " · 안읽음" : ""}`;
+
+          const body = document.createElement("div");
+          body.style.cssText = `font-size:13px; line-height:1.45; white-space:pre-wrap; color:#222;`;
+          body.textContent = m.body || "";
+
+          box.appendChild(top);
+          box.appendChild(body);
+
+          if(mode==="inbox"){
+            const actions = document.createElement("div");
+            actions.style.cssText = `margin-top:10px; display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;`;
+
+            const reply = document.createElement("button");
+            reply.textContent = "답장";
+            reply.style.cssText = `
+              height:30px; padding:0 10px;
+              border-radius:10px;
+              border:1px solid rgba(0,0,0,0.22);
+              background: rgba(255,255,255,0.90);
+              font-weight:900;
+              font-size:12px;
+              cursor:pointer;
+            `;
+            reply.onclick = ()=>{
+              setMode("compose");
+              inpTo.value = (m.from||"").trim();
+              inpBody.focus();
+            };
+
+            actions.appendChild(reply);
+            box.appendChild(actions);
+          }
+
+          frag.appendChild(box);
+        });
+
+        list.appendChild(frag);
+        listHint.textContent = "";
+
+        if(mode==="inbox"){
+          markReadNow();
+          await refreshBadge();
+        }
+      }catch(e){
+        console.error(e);
+        listHint.textContent = "불러오기 실패…";
+      }
+    }
+
+    // 초기
+    inpNick.value = getNick();
+    refreshBadge();
+    setInterval(refreshBadge, 15000);
+
+  })();
+  </script>
 </body>
-</html>
+        </html>

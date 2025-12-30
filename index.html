@@ -1728,5 +1728,42 @@
   /* ---- end mobile layout polish ---- */
 ;
 </script>
+
+<script>
+(function(){
+  function qs(sel){ return document.querySelector(sel); }
+  const media = qs("video, audio");
+  const btn = qs("#muteBtn");
+
+  if(!media || !btn) return;
+
+  function updateUI(){
+    if(media.muted || media.volume === 0){
+      btn.innerHTML = "🔇 음소거 해제";
+      btn.setAttribute("aria-pressed","true");
+    }else{
+      btn.innerHTML = "🔊 음소거";
+      btn.setAttribute("aria-pressed","false");
+    }
+  }
+
+  btn.addEventListener("click", function(){
+    // Desktop browsers sometimes block audio until user interaction:
+    // this click counts as interaction.
+    if(media.muted || media.volume === 0){
+      media.muted = false;
+      media.volume = 1.0;
+      media.play().catch(()=>{});
+    }else{
+      media.muted = true;
+    }
+    updateUI();
+  });
+
+  // Init state
+  updateUI();
+})();
+</script>
+
 </body>
 </html>

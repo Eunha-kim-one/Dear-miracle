@@ -1,0 +1,70 @@
+/* mobile-fix.css
+   Mobile layout overrides for Dear-miracle (GitHub Pages)
+*/
+
+@media (max-width: 768px) {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+
+  /* Make windows feel “spread out” on mobile */
+  .win {
+    position: absolute !important;
+    transform: none;
+  }
+
+  /* Notice / board window: same width as messenger */
+  .win[data-key="notice"]{
+    width: 84vw !important;
+    max-width: 320px !important;
+    left: 50% !important;
+    top: 5.5vh !important;
+    transform: translateX(-50%) !important;
+  }
+
+  /* Messenger 안내 window: move to upper-right-ish center */
+  .win[data-key="dm-notice"]{
+    width: 84vw !important;
+    max-width: 320px !important;
+    left: 62% !important; /* “우 중앙” 느낌 */
+    top: 52vh !important;
+    transform: translateX(-50%) !important;
+  }
+
+  /* Equal-width buttons in messenger */
+  .win[data-key="dm-notice"] .dm-actions{
+    display: flex !important;
+    gap: 12px !important;
+    margin-top: 14px !important;
+  }
+  .win[data-key="dm-notice"] .dm-action-btn{
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  /* Youtube window + hint */
+  .win[data-key="yt"]{
+    width: 88vw !important;
+    max-width: 360px !important;
+    left: 50% !important;
+    bottom: 6vh !important;
+    top: auto !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .win[data-key="yt"] .yt-hint{
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.35;
+    opacity: 0.85;
+  }
+
+  /* Keep wallpaper tap area comfortable */
+  body::before, body::after {
+    pointer-events: none;
+  }
+}

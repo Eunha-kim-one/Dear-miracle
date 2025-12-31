@@ -756,3 +756,55 @@ document.addEventListener("DOMContentLoaded", () => {
     if(hint) hint.classList.add("hidden");
   }
 });
+
+/* =========================
+   Floating Stickers
+   ========================= */
+
+const STICKERS = [
+  "assets/stickers/camera.png",
+  "assets/stickers/flower-dot.png",
+  "assets/stickers/headphone.png",
+  "assets/stickers/video-tape.png",
+  "assets/stickers/wings.png"
+];
+
+function rand(min, max){ return Math.random() * (max - min) + min; }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function spawnStickers(){
+  const layer = document.getElementById("sticker-layer");
+  if(!layer) return;
+
+  layer.innerHTML = "";
+
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const isMobile = w <= 768;
+
+  const gapX = isMobile ? 110 : 150;
+  const gapY = isMobile ? 140 : 180;
+  const pad  = 24;
+
+  const cols = Math.floor((w - pad * 2) / gapX);
+  const rows = Math.floor((h - pad * 2) / gapY);
+
+  for(let y = 0; y < rows; y++){
+    for(let x = 0; x < cols; x++){
+      if(Math.random() > 0.55) continue;
+
+      const img = document.createElement("img");
+      img.src = pick(STICKERS);
+      img.className = `sticker v${Math.ceil(rand(1,3))}`;
+
+      img.style.left = `${pad + x * gapX + rand(-14,14)}px`;
+      img.style.top  = `${pad + y * gapY + rand(-18,18)}px`;
+
+      layer.appendChild(img);
+    }
+  }
+}
+
+document.addEventListener("DOMContentLoaded", spawnStickers);
+window.addEventListener("resize", spawnStickers);
+

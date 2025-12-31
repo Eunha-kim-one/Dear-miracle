@@ -182,3 +182,10 @@
   background-image: url("assets/icons/close.png");
 }
 
+/* 창 컨트롤 버튼 미감 조정 */
+.title-btns {
+  transform: scale(0.75);
+  transform-origin: right top; /* 오른쪽 상단 기준으로 줄이기 */
+  opacity: 0.55;
+}
+

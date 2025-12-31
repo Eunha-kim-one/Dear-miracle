@@ -348,7 +348,7 @@
   input,
   textarea,
   select {
-    cursor: url("assets/icons/sparkle.png") 16 16, pointer;
+    cursor: url("assets/icons/sparkle.png") 14 14, pointer;
   }
 
 }

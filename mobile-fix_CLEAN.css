@@ -286,7 +286,7 @@
 
   box-shadow: 0 10px 26px rgba(0,0,0,0.12);
 
-  z-index: 50; /* 창들보다 낮게 (win이 100+면 안전) */
+  z-index: 1000; /* 창들보다 높게 (win이 100+면 안전) */
 }
 
 #memoWin .memo-header{
@@ -356,7 +356,7 @@
   align-items:center;
   justify-content:center;
 
-  z-index: 50; /* 메모랑 같은 도구 레이어 */
+  z-index: 1000; /* 메모랑 같은 도구 레이어 */
   text-decoration: none;
 }
 

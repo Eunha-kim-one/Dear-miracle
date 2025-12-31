@@ -276,7 +276,7 @@
   position: fixed;
   left: 850px;
   bottom: 84px; /* 작업표시줄/DM버튼 겹침 방지용 여유 */
-  width: 260px;
+  width: 460px;
 
   background: rgba(255,255,255,0.75);
   backdrop-filter: blur(6px);

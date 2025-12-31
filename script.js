@@ -905,3 +905,40 @@ dmFabBtn?.addEventListener("click", () => {
   dmBadge?.classList.add("hidden");
 });
 
+// =========================
+// Memo (localStorage)
+// =========================
+(function(){
+  const memoArea = document.getElementById("memoArea");
+  const memoClear = document.getElementById("memoClear");
+  const memoCopy  = document.getElementById("memoCopy");
+  if(!memoArea) return;
+
+  const KEY = "dm_memo_text";
+
+  // load
+  memoArea.value = localStorage.getItem(KEY) || "";
+
+  // save (typing)
+  memoArea.addEventListener("input", () => {
+    localStorage.setItem(KEY, memoArea.value);
+  });
+
+  // clear
+  memoClear?.addEventListener("click", () => {
+    if(!confirm("Clear memo?")) return;
+    memoArea.value = "";
+    localStorage.removeItem(KEY);
+  });
+
+  // copy
+  memoCopy?.addEventListener("click", async () => {
+    try{
+      await navigator.clipboard.writeText(memoArea.value || "");
+      alert("Copied! Paste into Google Docs :)");
+    }catch(e){
+      alert("Copy failed. (Browser permission issue)");
+    }
+  });
+})();
+

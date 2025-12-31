@@ -368,3 +368,81 @@
 .dm-fab:hover .dm-badge{
   transform: scale(1.15);
 }
+
+/* =========================
+   Memo Widget (PC only)
+========================= */
+.memo-win{
+  position: fixed;
+  left: 18px;
+  bottom: 84px; /* 작업표시줄/DM버튼 겹침 방지용 여유 */
+  width: 260px;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 14px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+  z-index: 5; /* 창들보다 낮게 (win이 100+면 안전) */
+}
+
+.memo-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 10px 12px 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.memo-actions{
+  display:flex;
+  gap: 6px;
+}
+
+.memo-actions button{
+  border: 1px solid rgba(0,0,0,0.15);
+  background: rgba(255,255,255,0.65);
+  border-radius: 10px;
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.memo-win textarea{
+  width: calc(100% - 24px);
+  margin: 0 12px 12px;
+  height: 120px;
+  resize: none;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  font-family: inherit;
+  background: rgba(255,255,255,0.6);
+}
+
+/* Google Docs shortcut (floating) */
+.docs-shortcut{
+  position: fixed;
+  left: 18px;
+  bottom: 36px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.65);
+  border: 1px solid rgba(0,0,0,0.12);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index: 5; /* 메모랑 같은 층 */
+  text-decoration: none;
+}
+
+/* 모바일에서는 숨김 */
+@media (max-width: 980px){
+  .memo-win, .docs-shortcut{ display:none; }
+}
+

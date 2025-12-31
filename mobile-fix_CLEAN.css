@@ -1,0 +1,131 @@
+/* mobile-fix.css
+   - Mobile-only layout + wallpaper tap hint
+   - Keeps desktop look untouched
+*/
+
+@media (max-width: 768px) {
+  html, body { height: 100%; }
+  body { overflow: hidden; }
+
+  .wallpaper{
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  #desk{ position: relative; z-index: 1; }
+
+  /* Hide photo/media windows on mobile (they become the wallpaper) */
+  .win[data-key^="w"]{ display: none !important; }
+
+  /* Hide old “mute/unmute” helper window on mobile */
+  .win[data-key="dm-notice"]{ display: none !important; }
+
+  .win[data-key="notice"]{
+    width: min(92vw, 430px) !important;
+    left: 50% !important;
+    top: 6vh !important;
+    transform: translateX(-50%) !important;
+    z-index: 9990 !important;
+  }
+
+  .win[data-key="messenger"]{
+    width: min(90vw, 380px) !important;
+    left: 50% !important;
+    top: 56vh !important;
+    transform: translateX(-50%) !important;
+    z-index: 9980 !important;
+  }
+
+  /* Two action buttons same width (no style changes) */
+  .win[data-key="messenger"] .actions,
+  .win[data-key="messenger"] .btn-row,
+  .win[data-key="messenger"] .messenger-actions{
+    display: flex !important;
+    gap: 12px !important;
+  }
+  .win[data-key="messenger"] .actions button,
+  .win[data-key="messenger"] .btn-row button,
+  .win[data-key="messenger"] .messenger-actions button{
+    flex: 1 1 0 !important;
+    width: auto !important;
+  }
+
+  .win[data-key="notice"] .content{
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+  }
+
+  .dm-fab{ z-index: 9999 !important; }
+
+  #mobileHint{
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    z-index: 10000;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    line-height: 1.2;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 220ms ease, transform 220ms ease;
+  }
+  #mobileHint.hidden{
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+
+
+
+/* ===== Mobile mini YouTube player (mobile only) ===== */
+@media (max-width: 768px){
+  #ytWin{
+    position: fixed !important;
+    right: 14px !important;
+    bottom: 84px !important; /* above the messenger FAB */
+    left: auto !important;
+    top: auto !important;
+
+    width: min(72vw, 320px) !important;
+    height: auto !important;
+
+    z-index: 9998 !important;
+  }
+
+  /* Make it look like a mini player (hide titlebar, keep content) */
+  #ytWin .titlebar{
+    padding: 6px 10px !important;
+  }
+  #ytWin .titlebar .title{
+    max-width: 180px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+  #ytWin iframe{
+    width: 100% !important;
+    height: 160px !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+  }
+}
+
+/* Smaller phones */
+@media (max-width: 480px){
+  #ytWin{
+    width: 240px !important;
+  }
+  #ytWin iframe{
+    height: 140px !important;
+  }
+}

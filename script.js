@@ -1,4 +1,4 @@
-// script.js
+ // script.js
 // - Extracted from index_MINIPLAYERFIX.html
 // - Consolidated to keep index.html clean
 // - Works for both desktop & mobile (mobile-only UI rules stay in mobile-fix.css)
@@ -886,40 +886,39 @@ document.addEventListener("DOMContentLoaded", spawnStickers);
 window.addEventListener("resize", spawnStickers);
 
 // =========================
-// 메모 위젯 ( 로컬 스토리지 ) 
+// 메모 위젯 (localStorage)
 // =========================
-(function () {
+document.addEventListener("DOMContentLoaded", () => {
   const memoArea  = document.getElementById("memoArea");
   const memoCopy  = document.getElementById("memoCopy");
   const memoClear = document.getElementById("memoClear");
 
-  // HTML에 메모 위젯이 없으면 아무 것도 안 함 (안전장치)
   if (!memoArea) return;
 
-  const STORAGE_KEY = "dm_memo_text";
+  const KEY = "desktop_memo_text";
 
-  // 1. 로드
-  memoArea.value = localStorage.getItem(STORAGE_KEY) || "";
+  // 페이지 로드 시 불러오기
+  memoArea.value = localStorage.getItem(KEY) || "";
 
-  // 2. 입력 시 자동 저장
+  // 입력할 때마다 저장
   memoArea.addEventListener("input", () => {
-    localStorage.setItem(STORAGE_KEY, memoArea.value);
+    localStorage.setItem(KEY, memoArea.value);
   });
 
-  // 3. 메모 비우기
+  // 비우기
   memoClear?.addEventListener("click", () => {
-    if (!confirm("Clear memo?")) return;
+    if (!confirm("메모를 지울까요?")) return;
     memoArea.value = "";
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(KEY);
   });
 
-  // 4. 전체 복사 (Google Docs용)
+  // 복사
   memoCopy?.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(memoArea.value || "");
-      alert("Copied! Paste into Google Docs ✨");
-    } catch (e) {
-      alert("Copy failed (browser permission issue)");
+      alert("복사되었습니다. 구글 문서에 붙여넣으세요!");
+    } catch {
+      alert("복사 실패 (브라우저 권한 문제)");
     }
   });
-})();
+});

@@ -274,7 +274,7 @@
 ========================= */
 #memoWin{
   position: fixed;
-  left: 65%;
+  left: 50%;
   bottom: 84px; /* 작업표시줄/DM버튼 겹침 방지 */
   transform: translateX(150px);
   width: 460px;

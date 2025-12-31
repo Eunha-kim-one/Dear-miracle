@@ -159,13 +159,12 @@
     win.addEventListener("pointerdown", ()=> bringToFront(win));
   });
 
- window.addEventListener("load", () => {
-  autoLayout();
-  // byKey 대신 실제 ID를 사용하는 방식으로 안전하게 변경
-  const noticeWin = document.getElementById("notice"); 
-  if (noticeWin) bringToFront(noticeWin);
-});
-  
+  window.addEventListener("load", () => {
+    autoLayout();
+    // 첫 방문자 UX: 구인 게시판 바로가기를 항상 맨 앞에
+    const noticeWin = byKey["notice"];
+    if (noticeWin) bringToFront(noticeWin);
+  });
   window.addEventListener("resize", () => autoLayout());
 
   // ===== 시계 =====

@@ -83,7 +83,7 @@
     opacity: 0;
     transform: translateX(-50%) translateY(10px);
   }
-   
+}
    /* ===== 모바일 전용 유튜브 창 위치 조정 ===== */
 @media (max-width: 480px){
   #ytWin{

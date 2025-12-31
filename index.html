@@ -705,6 +705,7 @@ body {
 </style>
 </head>
 <body>
+    <div id="mobileHint">모바일 환경에서는 터치 시 배경화면이 바뀝니다.</div>
 <div class="wallpaper"></div>
 <div class="desk" id="desk">
 <!-- 0) 공지/게시판 안내 창 -->
@@ -1999,6 +2000,13 @@ body {
   if(notice) notice.style.zIndex = "9990";
   if(dmNotice) dmNotice.style.zIndex = "9989";
 })();
+
+    <script>
+document.addEventListener('touchstart', () => {
+  const hint = document.getElementById('mobileHint');
+  if (hint) hint.style.display = 'none';
+});
+
 </script>
 </body>
 </html>

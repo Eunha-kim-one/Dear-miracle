@@ -791,7 +791,7 @@ function spawnStickers(){
 
   for(let y = 0; y < rows; y++){
     for(let x = 0; x < cols; x++){
-      if(Math.random() > 0.55) continue;
+      if(Math.random() > 0.67) continue;
 
       const img = document.createElement("img");
       img.src = pick(STICKERS);

@@ -1732,23 +1732,33 @@ body {
     if(!el || !file) return;
     el.style.backgroundImage = `url(${file})`;
     el.dataset.wallpaper = file;
+    
+  }
+function showHintOnce(){
+  const hint = document.getElementById("mobileHint");
+  if(!hint) return;
+
+  if(!isMobile()){
+    hint.classList.add("hidden");
+    return;
   }
 
-  function showHintOnce(){
-    const hint = document.getElementById("mobileHint");
-    if(!hint) return;
-    if(!isMobile()){ hint.style.display = "none"; return; }
-    const seen = localStorage.getItem("mobileHintSeen");
-    if(seen === "1"){ hint.classList.add("hidden"); return; }
-    hint.classList.remove("hidden");
+  const seen = localStorage.getItem("mobileHintSeen");
+  if(seen === "1"){
+    hint.classList.add("hidden");
+    return;
+  }
+
+  hint.classList.remove("hidden");
+      }
   }
 
   function hideHint(){
-    const hint = document.getElementById("mobileHint");
-    if(!hint) return;
-    hint.classList.add("hidden");
-    try{ localStorage.setItem("mobileHintSeen","1"); }catch(e){}
-  }
+  const hint = document.getElementById("mobileHint");
+  if(!hint) return;
+  hint.classList.add("hidden");
+  try{ localStorage.setItem("mobileHintSeen","1"); }catch(e){}
+}
 
   function onBackgroundTap(e){
     if(!isMobile()) return;

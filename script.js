@@ -765,6 +765,8 @@ const STICKERS = ["assets/stickers/camera.png",
 "assets/stickers/headphone.png", 
 "assets/stickers/video-tape.png", 
 "assets/stickers/wings.png", 
+"assets/stickers/radio.png", 
+"assets/stickers/rainbow.png"
 ];
 
 

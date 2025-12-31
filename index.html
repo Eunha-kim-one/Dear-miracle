@@ -671,8 +671,12 @@ body {
   <div class="memo-header">
     <span>Memo</span>
     <div class="memo-actions">
-      <button id="memoCopy" title="Copy">⧉</button>
-      <button id="memoClear" title="Clear">×</button>
+  <a id="memoNewDoc" class="memo-btn"
+   href="https://docs.google.com/document/create"
+   target="_blank" rel="noopener"
+   title="New Google Doc">＋</a>
+  <button id="memoCopy" title="Copy">⧉</button>
+  <button id="memoClear" title="Clear">×</button>
     </div>
   </div>
 
@@ -680,8 +684,10 @@ body {
     id="memoArea"
     placeholder="Notes for profiles / relations...">
   </textarea>
-</div>
 
+  <div class="memo-help">
+  📝 구글문서 연동(버튼) · 💾 새로고침해도 날아가지 않아요 · ✍️ 쓰면 자동으로 커져요
+</div>
 
     <!-- 0) 공지/게시판 안내 창 -->
     <div class="win is-front" data-key="notice" style="left:18px; top:18px; width: 260px;" data-z="300">

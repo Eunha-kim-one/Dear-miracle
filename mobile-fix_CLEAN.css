@@ -274,20 +274,19 @@
 ========================= */
 #memoWin{
   position: fixed;
-  left: 850px;
-  bottom: 84px; /* 작업표시줄/DM버튼 겹침 방지용 여유 */
+  left: 65%;
+  bottom: 84px; /* 작업표시줄/DM버튼 겹침 방지 */
+  transform: translateX(150px);
   width: 460px;
 
   background: rgba(255,255,255,0.75);
   backdrop-filter: blur(6px);
-
   border: 1px solid rgba(0,0,0,0.12);
   border-radius: 14px;
-
   box-shadow: 0 10px 26px rgba(0,0,0,0.12);
-
-  z-index: 1000; /* 창들보다 높게 (win이 100+면 안전) */
+  z-index: 1000;
 }
+
 
 #memoWin .memo-header{
   display:flex;
@@ -338,25 +337,23 @@
 /* Google Docs shortcut (floating) */
 .docs-shortcut{
   position: fixed;
-  left: 850px;
+  left: 50%;
   bottom: 36px;
+  transform: translateX(150px);
 
   width: 44px;
   height: 44px;
-
   border-radius: 14px;
 
   background: rgba(255,255,255,0.65);
   border: 1px solid rgba(0,0,0,0.12);
   backdrop-filter: blur(6px);
-
   box-shadow: 0 10px 26px rgba(0,0,0,0.12);
 
   display:flex;
   align-items:center;
   justify-content:center;
-
-  z-index: 1000; /* 메모랑 같은 도구 레이어 */
+  z-index: 1000;
   text-decoration: none;
 }
 

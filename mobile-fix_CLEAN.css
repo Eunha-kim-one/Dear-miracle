@@ -374,7 +374,7 @@
 ========================= */
 .memo-win{
   position: fixed;
-  left: 18px;
+  left: 200px;
   bottom: 84px; /* 작업표시줄/DM버튼 겹침 방지용 여유 */
   width: 260px;
   background: rgba(255,255,255,0.75);
@@ -382,7 +382,7 @@
   border: 1px solid rgba(0,0,0,0.12);
   border-radius: 14px;
   box-shadow: 0 10px 26px rgba(0,0,0,0.12);
-  z-index: 5; /* 창들보다 낮게 (win이 100+면 안전) */
+  z-index: 3; /* 창들보다 낮게 (win이 100+면 안전) */
 }
 
 .memo-header{
@@ -425,7 +425,7 @@
 /* Google Docs shortcut (floating) */
 .docs-shortcut{
   position: fixed;
-  left: 18px;
+  left: 200px;
   bottom: 36px;
   width: 44px;
   height: 44px;

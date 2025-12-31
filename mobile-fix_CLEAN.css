@@ -145,7 +145,7 @@
   position: absolute;
   width: 32px; /* ← 크기 절반 */
   height: auto;
-  opacity: 0.95;
+  opacity: 0.6; /* ← 투명도 조금 낮춤 */
   animation: floatY 4s ease-in-out infinite;
   filter: drop-shadow(0 4px 10px rgba(0,0,0,.18));
 }

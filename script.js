@@ -767,8 +767,6 @@ const STICKERS = [
   "assets/stickers/headphone.png",
   "assets/stickers/video-tape.png",
   "assets/stickers/wings.png"
-  "assets/stickers/rainbow.png"
-  "assets/stickers/radio.png"
 ];
 
 function rand(min, max){ return Math.random() * (max - min) + min; }
@@ -809,4 +807,3 @@ function spawnStickers(){
 
 document.addEventListener("DOMContentLoaded", spawnStickers);
 window.addEventListener("resize", spawnStickers);
-

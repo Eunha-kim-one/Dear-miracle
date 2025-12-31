@@ -885,3 +885,41 @@ function spawnStickers(){
 document.addEventListener("DOMContentLoaded", spawnStickers);
 window.addEventListener("resize", spawnStickers);
 
+// =========================
+// 메모 위젯 ( 로컬 스토리지 ) 
+// =========================
+(function () {
+  const memoArea  = document.getElementById("memoArea");
+  const memoCopy  = document.getElementById("memoCopy");
+  const memoClear = document.getElementById("memoClear");
+
+  // HTML에 메모 위젯이 없으면 아무 것도 안 함 (안전장치)
+  if (!memoArea) return;
+
+  const STORAGE_KEY = "dm_memo_text";
+
+  // 1. 로드
+  memoArea.value = localStorage.getItem(STORAGE_KEY) || "";
+
+  // 2. 입력 시 자동 저장
+  memoArea.addEventListener("input", () => {
+    localStorage.setItem(STORAGE_KEY, memoArea.value);
+  });
+
+  // 3. 메모 비우기
+  memoClear?.addEventListener("click", () => {
+    if (!confirm("Clear memo?")) return;
+    memoArea.value = "";
+    localStorage.removeItem(STORAGE_KEY);
+  });
+
+  // 4. 전체 복사 (Google Docs용)
+  memoCopy?.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(memoArea.value || "");
+      alert("Copied! Paste into Google Docs ✨");
+    } catch (e) {
+      alert("Copy failed (browser permission issue)");
+    }
+  });
+})();

@@ -368,3 +368,20 @@
 @media (max-width: 980px){
   #memoWin, .docs-shortcut{ display:none; }
 }
+
+/* desk가 pointer-events:none 이라서,
+   메모/문서버튼은 따로 클릭 가능하게 풀어줘야 함 */
+#memoWin,
+#memoWin * {
+  pointer-events: auto;
+}
+
+#memoWin textarea {
+  user-select: text; /* 드래그/복사 가능 */
+}
+
+/* 구글문서 바로가기 버튼도 클릭 가능하게 */
+.docs-shortcut{
+  pointer-events: auto;
+}
+

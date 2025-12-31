@@ -158,7 +158,7 @@
     // 클릭만 해도 앞으로 오게
     win.addEventListener("pointerdown", ()=> bringToFront(win));
   });
-
+  
  window.addEventListener("load", () => {
   autoLayout();
   // byKey 대신 실제 ID를 사용하는 방식으로 안전하게 변경
@@ -168,6 +168,78 @@
   
   window.addEventListener("resize", () => autoLayout());
 
+  // ===== 창 컨트롤 버튼(최소화/최대화/닫기) =====
+
+  // 버튼 누를 때 드래그 시작되는 거 방지
+  document.querySelectorAll(".title-btns").forEach((box) => {
+    box.addEventListener("pointerdown", (e) => e.stopPropagation());
+  });
+
+  function maximizeWin(win){
+    // 원래 위치/크기 저장(딱 1번만)
+    if (!win.dataset.prevLeft) {
+      win.dataset.prevLeft = win.style.left || (win.offsetLeft + "px");
+      win.dataset.prevTop  = win.style.top  || (win.offsetTop + "px");
+      win.dataset.prevW    = win.style.width || "";
+      win.dataset.prevH    = win.style.height || "";
+    }
+
+    const taskbar = document.querySelector(".taskbar");
+    const taskH = taskbar ? taskbar.offsetHeight : 44;
+
+    win.classList.add("is-maximized");
+    win.dataset.maximized = "1";
+    win.style.left = "0px";
+    win.style.top = "0px";
+    win.style.width = "100vw";
+    win.style.height = `calc(100vh - ${taskH}px)`;
+  }
+
+  function restoreWin(win){
+    win.classList.remove("is-maximized");
+    win.dataset.maximized = "0";
+    win.style.left = win.dataset.prevLeft || "50px";
+    win.style.top  = win.dataset.prevTop  || "50px";
+    win.style.width  = win.dataset.prevW || "";
+    win.style.height = win.dataset.prevH || "";
+  }
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".title-btns .btn");
+    if (!btn) return;
+
+    const win = btn.closest(".win");
+    if (!win) return;
+
+    bringToFront(win);
+
+    // 버튼 3개를 "순서"로 구분 (HTML 안 건드리는 버전)
+    const btns = Array.from(win.querySelectorAll(".title-btns .btn"));
+    const idx = btns.indexOf(btn);
+
+    if (idx === 0) {
+      // 최소화: 일단 숨김(나중에 작업표시줄에서 다시 띄우는 거 붙이면 완성)
+      win.style.display = "none";
+      win.dataset.hidden = "1";
+      return;
+    }
+
+    if (idx === 1) {
+      // 최대화 토글
+      const isMax = win.dataset.maximized === "1";
+      if (!isMax) maximizeWin(win);
+      else restoreWin(win);
+      return;
+    }
+
+    if (idx === 2) {
+      // 닫기: 지금은 최소화랑 동일하게 숨김 처리(“OS 느낌” 유지)
+      win.style.display = "none";
+      win.dataset.hidden = "1";
+      return;
+    }
+  });
+  
   // ===== 시계 =====
   const clock = document.getElementById("clock");
   function tick(){

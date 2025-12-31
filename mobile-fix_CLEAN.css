@@ -274,7 +274,7 @@
 ========================= */
 #memoWin{
   position: fixed;
-  left: 650px;
+  left: 850px;
   bottom: 84px; /* 작업표시줄/DM버튼 겹침 방지용 여유 */
   width: 260px;
 
@@ -338,7 +338,7 @@
 /* Google Docs shortcut (floating) */
 .docs-shortcut{
   position: fixed;
-  left: 650px;
+  left: 850px;
   bottom: 36px;
 
   width: 44px;

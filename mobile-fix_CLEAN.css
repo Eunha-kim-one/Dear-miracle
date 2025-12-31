@@ -352,27 +352,19 @@
   font-weight: 600;
 
   color: #fff;
-  background: rgba(255, 80, 120, 0.85);
+  background: rgba(255, 80, 120, 0.8);
   border-radius: 999px;
 
   pointer-events: none;
   opacity: 0.9;
-}
 
-.dm-badge.hidden{
-  display: none;
-}
+  box-shadow: 0 2px 4px rgba(255, 80, 120, 0.25);
 
-/* 제미니의 미세 튜닝 제안 */
-.dm-badge {
-  /* ...기존 코드... */
-  background: rgba(255, 80, 120, 0.85); /* 네 y2k 감성에는 약간 더 형광빛 도는 핑크도 예뻐요 */
-  box-shadow: 0 2px 5px rgba(255, 80, 120, 0.3); /* 배지가 살짝 떠 보이게 은은한 그림자 */
   transform: scale(1);
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.18s ease-out;
 }
 
-/* 마우스를 올렸을 때 살짝 커지는 효과 (디테일!) */
-.dm-fab:hover .dm-badge {
-  transform: scale(1.2);
+/* hover는 "살짝"만 */
+.dm-fab:hover .dm-badge{
+  transform: scale(1.15);
 }

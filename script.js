@@ -922,3 +922,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// =========================
+// Memo textarea auto-resize
+// =========================
+(() => {
+  const ta = document.getElementById("memoArea");
+  if (!ta) return;
+
+  const resize = () => {
+    ta.style.height = "auto";
+    ta.style.height = ta.scrollHeight + "px";
+  };
+
+  // 초기 1회
+  resize();
+
+  // 입력할 때마다
+  ta.addEventListener("input", resize);
+})();

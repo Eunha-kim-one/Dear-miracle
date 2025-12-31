@@ -758,7 +758,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================
-   Floating Stickers
+   Floating Stickers (수정본)
    ========================= */
 
 const STICKERS = [
@@ -766,9 +766,12 @@ const STICKERS = [
   "assets/stickers/flower-dot.png",
   "assets/stickers/headphone.png",
   "assets/stickers/video-tape.png",
-  "assets/stickers/wings.png"
+  "assets/stickers/wings.png",
+  "assets/stickers/radio.png",
+  "assets/stickers/rainbow.png"
 ];
 
+// 이 아래에 있는 rand, pick, spawnStickers 함수들은 그대로 두시면 됩니다!
 function rand(min, max){ return Math.random() * (max - min) + min; }
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 

@@ -885,23 +885,3 @@ function spawnStickers(){
 document.addEventListener("DOMContentLoaded", spawnStickers);
 window.addEventListener("resize", spawnStickers);
 
-// =========================
-// DM badge (simple presence)
-// =========================
-const dmFabBtn = document.getElementById("dmFabBtn");
-const dmBadge  = document.getElementById("dmBadge");
-
-// 처음 홈에 왔을 때: 아직 쪽지 확인 안 했으면 표시
-if (!localStorage.getItem("dmChecked")) {
-  dmBadge?.classList.remove("hidden");
-  dmBadge.textContent = "●"; // 점 형태
-} else {
-  dmBadge?.classList.add("hidden");
-}
-
-// 쪽지 버튼 클릭 = 확인한 것으로 처리
-dmFabBtn?.addEventListener("click", () => {
-  localStorage.setItem("dmChecked", "1");
-  dmBadge?.classList.add("hidden");
-});
-

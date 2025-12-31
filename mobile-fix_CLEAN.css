@@ -326,3 +326,29 @@
     display: none;
   }
 }
+
+/* =========================
+   Custom Cursor (PC only)
+   normal: love particle
+   hover : sparkle
+========================= */
+@media (hover: hover) and (pointer: fine) {
+
+  /* 기본 커서 */
+  body {
+    cursor: url("assets/icons/love-particle.png") 16 16, auto;
+  }
+
+  /* 클릭 가능한 요소 위 */
+  a,
+  button,
+  .win,
+  .title-btns .btn,
+  [role="button"],
+  input,
+  textarea,
+  select {
+    cursor: url("assets/icons/sparkle.png") 16 16, pointer;
+  }
+
+}

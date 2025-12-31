@@ -666,7 +666,7 @@ body {
 
   <div class="desk" id="desk">
 
-    <!-- 📝 메모 위젯 신규버튼호출 (PC only) -->
+  <!-- 📝 메모 위젯 신규탑재 (PC only) -->
 <div class="memo-win" id="memoWin">
   <div class="memo-header">
     <span>Memo</span>
@@ -676,16 +676,13 @@ body {
     </div>
   </div>
 
-  <textarea id="memoAreaEl" placeholder="Notes for profiles / relations…"></textarea>
+  <!-- ✅ textarea는 반드시 여기 -->
+  <textarea
+    id="memoAreaEl"
+    placeholder="Notes for profiles / relations…">
+  </textarea>
 </div>
 
-<!-- 📄 구글문서 Shortcut -->
-<a class="docs-shortcut"
-   href="https://docs.google.com"
-   target="_blank"
-   title="Open Google Docs">
-  📄
-</a>
 
     <!-- 0) 공지/게시판 안내 창 -->
     <div class="win is-front" data-key="notice" style="left:18px; top:18px; width: 260px;" data-z="300">

@@ -269,3 +269,60 @@
   #fx-layer{ display: none; }
 }
 
+.fx-cloud,
+.fx-bubbles{
+  position: absolute;
+  opacity: 0.2;   /* 15~30% 사이 */
+  filter: blur(0.5px);
+}
+
+.fx-cloud{
+  width: 120vw;          /* 창보다 훨씬 크게 */
+  height: 40vh;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.cloud1{
+  background-image: url("assets/stickers/cloud1.png");
+  top: -10%;
+  animation: cloudFloat1 120s linear infinite;
+}
+.cloud2{
+  background-image: url("assets/stickers/cloud2.png");
+  bottom: -15%;
+  animation: cloudFloat2 160s linear infinite;
+}
+
+.fx-bubbles{
+  width: 100%;
+  height: 100%;
+  background: url("assets/stickers/bubbles.png") repeat;
+  background-size: 300px;
+  animation: bubbleDrift 180s linear infinite;
+  opacity: 0.15;
+}
+@keyframes cloudFloat1{
+  0%{ transform: translateY(0); }
+  50%{ transform: translateY(30px); }
+  100%{ transform: translateY(0); }
+}
+
+@keyframes cloudFloat2{
+  0%{ transform: translateY(0); }
+  50%{ transform: translateY(-40px); }
+  100%{ transform: translateY(0); }
+}
+
+@keyframes bubbleDrift{
+  from{
+    background-position: 0 0;
+  }
+  to{
+    background-position: 500px -800px;
+  }
+}
+@media (max-width: 768px){
+  #fx-layer{
+    display: none;
+  }
+}

@@ -160,3 +160,25 @@
 .sticker.v2{ animation-duration: 4.0s; }
 .sticker.v3{ animation-duration: 4.8s; }
 
+/* 창 상단 버튼 3개에 아이콘 입히기 */
+.title-btns .btn{
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px 14px;
+}
+
+/* 1번째=최소화 */
+.title-btns .btn:nth-child(1){
+  background-image: url("assets/icons/window-minimize.png");
+}
+
+/* 2번째=최대화 */
+.title-btns .btn:nth-child(2){
+  background-image: url("assets/icons/maximize.png");
+}
+
+/* 3번째=닫기 */
+.title-btns .btn:nth-child(3){
+  background-image: url("assets/icons/close.png");
+}
+

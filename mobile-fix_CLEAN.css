@@ -129,3 +129,34 @@
     height: 140px !important;
   }
 }
+
+/* =========================
+   Floating Stickers Layer
+   ========================= */
+
+#sticker-layer{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.sticker{
+  position: absolute;
+  width: 32px; /* ← 크기 절반 */
+  height: auto;
+  opacity: 0.95;
+  animation: floatY 4s ease-in-out infinite;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,.18));
+}
+
+@keyframes floatY{
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+.sticker.v1{ animation-duration: 3.4s; }
+.sticker.v2{ animation-duration: 4.0s; }
+.sticker.v3{ animation-duration: 4.8s; }
+

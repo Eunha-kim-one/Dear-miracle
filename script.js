@@ -428,20 +428,21 @@ async function enablePushForNick(nick){
       return true;
     }
 
-    nickSave.addEventListener("click", ()=>{
-      const val = (nickInput.value || "").trim();
-      if(!val){
-        nickHint.textContent = "닉네임을 입력해주세요.";
-        return;
-      }
-      setNick(val);
+    nickSave.addEventListener("click", async ()=>{
+  const val = (nickInput.value || "").trim();
+  if(!val){
+    nickHint.textContent = "닉네임을 입력해주세요.";
+    return;
+  }
+  setNick(val);
 
-     // ✅ 여기서 푸시 권한 요청 + 토큰 저장
-      await enablePushForNick(val);
+  // ✅ 푸시 권한 + 토큰 저장
+  await enablePushForNick(val);
 
-      closeNickModal();
-      startBadge(); // 닉 설정 후 뱃지 시작
-    });
+  closeNickModal();
+  startBadge();
+});
+
     nickCancel.addEventListener("click", ()=>{
       if(getNick()) closeNickModal();
       else nickHint.textContent = "닉네임을 입력해야 진행할 수 있습니다.";

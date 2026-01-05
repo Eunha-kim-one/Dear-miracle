@@ -299,6 +299,44 @@ import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.
     const VAPID_KEY = "BP1cLs7rP_5gZ97I_JW63hyvO08NculBB8HdOo2WlgLZytefWI9Y2kG0u0MhvdxzPMmuOw1_JBxXiPGDjK-gijM";
     const $ = (id) => document.getElementById(id);
 
+// ===== 푸시 권한 요청 + 토큰 발급 =====
+async function enablePushForNick(nick){
+  try{
+    // 1. 알림 권한 요청
+    const permission = await Notification.requestPermission();
+    if(permission !== "granted"){
+      console.log("❌ 알림 권한 거부됨");
+      return;
+    }
+
+    // 2. FCM 토큰 발급
+    const token = await getToken(messaging, {
+      vapidKey: VAPID_KEY
+    });
+
+    if(!token){
+      console.log("❌ 토큰 발급 실패");
+      return;
+    }
+
+    console.log("✅ FCM 토큰 발급 성공:", token);
+
+    // 3. Firestore에 저장 (닉네임 기준)
+    await setDoc(
+      doc(db, "pushTokens", nick),
+      {
+        token,
+        updatedAt: serverTimestamp()
+      }
+    );
+
+    console.log("✅ 토큰 Firestore 저장 완료");
+  }catch(err){
+    console.error("🔥 enablePushForNick 에러", err);
+  }
+}
+
+
     // ===== 닉네임 =====
     const NICK_KEY = "dm_nick";
     function getNick(){ return (localStorage.getItem(NICK_KEY) || "").trim(); }

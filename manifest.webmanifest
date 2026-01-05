@@ -1,23 +1,23 @@
 {
-"name": "Dear Miracle",
-"short_name": "Dear",
-"start_url": "/",
-"scope": "/",
-"display": "standalone",
-"background_color": "#ffffff",
-"theme_color": "#ffffff",
-"icons": [
-{
-"src": "/appicons/icon002sky_192.png",
-"sizes": "192x192",
-"type": "image/png",
-"purpose": "any maskable"
-},
-{
-"src": "/appicons/icon002sky_512.png",
-"sizes": "512x512",
-"type": "image/png",
-"purpose": "any maskable"
-}
-]
+  "name": "Dear Miracle",
+  "short_name": "Dear",
+  "start_url": "/Dear-miracle/",
+  "scope": "/Dear-miracle/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/Dear-miracle/appicons/icon002sky_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/Dear-miracle/appicons/icon002sky_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }

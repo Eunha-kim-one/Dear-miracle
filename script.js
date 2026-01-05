@@ -277,8 +277,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import {
       getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit,
-      serverTimestamp, doc, updateDoc, onSnapshot
+      serverTimestamp, doc, updateDoc, onSnapshot, setDoc
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
 
     // ✅ 동일해야 함
     const firebaseConfig = {
@@ -293,7 +295,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const $ = (id)=>document.getElementById(id);
+    const messaging = getMessaging(app); 
+    const VAPID_KEY = "BP1cLs7rP_5gZ97I_JW63hyvO08NculBB8HdOo2WlgLZytefWI9Y2kG0u0MhvdxzPMmuOw1_JBxXiPGDjK-gijM";
+    const $ = (id) => document.getElementById(id);
 
     // ===== 닉네임 =====
     const NICK_KEY = "dm_nick";

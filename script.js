@@ -435,6 +435,10 @@ async function enablePushForNick(nick){
         return;
       }
       setNick(val);
+
+     // ✅ 여기서 푸시 권한 요청 + 토큰 저장
+      await enablePushForNick(val);
+
       closeNickModal();
       startBadge(); // 닉 설정 후 뱃지 시작
     });
@@ -785,7 +789,11 @@ async function enablePushForNick(nick){
 
     // ===== 초기 구동 =====
     // 닉 있으면 뱃지 실시간 시작
-    if(getNick()) startBadge();
+    if(getNick()){
+  startBadge();
+  enablePushForNick(getNick()); // ✅ 이미 닉 있는 사람도 푸시 등록 시도
+}
+
   
 /* ---- Mobile window layout polish (random overlap + bring key buttons forward) ---- */
 

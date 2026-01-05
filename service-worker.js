@@ -1,12 +1,12 @@
 const CACHE_NAME = "dear-miracle-v1";
 
 const ASSETS = [
-  "/", 
-  "/index.html",
-  "/manifest.webmanifest",
-  "/mobile-fix_CLEAN.css",
-  "/appicons/icon002sky_192.png",
-  "/appicons/icon002sky_512.png"
+  "./", 
+  "./index.html",
+  "./manifest.webmanifest",
+  "./mobile-fix_CLEAN.css",
+  "./appicons/icon002sky_192.png",
+  "./appicons/icon002sky_512.png"
   // 필요하면 이미지, js 파일 여기 추가
 ];
 

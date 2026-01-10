@@ -71,16 +71,16 @@ self.addEventListener("notificationclick", (event) => {
 });
 
 
-const CACHE_NAME = "dear-miracle-v2";
+// ===== Cache (Offline) =====
+const CACHE_NAME = "dear-miracle-v3";
 
 const ASSETS = [
-  "./", 
+  "./",
   "./index.html",
   "./manifest.webmanifest",
   "./mobile-fix_CLEAN.css",
   "./appicons/icon002sky_192.png",
   "./appicons/icon002sky_512.png"
-  // 필요하면 이미지, js 파일 여기 추가
 ];
 
 self.addEventListener("install", (event) => {
@@ -93,11 +93,9 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
       )
     )
   );
@@ -105,8 +103,6 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then(
-      (response) => response || fetch(event.request)
-    )
+    caches.match(event.request).then((cached) => cached || fetch(event.request))
   );
 });

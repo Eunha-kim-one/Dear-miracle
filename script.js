@@ -309,9 +309,12 @@ async function enablePushForNick(nick){
       return;
     }
 
-    // 2. FCM 토큰 발급
+    // 2. FCM 토큰 발급 + 서비스워커를 확실히 잡고
+    const swReg = await navigator.serviceWorker.ready;
+   
     const token = await getToken(messaging, {
-      vapidKey: VAPID_KEY
+    vapidKey: VAPID_KEY,
+    serviceWorkerRegistration: swReg
     });
 
     if(!token){

@@ -306,6 +306,7 @@ async function enablePushForNick(nick){
     const permission = await Notification.requestPermission();
     if(permission !== "granted"){
       console.log("❌ 알림 권한 거부됨");
+      alert("알림 권한이 granted가 아님: " + permission);
       return;
     }
 
@@ -319,6 +320,7 @@ async function enablePushForNick(nick){
 
     if(!token){
       console.log("❌ 토큰 발급 실패");
+      alert("토큰이 비어있음(발급 실패)");
       return;
     }
 
@@ -333,8 +335,9 @@ async function enablePushForNick(nick){
       }
     );
 
-    console.log("✅ 토큰 Firestore 저장 완료");
+    alert("pushTokens 저장 성공!");
   }catch(err){
+    alert("pushTokens 저장 실패: " + (err?.message || err));
     console.error("🔥 enablePushForNick 에러", err);
   }
 }

@@ -435,6 +435,8 @@ async function enablePushForNick(nick){
     }
 
     nickSave.addEventListener("click", async ()=>{
+    alert("닉 저장 클릭 이벤트 들어옴"); // ✅ 이 줄 추가
+     
   const val = (nickInput.value || "").trim();
   if(!val){
     nickHint.textContent = "닉네임을 입력해주세요.";

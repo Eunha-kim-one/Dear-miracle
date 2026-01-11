@@ -305,8 +305,7 @@ async function enablePushForNick(nick){
     // 1. 알림 권한 요청
     const permission = await Notification.requestPermission();
     if(permission !== "granted"){
-      console.log("❌ 알림 권한 거부됨");
-      alert("알림 권한이 granted가 아님: " + permission);
+      console.log("알림 권한 미허용", permission);
       return;
     }
 
@@ -320,7 +319,6 @@ async function enablePushForNick(nick){
 
     if(!token){
       console.log("❌ 토큰 발급 실패");
-      alert("토큰이 비어있음(발급 실패)");
       return;
     }
 
@@ -335,9 +333,8 @@ async function enablePushForNick(nick){
       }
     );
 
-    alert("pushTokens 저장 성공!");
+    console.log("pushTokens 저장 완료:", nick);
   }catch(err){
-    alert("pushTokens 저장 실패: " + (err?.message || err));
     console.error("🔥 enablePushForNick 에러", err);
   }
 }
@@ -435,7 +432,6 @@ async function enablePushForNick(nick){
     }
 
     nickSave.addEventListener("click", async ()=>{
-    alert("닉 저장 클릭 이벤트 들어옴"); // ✅ 이 줄 추가
      
   const val = (nickInput.value || "").trim();
   if(!val){
@@ -446,6 +442,7 @@ async function enablePushForNick(nick){
 
   // ✅ 푸시 권한 + 토큰 저장
   await enablePushForNick(val);
+  nickHint.textContent = "닉네임 저장 완료!"; // ✅ UX용 한 줄
 
   closeNickModal();
   startBadge();
@@ -800,7 +797,7 @@ async function enablePushForNick(nick){
     // 닉 있으면 뱃지 실시간 시작
     if(getNick()){
   startBadge();
-  enablePushForNick(getNick()); // ✅ 이미 닉 있는 사람도 푸시 등록 시도
+  // enablePushForNick(getNick());  // ⛔ 자동 실행은 제거(닉 저장 버튼에서만 수행)
 }
 
   
